@@ -9,6 +9,21 @@ export type DefaultScheduleEntry = {
 };
 
 export const DEFAULT_SCHEDULES_DIR = "/schedules/defaults/";
+export const PREFERRED_DEFAULT_SCHEDULE_ID = "latarjet_schedule.json";
+
+const KNOWN_DEFAULT_SCHEDULE_FILES = [
+  "latarjet_schedule.json",
+  "demo-small-plan-v1.json",
+  "template-v1.json",
+] as const;
+
+function knownDefaultEntries(): DefaultScheduleEntry[] {
+  return KNOWN_DEFAULT_SCHEDULE_FILES.map((id) => ({
+    id,
+    label: labelFromFilename(id),
+    path: `${DEFAULT_SCHEDULES_DIR}${id}`,
+  }));
+}
 
 function labelFromFilename(name: string) {
   return name
@@ -52,13 +67,19 @@ function normalizeToDefaultsPath(href: string): string | null {
 }
 
 export async function loadDefaultScheduleManifest(dir = DEFAULT_SCHEDULES_DIR): Promise<DefaultScheduleEntry[]> {
-  const res = await fetch(dir, { cache: "no-store" });
-  if (!res.ok) throw new Error(`Failed to read default schedules directory (${res.status}).`);
+  let hrefs: string[] = [];
 
-  const html = await res.text();
-  const hrefs = parseJsonLinksFromDirectoryHtml(html);
+  try {
+    const res = await fetch(dir, { cache: "no-store" });
+    if (res.ok) {
+      const html = await res.text();
+      hrefs = parseJsonLinksFromDirectoryHtml(html);
+    }
+  } catch {
+    hrefs = [];
+  }
 
-  const entries = hrefs
+  const entriesFromDirectory = hrefs
     .map(normalizeToDefaultsPath)
     .filter((x): x is string => Boolean(x))
     .map((path) => {
@@ -68,10 +89,15 @@ export async function loadDefaultScheduleManifest(dir = DEFAULT_SCHEDULES_DIR): 
         label: labelFromFilename(file),
         path,
       } as DefaultScheduleEntry;
-    })
-    .sort((a, b) => a.label.localeCompare(b.label));
+    });
 
-  return uniqueByPath(entries);
+  const entries = uniqueByPath([...entriesFromDirectory, ...knownDefaultEntries()]).sort((a, b) => {
+    if (a.id === PREFERRED_DEFAULT_SCHEDULE_ID && b.id !== PREFERRED_DEFAULT_SCHEDULE_ID) return -1;
+    if (b.id === PREFERRED_DEFAULT_SCHEDULE_ID && a.id !== PREFERRED_DEFAULT_SCHEDULE_ID) return 1;
+    return a.label.localeCompare(b.label);
+  });
+
+  return entries;
 }
 
 export async function loadDefaultSchedule(entry: DefaultScheduleEntry): Promise<Schedule> {

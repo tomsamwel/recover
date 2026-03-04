@@ -9,8 +9,30 @@ import {
   parseHHMM,
   parseSchedule,
   weekIndexFromDay,
-} from "./src/domain/schedule";
-import type { DefaultScheduleEntry, Gate, Schedule, ScheduleWeek } from "./src/domain/schedule";
+  PREFERRED_DEFAULT_SCHEDULE_ID,
+} from "./domain/schedule";
+import type { DefaultScheduleEntry, Schedule } from "./domain/schedule";
+import { GateChecklist } from "./app/components/GateChecklist";
+import { ScheduleHeader } from "./app/components/ScheduleHeader";
+import { SessionTimeline } from "./app/components/SessionTimeline";
+import {
+  buildSessionsFromWeek,
+  emptyDone,
+  emptyGateState,
+  fmtAt,
+  loadDone,
+  loadGates,
+  loadSchedule,
+  minutesOfDay,
+  saveDone,
+  saveGates,
+  saveSchedule,
+  scheduleId,
+  todayKey,
+  type DoneState,
+} from "./app/scheduleViewModel";
+import { migrateLocalState } from "./app/storage/migrate";
+import { SCHEDULE_STORAGE_KEY, SELECTED_WEEK_KEY, THEME_KEY } from "./app/storage/keys";
 import {
   Hand,
   Bone,
@@ -20,18 +42,11 @@ import {
   Aperture,
   Wind,
   Moon,
-  Sun,
   Info,
   RefreshCcw,
-  Upload,
-  ChevronDown,
 } from "lucide-react";
 
-type Item = { id: string; title: string; icon: keyof typeof ICONS; how: string[]; why: string; progress?: string };
-
-type Session = { id: string; time: string; title: string; items: Item[] };
-
-type DoneState = Record<string, Record<string, boolean>>;
+const clamp = (n: number, a: number, b: number) => Math.max(a, Math.min(b, n));
 
 type OpenState =
   | { kind: "exercise"; sessionId: string; itemId: string }
@@ -48,174 +63,9 @@ const ICONS = {
   sleep: Moon,
 } as const;
 
-
-const SCHEDULE_STORAGE_KEY = "recovery_schedule_json_v1";
-const DONE_STORAGE_KEY = "recovery_done_v2";
-const SELECTED_WEEK_KEY = "recovery_selected_week_v1";
-const GATES_STORAGE_KEY = "recovery_gates_v1";
-const THEME_KEY = "recovery_theme_v1";
-
-const pad2 = (n: number) => String(n).padStart(2, "0");
-const todayKey = () => {
-  const d = new Date();
-  return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
-};
-const minutesOfDay = (d: Date) => d.getHours() * 60 + d.getMinutes() + d.getSeconds() / 60;
-const fmtAt = (s?: string) => {
-  if (!s) return "";
-  const d = new Date(s);
-  if (!Number.isFinite(d.getTime())) return s;
-  return d.toLocaleString(undefined, { year: "numeric", month: "short", day: "2-digit", hour: "2-digit", minute: "2-digit" });
-};
-
-const clamp = (n: number, a: number, b: number) => Math.max(a, Math.min(b, n));
-
-function hash32(str: string) {
-  let h = 0x811c9dc5;
-  for (let i = 0; i < str.length; i++) {
-    h ^= str.charCodeAt(i);
-    h = Math.imul(h, 0x01000193);
-  }
-  return (h >>> 0).toString(16).padStart(8, "0");
-}
-
-function scheduleId(s: Schedule) {
-  const m = s.metadata ?? {};
-  const slim = {
-    v: s.version,
-    a: m.anchor?.at ?? m.surgeryStart ?? "",
-    p: Array.isArray(m.periods) ? m.periods.map((x) => [x.id, x.label, x.startDay, x.endDay]) : [],
-    w: s.weeks.map((wk) => [
-      wk.weekNumber,
-      wk.label ?? "",
-      wk.gates?.map((g) => [g.id, g.title]) ?? [],
-      wk.sessions.map((ss) => [ss.id, ss.title, ss.timeOfDay ?? "", ss.exercises.map((e) => e.id ?? e.name)]),
-    ]),
-  };
-  return hash32(JSON.stringify(slim));
-}
-
 const clsx = (...v: Array<string | false | null | undefined>) => v.filter(Boolean).join(" ");
 
-function iconFor(title: string): keyof typeof ICONS {
-  const t = title.toLowerCase();
-  if (t.includes("hand") || t.includes("wrist") || t.includes("fist")) return "hand";
-  if (t.includes("elbow") || t.includes("biceps") || t.includes("triceps")) return "bone";
-  if (t.includes("pend") || t.includes("sling")) return "pendulum";
-  if (t.includes("thor") || t.includes("t-spine") || t.includes("chest")) return "thoraxUp";
-  if (t.includes("scap") || t.includes("serratus") || t.includes("trap")) return "scapula";
-  if (t.includes("breath")) return "breath";
-  if (t.includes("sleep")) return "sleep";
-  return "rotate";
-}
-
 const postOpDay = (now: Date, anchor: Date) => Math.floor((now.getTime() - anchor.getTime()) / 86400000);
-
-function buildSessionsFromWeek(week: ScheduleWeek): Session[] {
-  return week.sessions
-    .map((s) => ({ ...s, t: parseHHMM(s.timeOfDay) }))
-    .sort((a, b) => (Number.isFinite(a.t) ? a.t : 1e9) - (Number.isFinite(b.t) ? b.t : 1e9))
-    .map((s) => {
-      const items: Item[] = s.exercises.map((e, i) => {
-        const lines = (e.instructions || "")
-          .split("\r")
-          .join("")
-          .split("\n")
-          .map((x) => x.trim())
-          .filter(Boolean);
-        const id = (e.id || `${s.id}__${i}__${e.name || "exercise"}`)
-          .trim()
-          .toLowerCase()
-          .replaceAll(" ", "-");
-        return {
-          id,
-          title: e.name || "Exercise",
-          icon: iconFor(e.name || "exercise"),
-          how: lines.length ? lines : [e.instructions].filter(Boolean),
-          why: e.purpose || "",
-          progress: e.progression,
-        };
-      });
-      return { id: s.id, time: typeof s.timeOfDay === "string" ? s.timeOfDay : "", title: s.title, items };
-    });
-}
-
-function loadSchedule(): Schedule {
-  try {
-    const raw = localStorage.getItem(SCHEDULE_STORAGE_KEY);
-    if (!raw) return TEMPLATE_SCHEDULE;
-    const parsed = JSON.parse(raw);
-    const result = parseSchedule(parsed);
-    return result.ok ? result.value : TEMPLATE_SCHEDULE;
-  } catch {
-    return TEMPLATE_SCHEDULE;
-  }
-}
-
-const saveSchedule = (s: Schedule) => {
-  try {
-    localStorage.setItem(SCHEDULE_STORAGE_KEY, JSON.stringify(s));
-  } catch {}
-};
-
-function emptyDone(sessions: Session[]): DoneState {
-  const out: DoneState = {};
-  for (const s of sessions) {
-    out[s.id] = {};
-    for (const it of s.items) out[s.id][it.id] = false;
-  }
-  return out;
-}
-
-function loadDone(doneKey: string, sessions: Session[]): DoneState {
-  const base = emptyDone(sessions);
-  try {
-    const raw = localStorage.getItem(DONE_STORAGE_KEY);
-    if (!raw) return base;
-    const parsed = JSON.parse(raw) as Record<string, DoneState>;
-    const saved = parsed?.[doneKey];
-    if (!saved) return base;
-    for (const s of sessions) for (const it of s.items) base[s.id][it.id] = Boolean(saved?.[s.id]?.[it.id]);
-    return base;
-  } catch {
-    return base;
-  }
-}
-
-function saveDone(doneKey: string, done: DoneState) {
-  try {
-    const raw = localStorage.getItem(DONE_STORAGE_KEY);
-    const parsed = raw ? (JSON.parse(raw) as Record<string, DoneState>) : {};
-    parsed[doneKey] = done;
-    localStorage.setItem(DONE_STORAGE_KEY, JSON.stringify(parsed));
-  } catch {}
-}
-
-const emptyGateState = (gates: Gate[]) => Object.fromEntries(gates.map((g) => [g.id, false])) as Record<string, boolean>;
-
-function loadGates(key: string, gates: Gate[]) {
-  const base = emptyGateState(gates);
-  try {
-    const raw = localStorage.getItem(GATES_STORAGE_KEY);
-    if (!raw) return base;
-    const parsed = JSON.parse(raw) as Record<string, Record<string, boolean>>;
-    const saved = parsed?.[key];
-    if (!saved) return base;
-    for (const g of gates) base[g.id] = Boolean(saved[g.id]);
-    return base;
-  } catch {
-    return base;
-  }
-}
-
-function saveGates(key: string, state: Record<string, boolean>) {
-  try {
-    const raw = localStorage.getItem(GATES_STORAGE_KEY);
-    const parsed = raw ? (JSON.parse(raw) as Record<string, Record<string, boolean>>) : {};
-    parsed[key] = state;
-    localStorage.setItem(GATES_STORAGE_KEY, JSON.stringify(parsed));
-  } catch {}
-}
 
 function Tile({
   title,
@@ -321,7 +171,12 @@ function SessionDot({
 }
 
 export default function App() {
-  const [schedule, setSchedule] = useState<Schedule>(() => (typeof window === "undefined" ? TEMPLATE_SCHEDULE : loadSchedule()));
+  const [schedule, setSchedule] = useState<Schedule>(() =>
+    typeof window === "undefined" ? TEMPLATE_SCHEDULE : loadSchedule(TEMPLATE_SCHEDULE, (parsed) => {
+      const result = parseSchedule(parsed);
+      return result.ok ? result.value : null;
+    })
+  );
   const [dm, setDm] = useState(() => {
     try {
       return localStorage.getItem(THEME_KEY) === "d";
@@ -333,6 +188,13 @@ export default function App() {
   const [selectedDefaultId, setSelectedDefaultId] = useState("");
   const [defaultMenuOpen, setDefaultMenuOpen] = useState(false);
   const [defaultState, setDefaultState] = useState<{ loading: boolean; error: string | null }>({ loading: false, error: null });
+  const hadSavedScheduleOnBootRef = useRef<boolean>(
+    typeof window !== "undefined" ? Boolean(localStorage.getItem(SCHEDULE_STORAGE_KEY)) : false
+  );
+
+  useEffect(() => {
+    migrateLocalState();
+  }, []);
   useEffect(() => {
     try {
       localStorage.setItem(THEME_KEY, dm ? "d" : "l");
@@ -347,7 +209,22 @@ export default function App() {
       .then((entries) => {
         if (cancelled) return;
         setDefaultSchedules(entries);
-        setSelectedDefaultId((cur) => cur || entries[0]?.id || "");
+
+        const preferred = entries.find((x) => x.id === PREFERRED_DEFAULT_SCHEDULE_ID) ?? entries[0];
+        if (!preferred) return;
+
+        setSelectedDefaultId((cur) => cur || preferred.id);
+
+        if (!hadSavedScheduleOnBootRef.current) {
+          loadDefaultSchedule(preferred)
+            .then((next) => {
+              if (!cancelled) setSchedule(next);
+            })
+            .catch((err: any) => {
+              if (!cancelled)
+                setDefaultState((prev) => ({ ...prev, error: err instanceof Error ? err.message : "Failed to load default schedule." }));
+            });
+        }
       })
       .catch((err: any) => {
         if (cancelled) return;
@@ -588,247 +465,56 @@ export default function App() {
       />
 
       <div className="wrap">
-        <div className="top">
-          <div>
-            <div className="h1">Timeline</div>
-          </div>
+        <ScheduleHeader
+          dm={dm}
+          setDm={setDm}
+          defaultsRef={defaultsRef}
+          defaultMenuOpen={defaultMenuOpen}
+          setDefaultMenuOpen={setDefaultMenuOpen}
+          fileRef={fileRef}
+          defaultSchedules={defaultSchedules}
+          selectedDefaultId={selectedDefaultId}
+          applyDefaultSchedule={applyDefaultSchedule}
+          defaultState={defaultState}
+          todayLabel={todayKey()}
+          day={day}
+          period={period}
+          anchor={a}
+          anchorLabel={aTxt}
+          weeks={weeks}
+          selectedWeek={selectedWeek}
+          autoWeek={autoWeek}
+          setSelectedWeek={setSelectedWeek}
+          week={week}
+          clsx={clsx}
+        />
 
-          <div className="topr">
-            <div className="tb" role="group" aria-label="Theme toggle">
-              <motion.button
-                type="button"
-                whileTap={{ scale: 0.98 }}
-                className={clsx("tseg", !dm && "tsegOn")}
-                onClick={() => setDm(false)}
-                aria-label="Light mode"
-                title="Light mode"
-              >
-                <Sun className="ti" />
-              </motion.button>
-              <motion.button
-                type="button"
-                whileTap={{ scale: 0.98 }}
-                className={clsx("tseg", dm && "tsegOn")}
-                onClick={() => setDm(true)}
-                aria-label="Dark mode"
-                title="Dark mode"
-              >
-                <Moon className="ti" />
-              </motion.button>
-            </div>
-            <div ref={defaultsRef} className={clsx("upl", defaultMenuOpen && "uplOn")}> 
-              <motion.button
-                type="button"
-                whileTap={{ scale: 0.98 }}
-                className="uplPart uplMain"
-                onClick={() => fileRef.current?.click()}
-                title="Upload"
-                aria-label="Upload"
-              >
-                <Upload className="h-[15px] w-[15px]" />
-              </motion.button>
-              <div className="uplDiv" aria-hidden />
-              <motion.button
-                type="button"
-                whileTap={{ scale: 0.98 }}
-                className="uplPart uplChevron"
-                onClick={() => setDefaultMenuOpen((v) => !v)}
-                title="Default schedules"
-                aria-label="Default schedules"
-                aria-expanded={defaultMenuOpen}
-              >
-                <ChevronDown className={clsx("h-4 w-4", "car", defaultMenuOpen && "carOn")} />
-              </motion.button>
+        <GateChecklist
+          gatesOpen={gatesOpen}
+          setGatesOpen={setGatesOpen}
+          gateProgress={gateProgress}
+          gates={gates}
+          gateDone={gateDone}
+          toggleGate={toggleGate}
+          showGateInfo={(gateId) => setOpen({ kind: "gate", gateId })}
+          clsx={clsx}
+        />
 
-              <AnimatePresence>
-                {defaultMenuOpen && (
-                  <motion.div
-                    className="uplMenu"
-                    initial={{ opacity: 0, y: -6, scale: 0.98 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: -6, scale: 0.98 }}
-                    transition={{ duration: 0.14 }}
-                  >
-                    {!defaultSchedules.length ? (
-                      <div className="uplIt mut">No defaults found</div>
-                    ) : (
-                      defaultSchedules.map((entry) => {
-                        const active = selectedDefaultId === entry.id;
-                        return (
-                          <button
-                            key={entry.id}
-                            type="button"
-                            className={clsx("uplIt", active && "uplItOn")}
-                            onClick={() => applyDefaultSchedule(entry.id)}
-                            disabled={defaultState.loading}
-                          >
-                            <span>{entry.label}</span>
-                          </button>
-                        );
-                      })
-                    )}
-                    {defaultState.error ? <div className="uplErr">{defaultState.error}</div> : null}
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-            <div className="mut">{todayKey()}</div>
-          </div>
-        </div>
-
-        <div className="pnl ph">
-          <div className="phl">
-            <div className="cap">Post-op day</div>
-            <div className="num">{day}</div>
-            {period ? (
-              <>
-                <div className="dot" />
-                <div className="cap">Phase</div>
-                <div className="mut">{period.label}</div>
-              </>
-            ) : null}
-          </div>
-          <div className="fnt">
-            Anchor: <span className="ak" title={a?.at}>{aTxt}</span>
-            {a?.type ? <span className="atk"> · {a.type}</span> : null}
-          </div>
-        </div>
-
-        <div className="weekbar">
-          {weeks.map((w) => {
-            const active = w.weekNumber === selectedWeek;
-            const isAuto = w.weekNumber === autoWeek;
-            return (
-              <button
-                key={w.weekNumber}
-                type="button"
-                className={clsx("weekpill", active && "weekpill-on")}
-                onClick={() => setSelectedWeek(w.weekNumber)}
-              >
-                <span className="weekpill-t">{w.weekNumber}</span>
-                {isAuto && <span className="weekpill-dot" aria-hidden />}
-              </button>
-            );
-          })}
-        </div>
-
-        <div className="wk">
-          <div className="cap">{week.label ?? `Week ${week.weekNumber}`}</div>
-          {week.description ? <div className="sub">{week.description}</div> : null}
-        </div>
-
-        <div className="pnl gt">
-          <button type="button" className="gth" onClick={() => setGatesOpen((v) => !v)} aria-expanded={gatesOpen}>
-            <div className="cap">Criteria gates</div>
-            <div className="gtr">
-              <div className="gpm">
-                <span className="numS">
-                  {gateProgress.done}/{gateProgress.total}
-                </span>
-                <div className="gpb">
-                  <motion.div
-                    className="gpf"
-                    animate={{ width: `${Math.round(gateProgress.pct * 100)}%` }}
-                    transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-                  />
-                </div>
-              </div>
-              <ChevronDown className={clsx("car", gatesOpen && "carOn")} />
-            </div>
-          </button>
-
-          <AnimatePresence initial={false}>
-            {gatesOpen && (
-              <motion.div
-                className="gtb"
-                initial={{ height: 0, opacity: 0 }}
-                animate={{ height: "auto", opacity: 1 }}
-                exit={{ height: 0, opacity: 0 }}
-                transition={{ duration: 0.18 }}
-              >
-                {!gates.length ? (
-                  <div className="sub">No gates in this week.</div>
-                ) : (
-                  <div className="gtl">
-                    {gates.map((g) => {
-                      const on = Boolean(gateDone[g.id]);
-                      return (
-                        <div key={g.id} className={clsx("gr", on && "grOn")}>
-                          <button type="button" className="gm" onClick={() => toggleGate(g.id)}>
-                            <span className={clsx("gc", on && "gcOn")} aria-hidden />
-                            <span className="gtx">{g.title}</span>
-                          </button>
-                          <button
-                            type="button"
-                            className="ib"
-                            onClick={() => setOpen({ kind: "gate", gateId: g.id })}
-                            aria-label="Gate details"
-                            title="Details"
-                          >
-                            <Info className="h-[18px] w-[18px]" />
-                          </button>
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-
-        <div ref={containerRef} className="tlw">
-          <div className="rail" aria-hidden />
-          <motion.div className="rail-fill" aria-hidden animate={{ height: nowY }} transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }} />
-          <motion.div className="now-dot" aria-hidden animate={{ top: nowY }} transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }} />
-
-          <div className="sp">
-            {sessions.map((s) => {
-              const tot = totals[s.id] ?? { done: 0, total: 0, progress: 0 };
-              const overdue = isOverdue(s.id);
-              return (
-                <div key={s.id} className="row">
-                  <div className="row-rail">
-                    <SessionDot
-                      progress={tot.progress}
-                      doneAll={tot.done === tot.total}
-                      overdue={overdue}
-                      onClick={() => toggleSession(s.id)}
-                      innerRef={(el) => {
-                        dotRefs.current[s.id] = el;
-                      }}
-                    />
-                  </div>
-
-                  <div className="cnt">
-                    <div className="hdr">
-                      <div className="rt">{s.time || ""}</div>
-                      <div className="st">{s.title}</div>
-                    </div>
-                    <div className="grid">
-                      {s.items.map((it) => {
-                        const Icon = ICONS[it.icon];
-                        const doneIt = Boolean(done[s.id]?.[it.id]);
-                        const variant: "active" | "overdue" | "done" = doneIt ? "done" : overdue ? "overdue" : "active";
-                        return (
-                          <Tile
-                            key={it.id}
-                            title={it.title}
-                            Icon={Icon}
-                            done={doneIt}
-                            variant={variant}
-                            onToggle={() => toggleItem(s.id, it.id)}
-                            onInfo={() => setOpen({ kind: "exercise", sessionId: s.id, itemId: it.id })}
-                          />
-                        );
-                      })}
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
+        <SessionTimeline
+          containerRef={containerRef}
+          nowY={nowY}
+          sessions={sessions}
+          totals={totals}
+          isOverdue={isOverdue}
+          toggleSession={toggleSession}
+          dotRefs={dotRefs}
+          ICONS={ICONS}
+          done={done}
+          toggleItem={toggleItem}
+          setOpenExercise={(sessionId, itemId) => setOpen({ kind: "exercise", sessionId, itemId })}
+          Tile={Tile}
+          SessionDot={SessionDot}
+        />
 
         <div className="fab">
           <motion.button type="button" onClick={resetToday} whileTap={{ scale: 0.98 }} className="rb" aria-label="Reset today">
