@@ -1,6 +1,17 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
+  TEMPLATE_SCHEDULE,
+  activePeriod,
+  getAnchorDate,
+  loadDefaultSchedule,
+  loadDefaultScheduleManifest,
+  parseHHMM,
+  parseSchedule,
+  weekIndexFromDay,
+} from "./src/domain/schedule";
+import type { DefaultScheduleEntry, Gate, Schedule, ScheduleWeek } from "./src/domain/schedule";
+import {
   Hand,
   Bone,
   Orbit,
@@ -15,45 +26,6 @@ import {
   Upload,
   ChevronDown,
 } from "lucide-react";
-
-type Gate = { id: string; title: string; detail: string[] };
-
-type ScheduleExercise = {
-  id?: string;
-  name: string;
-  purpose: string;
-  instructions: string;
-  progression?: string;
-  link?: string;
-};
-
-type ScheduleSession = {
-  id: string;
-  title: string;
-  timeOfDay?: string | null;
-  exercises: ScheduleExercise[];
-};
-
-type SchedulePeriod = { id: string; label: string; startDay: number; endDay: number };
-
-type ScheduleAnchor = { type?: string; at: string };
-
-type ScheduleMeta = {
-  anchor?: ScheduleAnchor;
-  periods?: SchedulePeriod[];
-  weekLengthDays?: number;
-  [k: string]: any;
-};
-
-type ScheduleWeek = {
-  weekNumber: number;
-  label?: string;
-  description?: string;
-  gates: Gate[];
-  sessions: ScheduleSession[];
-};
-
-type Schedule = { version: number; metadata?: ScheduleMeta; weeks: ScheduleWeek[] };
 
 type Item = { id: string; title: string; icon: keyof typeof ICONS; how: string[]; why: string; progress?: string };
 
@@ -76,51 +48,6 @@ const ICONS = {
   sleep: Moon,
 } as const;
 
-const TEMPLATE_SCHEDULE: Schedule = {
-  version: 1,
-  metadata: {
-    template: true,
-    anchor: { type: "surgeryEnd", at: "2026-02-13T16:00:00+01:00" },
-    weekLengthDays: 7,
-    periods: [
-      { id: "p0", label: "Week 0–2 (Protection)", startDay: 0, endDay: 13 },
-      { id: "p1", label: "Week 3–4 (PROM)", startDay: 14, endDay: 27 },
-    ],
-  },
-  weeks: [
-    {
-      weekNumber: 0,
-      label: "Template",
-      description: "Upload your schedule JSON (auto-saved).",
-      gates: [
-        {
-          id: "pain-rules",
-          title: "Pain rules met",
-          detail: [
-            "Rest pain target ≤ 3/10.",
-            "During exercises max 6/10.",
-            "Return to baseline within 30 minutes.",
-          ],
-        },
-      ],
-      sessions: [
-        {
-          id: "am",
-          title: "Morning",
-          timeOfDay: "08:00",
-          exercises: [
-            {
-              id: "handpump",
-              name: "Hand/wrist pump",
-              purpose: "Promote circulation.",
-              instructions: "Make a fist 20x\nSpread fingers 20x\nWrist circles 10 each direction",
-            },
-          ],
-        },
-      ],
-    },
-  ],
-};
 
 const SCHEDULE_STORAGE_KEY = "recovery_schedule_json_v1";
 const DONE_STORAGE_KEY = "recovery_done_v2";
@@ -168,17 +95,6 @@ function scheduleId(s: Schedule) {
   return hash32(JSON.stringify(slim));
 }
 
-function parseHHMM(t?: string | null) {
-  if (!t) return NaN;
-  const parts = t.trim().split(":");
-  if (parts.length !== 2) return NaN;
-  const h = Number(parts[0]);
-  const m = Number(parts[1]);
-  if (!Number.isFinite(h) || !Number.isFinite(m)) return NaN;
-  if (h < 0 || h > 23 || m < 0 || m > 59) return NaN;
-  return h * 60 + m;
-}
-
 const clsx = (...v: Array<string | false | null | undefined>) => v.filter(Boolean).join(" ");
 
 function iconFor(title: string): keyof typeof ICONS {
@@ -193,93 +109,7 @@ function iconFor(title: string): keyof typeof ICONS {
   return "rotate";
 }
 
-function normalizeMeta(raw: any): ScheduleMeta | undefined {
-  if (!raw || typeof raw !== "object") return undefined;
-  const out: ScheduleMeta = { ...raw };
-  if (raw.anchor && typeof raw.anchor === "object" && typeof raw.anchor.at === "string")
-    out.anchor = { at: String(raw.anchor.at), type: typeof raw.anchor.type === "string" ? raw.anchor.type : undefined };
-  else if (typeof raw.surgeryStart === "string") out.anchor = { at: raw.surgeryStart, type: "surgeryStart" };
-  if (Array.isArray(raw.periods))
-    out.periods = raw.periods
-      .filter((p: any) => p && typeof p === "object")
-      .map((p: any) => ({
-        id: String(p.id ?? ""),
-        label: String(p.label ?? ""),
-        startDay: Number(p.startDay),
-        endDay: Number(p.endDay),
-      }))
-      .filter((p: any) => p.id && p.label && Number.isFinite(p.startDay) && Number.isFinite(p.endDay) && p.endDay >= p.startDay);
-  if (Number.isFinite(Number(raw.weekLengthDays))) out.weekLengthDays = Number(raw.weekLengthDays);
-  return out;
-}
-
-function getAnchorDate(schedule: Schedule) {
-  const at = schedule.metadata?.anchor?.at;
-  const d = at ? new Date(at) : new Date(NaN);
-  if (Number.isFinite(d.getTime())) return d;
-  const legacy = schedule.metadata?.surgeryStart;
-  const d2 = typeof legacy === "string" ? new Date(legacy) : new Date(NaN);
-  if (Number.isFinite(d2.getTime())) return d2;
-  return new Date();
-}
-
 const postOpDay = (now: Date, anchor: Date) => Math.floor((now.getTime() - anchor.getTime()) / 86400000);
-
-function activePeriod(meta: ScheduleMeta | undefined, day: number): SchedulePeriod | null {
-  const ps = meta?.periods;
-  if (!Array.isArray(ps) || !ps.length) return null;
-  for (const p of ps) if (day >= p.startDay && day <= p.endDay) return p;
-  return null;
-}
-
-function weekIndexFromDay(meta: ScheduleMeta | undefined, day: number) {
-  const wlen = Number.isFinite(Number(meta?.weekLengthDays)) ? Number(meta?.weekLengthDays) : 7;
-  return Math.floor(day / Math.max(1, wlen));
-}
-
-function normalizeSchedule(raw: any): Schedule | null {
-  if (!raw || typeof raw !== "object") return null;
-  if (!Array.isArray(raw.weeks)) return null;
-  const version = Number(raw.version);
-  if (!Number.isFinite(version)) return null;
-
-  const weeks: ScheduleWeek[] = raw.weeks
-    .filter((w: any) => w && typeof w === "object" && Number.isFinite(Number(w.weekNumber)) && Array.isArray(w.sessions))
-    .map((w: any) => ({
-      weekNumber: Number(w.weekNumber),
-      label: typeof w.label === "string" ? w.label : undefined,
-      description: typeof w.description === "string" ? w.description : undefined,
-      gates: Array.isArray(w.gates)
-        ? w.gates
-            .filter((g: any) => g && typeof g === "object" && typeof g.id === "string" && typeof g.title === "string")
-            .map((g: any) => ({
-              id: String(g.id),
-              title: String(g.title),
-              detail: Array.isArray(g.detail) ? g.detail.map((x: any) => String(x)) : [],
-            }))
-        : [],
-      sessions: w.sessions
-        .filter((s: any) => s && typeof s === "object" && typeof s.id === "string" && Array.isArray(s.exercises))
-        .map((s: any) => ({
-          id: String(s.id),
-          title: typeof s.title === "string" ? s.title : String(s.id),
-          timeOfDay: typeof s.timeOfDay === "string" ? s.timeOfDay : s.timeOfDay ?? null,
-          exercises: s.exercises
-            .filter((e: any) => e && typeof e === "object")
-            .map((e: any) => ({
-              id: typeof e.id === "string" ? e.id : undefined,
-              name: String(e.name ?? ""),
-              purpose: String(e.purpose ?? ""),
-              instructions: String(e.instructions ?? ""),
-              progression: typeof e.progression === "string" ? e.progression : undefined,
-              link: typeof e.link === "string" ? e.link : undefined,
-            })),
-        })),
-    }));
-
-  if (!weeks.length) return null;
-  return { version, metadata: normalizeMeta(raw.metadata), weeks };
-}
 
 function buildSessionsFromWeek(week: ScheduleWeek): Session[] {
   return week.sessions
@@ -315,7 +145,8 @@ function loadSchedule(): Schedule {
     const raw = localStorage.getItem(SCHEDULE_STORAGE_KEY);
     if (!raw) return TEMPLATE_SCHEDULE;
     const parsed = JSON.parse(raw);
-    return normalizeSchedule(parsed) ?? TEMPLATE_SCHEDULE;
+    const result = parseSchedule(parsed);
+    return result.ok ? result.value : TEMPLATE_SCHEDULE;
   } catch {
     return TEMPLATE_SCHEDULE;
   }
@@ -498,12 +329,45 @@ export default function App() {
       return false;
     }
   });
+  const [defaultSchedules, setDefaultSchedules] = useState<DefaultScheduleEntry[]>([]);
+  const [selectedDefaultId, setSelectedDefaultId] = useState("");
+  const [defaultMenuOpen, setDefaultMenuOpen] = useState(false);
+  const [defaultState, setDefaultState] = useState<{ loading: boolean; error: string | null }>({ loading: false, error: null });
   useEffect(() => {
     try {
       localStorage.setItem(THEME_KEY, dm ? "d" : "l");
     } catch {}
   }, [dm]);
   useEffect(() => saveSchedule(schedule), [schedule]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    let cancelled = false;
+    loadDefaultScheduleManifest()
+      .then((entries) => {
+        if (cancelled) return;
+        setDefaultSchedules(entries);
+        setSelectedDefaultId((cur) => cur || entries[0]?.id || "");
+      })
+      .catch((err: any) => {
+        if (cancelled) return;
+        setDefaultState((prev) => ({ ...prev, error: err instanceof Error ? err.message : "Failed to load default schedules." }));
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!defaultMenuOpen) return;
+    const onPointerDown = (e: MouseEvent) => {
+      const node = defaultsRef.current;
+      if (!node) return;
+      if (!node.contains(e.target as Node)) setDefaultMenuOpen(false);
+    };
+    document.addEventListener("mousedown", onPointerDown);
+    return () => document.removeEventListener("mousedown", onPointerDown);
+  }, [defaultMenuOpen]);
 
   const weeks = useMemo(() => schedule.weeks.slice().sort((a, b) => a.weekNumber - b.weekNumber), [schedule]);
   const schedId = useMemo(() => scheduleId(schedule), [schedule]);
@@ -561,6 +425,7 @@ export default function App() {
   const [open, setOpen] = useState<OpenState | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const fileRef = useRef<HTMLInputElement | null>(null);
+  const defaultsRef = useRef<HTMLDivElement | null>(null);
   const dotRefs = useRef<Record<string, HTMLButtonElement | null>>({});
   const [dotPos, setDotPos] = useState<Record<string, number>>({});
 
@@ -676,11 +541,27 @@ export default function App() {
     fr.onload = () => {
       try {
         const parsed = JSON.parse(String(fr.result ?? ""));
-        const norm = normalizeSchedule(parsed);
-        if (norm) setSchedule(norm);
+        const result = parseSchedule(parsed);
+        if (result.ok) setSchedule(result.value);
       } catch {}
     };
     fr.readAsText(file);
+  };
+
+  const applyDefaultSchedule = async (scheduleId?: string) => {
+    const id = scheduleId ?? selectedDefaultId;
+    const entry = defaultSchedules.find((x) => x.id === id);
+    if (!entry) return;
+    setDefaultState({ loading: true, error: null });
+    try {
+      const next = await loadDefaultSchedule(entry);
+      setSchedule(next);
+      setSelectedDefaultId(entry.id);
+      setDefaultMenuOpen(false);
+      setDefaultState({ loading: false, error: null });
+    } catch (err: any) {
+      setDefaultState({ loading: false, error: err instanceof Error ? err.message : "Failed to load default schedule." });
+    }
   };
 
   const resetToday = () => {
@@ -713,21 +594,84 @@ export default function App() {
           </div>
 
           <div className="topr">
-            <motion.button type="button" whileTap={{ scale: 0.98 }} className="tb" onClick={() => setDm((v) => !v)} aria-label="Toggle dark mode" title="Theme">
-              <motion.span className="tk" animate={{ x: dm ? 26 : 0 }} transition={{ duration: 0.18 }} />
-              <Sun className={clsx("ti", dm && "off")} />
-              <Moon className={clsx("ti", !dm && "off")} />
-            </motion.button>
-            <motion.button
-              type="button"
-              whileTap={{ scale: 0.98 }}
-              className="ib"
-              onClick={() => fileRef.current?.click()}
-              title="Upload"
-              aria-label="Upload"
-            >
-              <Upload className="h-4 w-4" />
-            </motion.button>
+            <div className="tb" role="group" aria-label="Theme toggle">
+              <motion.button
+                type="button"
+                whileTap={{ scale: 0.98 }}
+                className={clsx("tseg", !dm && "tsegOn")}
+                onClick={() => setDm(false)}
+                aria-label="Light mode"
+                title="Light mode"
+              >
+                <Sun className="ti" />
+              </motion.button>
+              <motion.button
+                type="button"
+                whileTap={{ scale: 0.98 }}
+                className={clsx("tseg", dm && "tsegOn")}
+                onClick={() => setDm(true)}
+                aria-label="Dark mode"
+                title="Dark mode"
+              >
+                <Moon className="ti" />
+              </motion.button>
+            </div>
+            <div ref={defaultsRef} className={clsx("upl", defaultMenuOpen && "uplOn")}> 
+              <motion.button
+                type="button"
+                whileTap={{ scale: 0.98 }}
+                className="uplPart uplMain"
+                onClick={() => fileRef.current?.click()}
+                title="Upload"
+                aria-label="Upload"
+              >
+                <Upload className="h-[15px] w-[15px]" />
+              </motion.button>
+              <div className="uplDiv" aria-hidden />
+              <motion.button
+                type="button"
+                whileTap={{ scale: 0.98 }}
+                className="uplPart uplChevron"
+                onClick={() => setDefaultMenuOpen((v) => !v)}
+                title="Default schedules"
+                aria-label="Default schedules"
+                aria-expanded={defaultMenuOpen}
+              >
+                <ChevronDown className={clsx("h-4 w-4", "car", defaultMenuOpen && "carOn")} />
+              </motion.button>
+
+              <AnimatePresence>
+                {defaultMenuOpen && (
+                  <motion.div
+                    className="uplMenu"
+                    initial={{ opacity: 0, y: -6, scale: 0.98 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -6, scale: 0.98 }}
+                    transition={{ duration: 0.14 }}
+                  >
+                    {!defaultSchedules.length ? (
+                      <div className="uplIt mut">No defaults found</div>
+                    ) : (
+                      defaultSchedules.map((entry) => {
+                        const active = selectedDefaultId === entry.id;
+                        return (
+                          <button
+                            key={entry.id}
+                            type="button"
+                            className={clsx("uplIt", active && "uplItOn")}
+                            onClick={() => applyDefaultSchedule(entry.id)}
+                            disabled={defaultState.loading}
+                          >
+                            <span>{entry.label}</span>
+                          </button>
+                        );
+                      })
+                    )}
+                    {defaultState.error ? <div className="uplErr">{defaultState.error}</div> : null}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
             <div className="mut">{todayKey()}</div>
           </div>
         </div>
@@ -1049,6 +993,18 @@ const css = `
 .pnl:before{content:"";position:absolute;inset:0;border-radius:inherit;background:linear-gradient(180deg,rgba(255,255,255,.85),rgba(255,255,255,0));opacity:.38;pointer-events:none}
 .ph{padding:12px 14px;margin-bottom:10px}
 .phl{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+.upl{position:relative;display:flex;align-items:center;height:36px;border-radius:14px;border:1px solid var(--bd);background:var(--s1);color:var(--txm);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:0 6px 18px rgba(0,0,0,.08);overflow:hidden}
+.uplOn,.upl:hover{border-color:var(--bd2);color:var(--tx)}
+.uplPart{height:100%;display:grid;place-items:center;border:none;background:transparent;color:inherit;padding:0;touch-action:manipulation}
+.uplMain{width:36px}
+.uplMain svg{width:15px;height:15px;stroke-width:1.75;opacity:.88}
+.uplChevron{width:26px}
+.uplDiv{width:1px;height:18px;background:color-mix(in srgb,var(--bd2) 70%,transparent)}
+.uplMenu{position:absolute;right:0;top:42px;min-width:220px;padding:6px;border-radius:14px;border:1px solid var(--bd);background:var(--s2);backdrop-filter:blur(16px) saturate(1.2);-webkit-backdrop-filter:blur(16px) saturate(1.2);box-shadow:0 10px 26px rgba(0,0,0,.14);z-index:15}
+.uplIt{width:100%;display:flex;align-items:center;justify-content:flex-start;text-align:left;border:none;background:transparent;color:var(--tx);padding:8px 10px;border-radius:10px;font-size:13px;line-height:1.25;touch-action:manipulation}
+.uplIt:hover{background:color-mix(in srgb,var(--s1) 70%,transparent)}
+.uplItOn{background:color-mix(in srgb,var(--ac) 18%,transparent)}
+.uplErr{margin-top:6px;padding:6px 8px;font-size:12px;color:color-mix(in srgb,var(--wa) 75%,var(--tx))}
 
 .weekbar{display:flex;gap:10px;overflow:auto;padding:8px 2px;scrollbar-width:none}
 .weekbar::-webkit-scrollbar{display:none}
@@ -1061,10 +1017,11 @@ const css = `
 .ib{width:36px;height:36px;border-radius:14px;display:grid;place-items:center;border:1px solid var(--bd);background:var(--s1);color:var(--txm);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:0 6px 18px rgba(0,0,0,.08);touch-action:manipulation}
 .ib:hover{border-color:var(--bd2);color:var(--tx)}
 
-.tb{position:relative;width:62px;height:36px;border-radius:999px;border:1px solid var(--bd);background:var(--s1);backdrop-filter:blur(14px) saturate(1.2);-webkit-backdrop-filter:blur(14px) saturate(1.2);box-shadow:0 6px 18px rgba(0,0,0,.08);display:flex;align-items:center;justify-content:space-between;padding:0 10px;touch-action:manipulation}
-.tk{position:absolute;top:4px;left:4px;width:28px;height:28px;border-radius:999px;background:var(--s2);border:1px solid var(--bd);box-shadow:0 10px 24px rgba(0,0,0,.12);z-index:0}
-.ti{width:16px;height:16px;z-index:1;color:var(--txm);transition:opacity .12s ease}
-.ti.off{opacity:.35}
+.tb{width:64px;height:36px;border-radius:999px;border:1px solid var(--bd);background:var(--s1);backdrop-filter:blur(14px) saturate(1.2);-webkit-backdrop-filter:blur(14px) saturate(1.2);box-shadow:0 6px 18px rgba(0,0,0,.08);display:grid;grid-template-columns:1fr 1fr;overflow:hidden}
+.tseg{border:none;background:transparent;border-radius:0;display:grid;place-items:center;color:var(--txm);touch-action:manipulation;height:100%;width:100%}
+.tsegOn{background:color-mix(in srgb,var(--s2) 92%,white 8%);color:var(--tx)}
+.tseg + .tseg{border-left:1px solid color-mix(in srgb,var(--bd2) 55%,transparent)}
+.ti{width:16px;height:16px;transition:opacity .12s ease}
 
 .gt{margin-top:12px;padding:12px 14px}
 .gth{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;background:transparent;border:none;padding:0;text-align:left;cursor:pointer;touch-action:manipulation}
