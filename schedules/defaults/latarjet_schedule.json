@@ -1,0 +1,3143 @@
+{
+  "version": 6,
+  "metadata": {
+    "description": "12‑week post‑operative rehabilitation schedule for Latarjet procedure aligned to Protocol 8 (Frisius). Week indexing: week 0 = POD 0–7 after operation. Pain rules: max 6/10 during exercise, return to baseline within 30 minutes, max +3 from baseline, resting pain ≤3. Protocol gates enforced: PROM starts week 3; AROM starts week 5; no resistance until after week 6; no resisted elbow flexion first 6 weeks; immobilizer daytime 5 weeks and night 6 weeks; no overhead work/sport in weeks 7–12; overhead sport after 6 months.",
+    "author": "RecoveryMD",
+    "created": "2026-03-03",
+    "notes": "This schedule keeps the original JSON structure (version/metadata/weeks/sessions/exercises/gates). All text is English. Strength sessions in weeks 7–11 are explicitly labeled as 3×/week.",
+    "anchor": {
+      "type": "surgeryEnd",
+      "at": "2026-02-13T16:00:00+01:00"
+    },
+    "weekLengthDays": 7,
+    "periods": [
+      {
+        "id": "p0",
+        "label": "Weeks 0–2 (Protection)",
+        "startDay": 0,
+        "endDay": 20
+      },
+      {
+        "id": "p1",
+        "label": "Weeks 3–4 (PROM)",
+        "startDay": 21,
+        "endDay": 34
+      },
+      {
+        "id": "p2",
+        "label": "Weeks 5–6 (AROM)",
+        "startDay": 35,
+        "endDay": 48
+      },
+      {
+        "id": "p3",
+        "label": "Weeks 7+ (Coordination/Strength build)",
+        "startDay": 49,
+        "endDay": 83
+      }
+    ]
+  },
+  "weeks": [
+    {
+      "weekNumber": 0,
+      "sessions": [
+        {
+          "id": "w0_s1",
+          "title": "Morning circulation & posture reset",
+          "timeOfDay": "08:00",
+          "exercises": [
+            {
+              "name": "Hand and wrist pumps",
+              "purpose": "Promote blood flow and reduce swelling in the hand and forearm.",
+              "instructions": "Make a fist then open your hand wide 20 times. Spread fingers apart and together 20 times. Rotate wrist 10 times clockwise and 10 times counter-clockwise. Keep shoulder relaxed and forearm supported.",
+              "progression": "Increase repetitions gradually if swelling/stiffness persists."
+            },
+            {
+              "name": "Elbow AROM",
+              "purpose": "Maintain elbow mobility without stressing the shoulder.",
+              "instructions": "With upper arm supported against your body, slowly bend and straighten the elbow 10–15 times. Keep shoulder quiet, do not lift the arm away from the body. No resistance.",
+              "progression": "Increase range gently as tolerated while keeping the shoulder still."
+            },
+            {
+              "name": "Isometric rotator cuff (ER/IR)",
+              "purpose": "Maintain rotator cuff activation without shoulder joint movement.",
+              "instructions": "Elbow at your side, bent ~90°. Place back of hand against a wall (or your other hand) and gently push as if rotating outward, without allowing movement. Hold 5 seconds. Repeat 5 reps. Then palm to wall and gently push inward (IR) 5 seconds, 5 reps. Effort ~20–30%, no visible shoulder movement. Stop if pain increases >+3 from baseline.",
+              "progression": "Progress to 8–10 reps or holds up to 10 seconds only if fully symptom-free and shoulder remains still."
+            },
+            {
+              "name": "Scapular setting",
+              "purpose": "Maintain scapular awareness and reduce guarding from sling posture.",
+              "instructions": "Gently draw shoulder blade back and down. Hold 3–5 seconds and relax. Repeat 6–8 times. Avoid shrugging.",
+              "progression": "Increase hold time gradually (up to 5 seconds) if pain-free and no shoulder hiking."
+            },
+            {
+              "name": "Cervical/Thoracic mobility",
+              "purpose": "Prevent neck and upper-back stiffness due to sling use.",
+              "instructions": "Chin tucks 5 reps (2-second hold). Head rotation left/right 5 reps per side. Side-bend ear toward shoulder 3 reps per side. Then seated thoracic: 5 slow chest-lift breaths + 5 small trunk rotations each side. Keep shoulder relaxed.",
+              "progression": "Increase repetitions slightly as comfort allows. Keep movements small and pain-free."
+            }
+          ]
+        },
+        {
+          "id": "w0_s2",
+          "title": "Midday pendulums & thoracic mobility",
+          "timeOfDay": "12:00",
+          "exercises": [
+            {
+              "name": "Passive pendulums",
+              "purpose": "Gentle, gravity-assisted shoulder motion with minimal muscle activation.",
+              "instructions": "Lean forward with your uninjured hand supported on a table. Let the operated arm hang heavy and relaxed. Use a tiny body sway so the arm swings forward/back, side/side, and small circles. Do 3–4 sets total, 15–30 seconds per set. Stop if shoulder muscles engage or if you feel front-of-shoulder stretch.",
+              "progression": "Increase time before range. Do not increase amplitude if you notice front stretch or guarding."
+            },
+            {
+              "name": "Cervical/Thoracic mobility",
+              "purpose": "Prevent neck and upper-back stiffness due to sling use.",
+              "instructions": "Chin tucks 5 reps (2-second hold). Head rotation left/right 5 reps per side. Side-bend ear toward shoulder 3 reps per side. Then seated thoracic: 5 slow chest-lift breaths + 5 small trunk rotations each side. Keep shoulder relaxed.",
+              "progression": "Increase repetitions slightly as comfort allows. Keep movements small and pain-free."
+            },
+            {
+              "name": "Scapular setting",
+              "purpose": "Maintain scapular awareness and reduce guarding from sling posture.",
+              "instructions": "Gently draw shoulder blade back and down. Hold 3–5 seconds and relax. Repeat 6–8 times. Avoid shrugging.",
+              "progression": "Increase hold time gradually (up to 5 seconds) if pain-free and no shoulder hiking."
+            }
+          ]
+        },
+        {
+          "id": "w0_s3",
+          "title": "Afternoon light mobility & circulation",
+          "timeOfDay": "16:00",
+          "exercises": [
+            {
+              "name": "Hand and wrist pumps",
+              "purpose": "Promote blood flow and reduce swelling in the hand and forearm.",
+              "instructions": "Make a fist then open your hand wide 20 times. Spread fingers apart and together 20 times. Rotate wrist 10 times clockwise and 10 times counter-clockwise. Keep shoulder relaxed and forearm supported.",
+              "progression": "Increase repetitions gradually if swelling/stiffness persists."
+            },
+            {
+              "name": "Elbow AROM",
+              "purpose": "Maintain elbow mobility without stressing the shoulder.",
+              "instructions": "With upper arm supported against your body, slowly bend and straighten the elbow 10–15 times. Keep shoulder quiet, do not lift the arm away from the body. No resistance.",
+              "progression": "Increase range gently as tolerated while keeping the shoulder still."
+            },
+            {
+              "name": "Scapular setting",
+              "purpose": "Maintain scapular awareness and reduce guarding from sling posture.",
+              "instructions": "Gently draw shoulder blade back and down. Hold 3–5 seconds and relax. Repeat 6–8 times. Avoid shrugging.",
+              "progression": "Increase hold time gradually (up to 5 seconds) if pain-free and no shoulder hiking."
+            },
+            {
+              "name": "Pendulums (short)",
+              "purpose": "Maintain gentle passive motion without stretching.",
+              "instructions": "1–2 short sets, 10–15 seconds each direction. Keep it passive and small.",
+              "progression": "Increase duration slightly only if fully relaxed and no front stretch."
+            }
+          ]
+        },
+        {
+          "id": "w0_s4",
+          "title": "Evening relaxation & breathing",
+          "timeOfDay": "20:00",
+          "exercises": [
+            {
+              "name": "Neck gentle mobility",
+              "purpose": "Reduce neck tension and support sleep quality.",
+              "instructions": "Chin tucks 5 reps, head rotations 5 per side. Stay within comfortable range.",
+              "progression": "Increase reps slightly if helpful."
+            },
+            {
+              "name": "Hand and wrist pumps",
+              "purpose": "Promote blood flow and reduce swelling in the hand and forearm.",
+              "instructions": "Make a fist then open your hand wide 20 times. Spread fingers apart and together 20 times. Rotate wrist 10 times clockwise and 10 times counter-clockwise. Keep shoulder relaxed and forearm supported.",
+              "progression": "Increase repetitions gradually if swelling/stiffness persists."
+            },
+            {
+              "name": "Deep breathing",
+              "purpose": "Support relaxation and reduce guarding (useful for sleep quality).",
+              "instructions": "Inhale through nose for 4 seconds, belly expands. Exhale for 6 seconds. Repeat 5 breaths.",
+              "progression": "Increase to 8–10 breaths if helpful."
+            }
+          ]
+        },
+        {
+          "id": "w0_walk",
+          "title": "Daily walking",
+          "timeOfDay": "throughout day",
+          "exercises": [
+            {
+              "name": "Walking",
+              "purpose": "Improve circulation and maintain general conditioning without loading the shoulder.",
+              "instructions": "Do 2 walks of 20–30 minutes or 3 walks of 15–20 minutes. Wear your immobilizer and keep the arm supported. Avoid arm swing with the operated arm.",
+              "progression": "Increase duration gradually as tolerated. Prefer splitting into shorter walks if sling traction discomfort appears."
+            }
+          ]
+        }
+      ],
+      "label": "Week 0 (POD 0–7)",
+      "description": "Protection phase. Immobilizer worn at all times except for hygiene and prescribed exercises. Focus on pain control, wound protection, distal mobility (hand/wrist/elbow), scapular control, and neck/thoracic mobility. No shoulder PROM or AROM beyond passive pendulums.",
+      "gates": [
+        {
+          "id": "wound",
+          "title": "Wound/infection signs OK",
+          "detail": [
+            "No fever or increasing wound pain.",
+            "No spreading redness/warmth, pus, or foul-smelling drainage.",
+            "If unsure: contact your care team promptly."
+          ],
+          "category": "Safety",
+          "priority": 1,
+          "tags": [
+            "wound",
+            "infection"
+          ],
+          "check": {
+            "mode": "manual"
+          },
+          "references": [
+            "Protocol 8: wound monitoring / red flags"
+          ]
+        },
+        {
+          "id": "pain",
+          "title": "Pain rules met",
+          "detail": [
+            "Resting pain ≤ 3/10.",
+            "Exercise pain ≤ 6/10.",
+            "Pain returns to baseline within 30 minutes.",
+            "No increase > +3 points from baseline."
+          ],
+          "category": "Safety",
+          "priority": 1,
+          "tags": [
+            "pain-rules"
+          ],
+          "check": {
+            "mode": "manual"
+          },
+          "references": [
+            "Protocol 8: NPRS rules"
+          ]
+        },
+        {
+          "id": "sling",
+          "title": "Immobilizer compliance",
+          "detail": [
+            "Wear immobilizer during the day through week 5.",
+            "Wear immobilizer at night through week 6.",
+            "Remove only for hygiene and prescribed exercises, always support the arm."
+          ],
+          "category": "Protocol",
+          "priority": 1,
+          "tags": [
+            "sling",
+            "immobilizer"
+          ],
+          "check": {
+            "mode": "manual"
+          },
+          "references": [
+            "Protocol 8: immobilizer rules"
+          ]
+        },
+        {
+          "id": "protect",
+          "title": "Protection rules followed",
+          "detail": [
+            "No resistance exercises through week 6.",
+            "No resisted elbow flexion for the first 6 weeks (biceps brevis / conjoined tendon protection).",
+            "No weight-bearing through the operated arm."
+          ],
+          "category": "Protocol",
+          "priority": 1,
+          "tags": [
+            "no-resistance",
+            "no-biceps",
+            "no-weightbearing"
+          ],
+          "check": {
+            "mode": "manual"
+          },
+          "references": [
+            "Protocol 8: no resistance until after week 6; no resisted elbow flexion for 6 weeks"
+          ]
+        },
+        {
+          "id": "no-shoulder-rom",
+          "title": "No shoulder PROM/AROM yet",
+          "detail": [
+            "Do not actively lift the arm (no AROM).",
+            "Do not stretch the shoulder (no PROM) beyond passive pendulums.",
+            "Pendulums must remain small and relaxed (stop before front stretch)."
+          ],
+          "category": "Protocol",
+          "priority": 1,
+          "tags": [
+            "no-prom",
+            "no-arom"
+          ],
+          "check": {
+            "mode": "manual"
+          },
+          "references": [
+            "Protocol 8: PROM from week 3; AROM from week 5"
+          ]
+        }
+      ]
+    },
+    {
+      "weekNumber": 1,
+      "sessions": [
+        {
+          "id": "w1_s1",
+          "title": "Morning circulation & posture reset",
+          "timeOfDay": "08:00",
+          "exercises": [
+            {
+              "name": "Hand and wrist pumps",
+              "purpose": "Promote blood flow and reduce swelling in the hand and forearm.",
+              "instructions": "Make a fist then open your hand wide 20 times. Spread fingers apart and together 20 times. Rotate wrist 10 times clockwise and 10 times counter-clockwise. Keep shoulder relaxed and forearm supported.",
+              "progression": "Increase repetitions gradually if swelling/stiffness persists."
+            },
+            {
+              "name": "Elbow AROM",
+              "purpose": "Maintain elbow mobility without stressing the shoulder.",
+              "instructions": "With upper arm supported against your body, slowly bend and straighten the elbow 10–15 times. Keep shoulder quiet, do not lift the arm away from the body. No resistance.",
+              "progression": "Increase range gently as tolerated while keeping the shoulder still."
+            },
+            {
+              "name": "Isometric rotator cuff (ER/IR)",
+              "purpose": "Maintain rotator cuff activation without shoulder joint movement.",
+              "instructions": "Elbow at your side, bent ~90°. Place back of hand against a wall (or your other hand) and gently push as if rotating outward, without allowing movement. Hold 5 seconds. Repeat 5 reps. Then palm to wall and gently push inward (IR) 5 seconds, 5 reps. Effort ~20–30%, no visible shoulder movement. Stop if pain increases >+3 from baseline.",
+              "progression": "Progress to 8–10 reps or holds up to 10 seconds only if fully symptom-free and shoulder remains still."
+            },
+            {
+              "name": "Scapular setting",
+              "purpose": "Maintain scapular awareness and reduce guarding from sling posture.",
+              "instructions": "Gently draw shoulder blade back and down. Hold 3–5 seconds and relax. Repeat 6–8 times. Avoid shrugging.",
+              "progression": "Increase hold time gradually (up to 5 seconds) if pain-free and no shoulder hiking."
+            },
+            {
+              "name": "Cervical/Thoracic mobility",
+              "purpose": "Prevent neck and upper-back stiffness due to sling use.",
+              "instructions": "Chin tucks 5 reps (2-second hold). Head rotation left/right 5 reps per side. Side-bend ear toward shoulder 3 reps per side. Then seated thoracic: 5 slow chest-lift breaths + 5 small trunk rotations each side. Keep shoulder relaxed.",
+              "progression": "Increase repetitions slightly as comfort allows. Keep movements small and pain-free."
+            }
+          ]
+        },
+        {
+          "id": "w1_s2",
+          "title": "Midday pendulums & thoracic mobility",
+          "timeOfDay": "12:00",
+          "exercises": [
+            {
+              "name": "Passive pendulums",
+              "purpose": "Gentle, gravity-assisted shoulder motion with minimal muscle activation.",
+              "instructions": "Lean forward with your uninjured hand supported on a table. Let the operated arm hang heavy and relaxed. Use a tiny body sway so the arm swings forward/back, side/side, and small circles. Do 3–4 sets total, 15–30 seconds per set. Stop if shoulder muscles engage or if you feel front-of-shoulder stretch.",
+              "progression": "Increase time before range. Do not increase amplitude if you notice front stretch or guarding."
+            },
+            {
+              "name": "Cervical/Thoracic mobility",
+              "purpose": "Prevent neck and upper-back stiffness due to sling use.",
+              "instructions": "Chin tucks 5 reps (2-second hold). Head rotation left/right 5 reps per side. Side-bend ear toward shoulder 3 reps per side. Then seated thoracic: 5 slow chest-lift breaths + 5 small trunk rotations each side. Keep shoulder relaxed.",
+              "progression": "Increase repetitions slightly as comfort allows. Keep movements small and pain-free."
+            },
+            {
+              "name": "Scapular setting",
+              "purpose": "Maintain scapular awareness and reduce guarding from sling posture.",
+              "instructions": "Gently draw shoulder blade back and down. Hold 3–5 seconds and relax. Repeat 6–8 times. Avoid shrugging.",
+              "progression": "Increase hold time gradually (up to 5 seconds) if pain-free and no shoulder hiking."
+            }
+          ]
+        },
+        {
+          "id": "w1_s3",
+          "title": "Afternoon light mobility & circulation",
+          "timeOfDay": "16:00",
+          "exercises": [
+            {
+              "name": "Hand and wrist pumps",
+              "purpose": "Promote blood flow and reduce swelling in the hand and forearm.",
+              "instructions": "Make a fist then open your hand wide 20 times. Spread fingers apart and together 20 times. Rotate wrist 10 times clockwise and 10 times counter-clockwise. Keep shoulder relaxed and forearm supported.",
+              "progression": "Increase repetitions gradually if swelling/stiffness persists."
+            },
+            {
+              "name": "Elbow AROM",
+              "purpose": "Maintain elbow mobility without stressing the shoulder.",
+              "instructions": "With upper arm supported against your body, slowly bend and straighten the elbow 10–15 times. Keep shoulder quiet, do not lift the arm away from the body. No resistance.",
+              "progression": "Increase range gently as tolerated while keeping the shoulder still."
+            },
+            {
+              "name": "Scapular setting",
+              "purpose": "Maintain scapular awareness and reduce guarding from sling posture.",
+              "instructions": "Gently draw shoulder blade back and down. Hold 3–5 seconds and relax. Repeat 6–8 times. Avoid shrugging.",
+              "progression": "Increase hold time gradually (up to 5 seconds) if pain-free and no shoulder hiking."
+            },
+            {
+              "name": "Pendulums (short)",
+              "purpose": "Maintain gentle passive motion without stretching.",
+              "instructions": "1–2 short sets, 10–15 seconds each direction. Keep it passive and small.",
+              "progression": "Increase duration slightly only if fully relaxed and no front stretch."
+            }
+          ]
+        },
+        {
+          "id": "w1_s4",
+          "title": "Evening relaxation & breathing",
+          "timeOfDay": "20:00",
+          "exercises": [
+            {
+              "name": "Neck gentle mobility",
+              "purpose": "Reduce neck tension and support sleep quality.",
+              "instructions": "Chin tucks 5 reps, head rotations 5 per side. Stay within comfortable range.",
+              "progression": "Increase reps slightly if helpful."
+            },
+            {
+              "name": "Hand and wrist pumps",
+              "purpose": "Promote blood flow and reduce swelling in the hand and forearm.",
+              "instructions": "Make a fist then open your hand wide 20 times. Spread fingers apart and together 20 times. Rotate wrist 10 times clockwise and 10 times counter-clockwise. Keep shoulder relaxed and forearm supported.",
+              "progression": "Increase repetitions gradually if swelling/stiffness persists."
+            },
+            {
+              "name": "Deep breathing",
+              "purpose": "Support relaxation and reduce guarding (useful for sleep quality).",
+              "instructions": "Inhale through nose for 4 seconds, belly expands. Exhale for 6 seconds. Repeat 5 breaths.",
+              "progression": "Increase to 8–10 breaths if helpful."
+            }
+          ]
+        },
+        {
+          "id": "w1_walk",
+          "title": "Daily walking",
+          "timeOfDay": "throughout day",
+          "exercises": [
+            {
+              "name": "Walking",
+              "purpose": "Improve circulation and maintain general conditioning without loading the shoulder.",
+              "instructions": "Do 2 walks of 20–30 minutes or 3 walks of 15–20 minutes. Wear your immobilizer and keep the arm supported. Avoid arm swing with the operated arm.",
+              "progression": "Increase duration gradually as tolerated. Prefer splitting into shorter walks if sling traction discomfort appears."
+            }
+          ]
+        }
+      ],
+      "label": "Week 1 (POD 7–14)",
+      "description": "Protection phase. Immobilizer worn at all times except for hygiene and prescribed exercises. Focus on pain control, wound protection, distal mobility (hand/wrist/elbow), scapular control, and neck/thoracic mobility. No shoulder PROM or AROM beyond passive pendulums.",
+      "gates": [
+        {
+          "id": "wound",
+          "title": "Wound/infection signs OK",
+          "detail": [
+            "No fever or increasing wound pain.",
+            "No spreading redness/warmth, pus, or foul-smelling drainage.",
+            "If unsure: contact your care team promptly."
+          ],
+          "category": "Safety",
+          "priority": 1,
+          "tags": [
+            "wound",
+            "infection"
+          ],
+          "check": {
+            "mode": "manual"
+          },
+          "references": [
+            "Protocol 8: wound monitoring / red flags"
+          ]
+        },
+        {
+          "id": "pain",
+          "title": "Pain rules met",
+          "detail": [
+            "Resting pain ≤ 3/10.",
+            "Exercise pain ≤ 6/10.",
+            "Pain returns to baseline within 30 minutes.",
+            "No increase > +3 points from baseline."
+          ],
+          "category": "Safety",
+          "priority": 1,
+          "tags": [
+            "pain-rules"
+          ],
+          "check": {
+            "mode": "manual"
+          },
+          "references": [
+            "Protocol 8: NPRS rules"
+          ]
+        },
+        {
+          "id": "sling",
+          "title": "Immobilizer compliance",
+          "detail": [
+            "Wear immobilizer during the day through week 5.",
+            "Wear immobilizer at night through week 6.",
+            "Remove only for hygiene and prescribed exercises, always support the arm."
+          ],
+          "category": "Protocol",
+          "priority": 1,
+          "tags": [
+            "sling",
+            "immobilizer"
+          ],
+          "check": {
+            "mode": "manual"
+          },
+          "references": [
+            "Protocol 8: immobilizer rules"
+          ]
+        },
+        {
+          "id": "protect",
+          "title": "Protection rules followed",
+          "detail": [
+            "No resistance exercises through week 6.",
+            "No resisted elbow flexion for the first 6 weeks (biceps brevis / conjoined tendon protection).",
+            "No weight-bearing through the operated arm."
+          ],
+          "category": "Protocol",
+          "priority": 1,
+          "tags": [
+            "no-resistance",
+            "no-biceps",
+            "no-weightbearing"
+          ],
+          "check": {
+            "mode": "manual"
+          },
+          "references": [
+            "Protocol 8: no resistance until after week 6; no resisted elbow flexion for 6 weeks"
+          ]
+        },
+        {
+          "id": "no-shoulder-rom",
+          "title": "No shoulder PROM/AROM yet",
+          "detail": [
+            "Do not actively lift the arm (no AROM).",
+            "Do not stretch the shoulder (no PROM) beyond passive pendulums.",
+            "Pendulums must remain small and relaxed (stop before front stretch)."
+          ],
+          "category": "Protocol",
+          "priority": 1,
+          "tags": [
+            "no-prom",
+            "no-arom"
+          ],
+          "check": {
+            "mode": "manual"
+          },
+          "references": [
+            "Protocol 8: PROM from week 3; AROM from week 5"
+          ]
+        }
+      ]
+    },
+    {
+      "weekNumber": 2,
+      "sessions": [
+        {
+          "id": "w2_s1",
+          "title": "Morning circulation & posture reset",
+          "timeOfDay": "08:00",
+          "exercises": [
+            {
+              "name": "Hand and wrist pumps",
+              "purpose": "Promote blood flow and reduce swelling in the hand and forearm.",
+              "instructions": "Make a fist then open your hand wide 20 times. Spread fingers apart and together 20 times. Rotate wrist 10 times clockwise and 10 times counter-clockwise. Keep shoulder relaxed and forearm supported.",
+              "progression": "Increase repetitions gradually if swelling/stiffness persists."
+            },
+            {
+              "name": "Elbow AROM",
+              "purpose": "Maintain elbow mobility without stressing the shoulder.",
+              "instructions": "With upper arm supported against your body, slowly bend and straighten the elbow 10–15 times. Keep shoulder quiet, do not lift the arm away from the body. No resistance.",
+              "progression": "Increase range gently as tolerated while keeping the shoulder still."
+            },
+            {
+              "name": "Isometric rotator cuff (ER/IR)",
+              "purpose": "Maintain rotator cuff activation without shoulder joint movement.",
+              "instructions": "Elbow at your side, bent ~90°. Place back of hand against a wall (or your other hand) and gently push as if rotating outward, without allowing movement. Hold 5 seconds. Repeat 5 reps. Then palm to wall and gently push inward (IR) 5 seconds, 5 reps. Effort ~20–30%, no visible shoulder movement. Stop if pain increases >+3 from baseline.",
+              "progression": "Progress to 8–10 reps or holds up to 10 seconds only if fully symptom-free and shoulder remains still."
+            },
+            {
+              "name": "Scapular setting",
+              "purpose": "Maintain scapular awareness and reduce guarding from sling posture.",
+              "instructions": "Gently draw shoulder blade back and down. Hold 3–5 seconds and relax. Repeat 6–8 times. Avoid shrugging.",
+              "progression": "Increase hold time gradually (up to 5 seconds) if pain-free and no shoulder hiking."
+            },
+            {
+              "name": "Cervical/Thoracic mobility",
+              "purpose": "Prevent neck and upper-back stiffness due to sling use.",
+              "instructions": "Chin tucks 5 reps (2-second hold). Head rotation left/right 5 reps per side. Side-bend ear toward shoulder 3 reps per side. Then seated thoracic: 5 slow chest-lift breaths + 5 small trunk rotations each side. Keep shoulder relaxed.",
+              "progression": "Increase repetitions slightly as comfort allows. Keep movements small and pain-free."
+            }
+          ]
+        },
+        {
+          "id": "w2_s2",
+          "title": "Midday pendulums & thoracic mobility",
+          "timeOfDay": "12:00",
+          "exercises": [
+            {
+              "name": "Passive pendulums",
+              "purpose": "Gentle, gravity-assisted shoulder motion with minimal muscle activation.",
+              "instructions": "Lean forward with your uninjured hand supported on a table. Let the operated arm hang heavy and relaxed. Use a tiny body sway so the arm swings forward/back, side/side, and small circles. Do 3–4 sets total, 15–30 seconds per set. Stop if shoulder muscles engage or if you feel front-of-shoulder stretch.",
+              "progression": "Increase time before range. Do not increase amplitude if you notice front stretch or guarding."
+            },
+            {
+              "name": "Cervical/Thoracic mobility",
+              "purpose": "Prevent neck and upper-back stiffness due to sling use.",
+              "instructions": "Chin tucks 5 reps (2-second hold). Head rotation left/right 5 reps per side. Side-bend ear toward shoulder 3 reps per side. Then seated thoracic: 5 slow chest-lift breaths + 5 small trunk rotations each side. Keep shoulder relaxed.",
+              "progression": "Increase repetitions slightly as comfort allows. Keep movements small and pain-free."
+            },
+            {
+              "name": "Scapular setting",
+              "purpose": "Maintain scapular awareness and reduce guarding from sling posture.",
+              "instructions": "Gently draw shoulder blade back and down. Hold 3–5 seconds and relax. Repeat 6–8 times. Avoid shrugging.",
+              "progression": "Increase hold time gradually (up to 5 seconds) if pain-free and no shoulder hiking."
+            }
+          ]
+        },
+        {
+          "id": "w2_s3",
+          "title": "Afternoon light mobility & circulation",
+          "timeOfDay": "16:00",
+          "exercises": [
+            {
+              "name": "Hand and wrist pumps",
+              "purpose": "Promote blood flow and reduce swelling in the hand and forearm.",
+              "instructions": "Make a fist then open your hand wide 20 times. Spread fingers apart and together 20 times. Rotate wrist 10 times clockwise and 10 times counter-clockwise. Keep shoulder relaxed and forearm supported.",
+              "progression": "Increase repetitions gradually if swelling/stiffness persists."
+            },
+            {
+              "name": "Elbow AROM",
+              "purpose": "Maintain elbow mobility without stressing the shoulder.",
+              "instructions": "With upper arm supported against your body, slowly bend and straighten the elbow 10–15 times. Keep shoulder quiet, do not lift the arm away from the body. No resistance.",
+              "progression": "Increase range gently as tolerated while keeping the shoulder still."
+            },
+            {
+              "name": "Scapular setting",
+              "purpose": "Maintain scapular awareness and reduce guarding from sling posture.",
+              "instructions": "Gently draw shoulder blade back and down. Hold 3–5 seconds and relax. Repeat 6–8 times. Avoid shrugging.",
+              "progression": "Increase hold time gradually (up to 5 seconds) if pain-free and no shoulder hiking."
+            },
+            {
+              "name": "Pendulums (short)",
+              "purpose": "Maintain gentle passive motion without stretching.",
+              "instructions": "1–2 short sets, 10–15 seconds each direction. Keep it passive and small.",
+              "progression": "Increase duration slightly only if fully relaxed and no front stretch."
+            }
+          ]
+        },
+        {
+          "id": "w2_s4",
+          "title": "Evening relaxation & breathing",
+          "timeOfDay": "20:00",
+          "exercises": [
+            {
+              "name": "Neck gentle mobility",
+              "purpose": "Reduce neck tension and support sleep quality.",
+              "instructions": "Chin tucks 5 reps, head rotations 5 per side. Stay within comfortable range.",
+              "progression": "Increase reps slightly if helpful."
+            },
+            {
+              "name": "Hand and wrist pumps",
+              "purpose": "Promote blood flow and reduce swelling in the hand and forearm.",
+              "instructions": "Make a fist then open your hand wide 20 times. Spread fingers apart and together 20 times. Rotate wrist 10 times clockwise and 10 times counter-clockwise. Keep shoulder relaxed and forearm supported.",
+              "progression": "Increase repetitions gradually if swelling/stiffness persists."
+            },
+            {
+              "name": "Deep breathing",
+              "purpose": "Support relaxation and reduce guarding (useful for sleep quality).",
+              "instructions": "Inhale through nose for 4 seconds, belly expands. Exhale for 6 seconds. Repeat 5 breaths.",
+              "progression": "Increase to 8–10 breaths if helpful."
+            }
+          ]
+        },
+        {
+          "id": "w2_walk",
+          "title": "Daily walking",
+          "timeOfDay": "throughout day",
+          "exercises": [
+            {
+              "name": "Walking",
+              "purpose": "Improve circulation and maintain general conditioning without loading the shoulder.",
+              "instructions": "Do 2 walks of 20–30 minutes or 3 walks of 15–20 minutes. Wear your immobilizer and keep the arm supported. Avoid arm swing with the operated arm.",
+              "progression": "Increase duration gradually as tolerated. Prefer splitting into shorter walks if sling traction discomfort appears."
+            }
+          ]
+        }
+      ],
+      "label": "Week 2 (POD 14–21)",
+      "description": "Protection phase. Immobilizer worn at all times except for hygiene and prescribed exercises. Focus on pain control, wound protection, distal mobility (hand/wrist/elbow), scapular control, and neck/thoracic mobility. No shoulder PROM or AROM beyond passive pendulums.",
+      "gates": [
+        {
+          "id": "wound",
+          "title": "Wound/infection signs OK",
+          "detail": [
+            "No fever or increasing wound pain.",
+            "No spreading redness/warmth, pus, or foul-smelling drainage.",
+            "If unsure: contact your care team promptly."
+          ],
+          "category": "Safety",
+          "priority": 1,
+          "tags": [
+            "wound",
+            "infection"
+          ],
+          "check": {
+            "mode": "manual"
+          },
+          "references": [
+            "Protocol 8: wound monitoring / red flags"
+          ]
+        },
+        {
+          "id": "pain",
+          "title": "Pain rules met",
+          "detail": [
+            "Resting pain ≤ 3/10.",
+            "Exercise pain ≤ 6/10.",
+            "Pain returns to baseline within 30 minutes.",
+            "No increase > +3 points from baseline."
+          ],
+          "category": "Safety",
+          "priority": 1,
+          "tags": [
+            "pain-rules"
+          ],
+          "check": {
+            "mode": "manual"
+          },
+          "references": [
+            "Protocol 8: NPRS rules"
+          ]
+        },
+        {
+          "id": "sling",
+          "title": "Immobilizer compliance",
+          "detail": [
+            "Wear immobilizer during the day through week 5.",
+            "Wear immobilizer at night through week 6.",
+            "Remove only for hygiene and prescribed exercises, always support the arm."
+          ],
+          "category": "Protocol",
+          "priority": 1,
+          "tags": [
+            "sling",
+            "immobilizer"
+          ],
+          "check": {
+            "mode": "manual"
+          },
+          "references": [
+            "Protocol 8: immobilizer rules"
+          ]
+        },
+        {
+          "id": "protect",
+          "title": "Protection rules followed",
+          "detail": [
+            "No resistance exercises through week 6.",
+            "No resisted elbow flexion for the first 6 weeks (biceps brevis / conjoined tendon protection).",
+            "No weight-bearing through the operated arm."
+          ],
+          "category": "Protocol",
+          "priority": 1,
+          "tags": [
+            "no-resistance",
+            "no-biceps",
+            "no-weightbearing"
+          ],
+          "check": {
+            "mode": "manual"
+          },
+          "references": [
+            "Protocol 8: no resistance until after week 6; no resisted elbow flexion for 6 weeks"
+          ]
+        },
+        {
+          "id": "no-shoulder-rom",
+          "title": "No shoulder PROM/AROM yet",
+          "detail": [
+            "Do not actively lift the arm (no AROM).",
+            "Do not stretch the shoulder (no PROM) beyond passive pendulums.",
+            "Pendulums must remain small and relaxed (stop before front stretch)."
+          ],
+          "category": "Protocol",
+          "priority": 1,
+          "tags": [
+            "no-prom",
+            "no-arom"
+          ],
+          "check": {
+            "mode": "manual"
+          },
+          "references": [
+            "Protocol 8: PROM from week 3; AROM from week 5"
+          ]
+        }
+      ]
+    },
+    {
+      "weekNumber": 3,
+      "sessions": [
+        {
+          "id": "w3_s1",
+          "title": "Morning circulation & posture reset",
+          "timeOfDay": "08:00",
+          "exercises": [
+            {
+              "name": "Hand and wrist pumps",
+              "purpose": "Promote blood flow and reduce swelling in the hand and forearm.",
+              "instructions": "Make a fist then open your hand wide 20 times. Spread fingers apart and together 20 times. Rotate wrist 10 times clockwise and 10 times counter-clockwise. Keep shoulder relaxed and forearm supported.",
+              "progression": "Increase repetitions gradually if swelling/stiffness persists."
+            },
+            {
+              "name": "Elbow AROM",
+              "purpose": "Maintain elbow mobility without stressing the shoulder.",
+              "instructions": "With upper arm supported against your body, slowly bend and straighten the elbow 10–15 times. Keep shoulder quiet, do not lift the arm away from the body. No resistance.",
+              "progression": "Increase range gently as tolerated while keeping the shoulder still."
+            },
+            {
+              "name": "Isometric rotator cuff (ER/IR)",
+              "purpose": "Maintain rotator cuff activation without shoulder joint movement.",
+              "instructions": "Elbow at your side, bent ~90°. Place back of hand against a wall (or your other hand) and gently push as if rotating outward, without allowing movement. Hold 5 seconds. Repeat 5 reps. Then palm to wall and gently push inward (IR) 5 seconds, 5 reps. Effort ~20–30%, no visible shoulder movement. Stop if pain increases >+3 from baseline.",
+              "progression": "Progress to 8–10 reps or holds up to 10 seconds only if fully symptom-free and shoulder remains still."
+            },
+            {
+              "name": "Scapular setting",
+              "purpose": "Maintain scapular awareness and reduce guarding from sling posture.",
+              "instructions": "Gently draw shoulder blade back and down. Hold 3–5 seconds and relax. Repeat 6–8 times. Avoid shrugging.",
+              "progression": "Increase hold time gradually (up to 5 seconds) if pain-free and no shoulder hiking."
+            },
+            {
+              "name": "Cervical/Thoracic mobility",
+              "purpose": "Prevent neck and upper-back stiffness due to sling use.",
+              "instructions": "Chin tucks 5 reps (2-second hold). Head rotation left/right 5 reps per side. Side-bend ear toward shoulder 3 reps per side. Then seated thoracic: 5 slow chest-lift breaths + 5 small trunk rotations each side. Keep shoulder relaxed.",
+              "progression": "Increase repetitions slightly as comfort allows. Keep movements small and pain-free."
+            }
+          ]
+        },
+        {
+          "id": "w3_s2",
+          "title": "Midday pendulums & thoracic mobility",
+          "timeOfDay": "12:00",
+          "exercises": [
+            {
+              "name": "Passive pendulums",
+              "purpose": "Gentle, gravity-assisted shoulder motion with minimal muscle activation.",
+              "instructions": "Lean forward with your uninjured hand supported on a table. Let the operated arm hang heavy and relaxed. Use a tiny body sway so the arm swings forward/back, side/side, and small circles. Do 3–4 sets total, 15–30 seconds per set. Stop if shoulder muscles engage or if you feel front-of-shoulder stretch.",
+              "progression": "Increase time before range. Do not increase amplitude if you notice front stretch or guarding."
+            },
+            {
+              "name": "Cervical/Thoracic mobility",
+              "purpose": "Prevent neck and upper-back stiffness due to sling use.",
+              "instructions": "Chin tucks 5 reps (2-second hold). Head rotation left/right 5 reps per side. Side-bend ear toward shoulder 3 reps per side. Then seated thoracic: 5 slow chest-lift breaths + 5 small trunk rotations each side. Keep shoulder relaxed.",
+              "progression": "Increase repetitions slightly as comfort allows. Keep movements small and pain-free."
+            },
+            {
+              "name": "Scapular setting",
+              "purpose": "Maintain scapular awareness and reduce guarding from sling posture.",
+              "instructions": "Gently draw shoulder blade back and down. Hold 3–5 seconds and relax. Repeat 6–8 times. Avoid shrugging.",
+              "progression": "Increase hold time gradually (up to 5 seconds) if pain-free and no shoulder hiking."
+            }
+          ]
+        },
+        {
+          "id": "w3_prom",
+          "title": "Shoulder PROM add-on (time-capped)",
+          "timeOfDay": "13:00",
+          "exercises": [
+            {
+              "name": "PROM setup check (10 seconds)",
+              "purpose": "Ensure movements stay passive and safe.",
+              "instructions": "Before each rep: jaw relaxed, shoulder dropped, elbow supported. Exhale as you move. If you feel the operated shoulder muscles help, reduce range immediately."
+            },
+            {
+              "name": "PROM/AAROM table slide (forward/scaption)",
+              "purpose": "Introduce gentle shoulder PROM/AAROM to reduce stiffness while protecting the repair.",
+              "instructions": "Sit at a table. Place the operated forearm on a towel. Keep shoulder relaxed and heavy. Use your body to slide the arm forward (slight scaption, not straight out to the side). Stop at the first mild stretch or any front pressure. Slide back. 8–12 slow reps.",
+              "progression": "Increase reps to 12–15 before increasing range. Do not force end range."
+            },
+            {
+              "name": "Gentle ER PROM/AAROM at side (towel roll + stick)",
+              "purpose": "Restore external rotation gradually with minimal anterior stress.",
+              "instructions": "Elbow tucked to your side with a small towel roll. Hold a stick (broom handle). Use the non-operated hand to gently guide the operated forearm outward (ER). Keep shoulder relaxed. Stop early (first mild stretch, no front pressure). 6–10 slow reps.",
+              "progression": "Increase reps first. Keep ER conservative and never forced. If you feel guarding, reduce range."
+            },
+            {
+              "name": "Optional third PROM pattern",
+              "purpose": "Only if the first two feel fully relaxed and symptom response is calm.",
+              "instructions": "If you want a 3rd movement, use the scapular-plane abduction table slide for 6–10 reps. Skip if any guarding or front pressure appears."
+            }
+          ]
+        },
+        {
+          "id": "w3_s3",
+          "title": "Afternoon light mobility & circulation",
+          "timeOfDay": "16:00",
+          "exercises": [
+            {
+              "name": "Hand and wrist pumps",
+              "purpose": "Promote blood flow and reduce swelling in the hand and forearm.",
+              "instructions": "Make a fist then open your hand wide 20 times. Spread fingers apart and together 20 times. Rotate wrist 10 times clockwise and 10 times counter-clockwise. Keep shoulder relaxed and forearm supported.",
+              "progression": "Increase repetitions gradually if swelling/stiffness persists."
+            },
+            {
+              "name": "Elbow AROM",
+              "purpose": "Maintain elbow mobility without stressing the shoulder.",
+              "instructions": "With upper arm supported against your body, slowly bend and straighten the elbow 10–15 times. Keep shoulder quiet, do not lift the arm away from the body. No resistance.",
+              "progression": "Increase range gently as tolerated while keeping the shoulder still."
+            },
+            {
+              "name": "Scapular setting",
+              "purpose": "Maintain scapular awareness and reduce guarding from sling posture.",
+              "instructions": "Gently draw shoulder blade back and down. Hold 3–5 seconds and relax. Repeat 6–8 times. Avoid shrugging.",
+              "progression": "Increase hold time gradually (up to 5 seconds) if pain-free and no shoulder hiking."
+            },
+            {
+              "name": "Pendulums (short)",
+              "purpose": "Maintain gentle passive motion without stretching.",
+              "instructions": "1–2 short sets, 10–15 seconds each direction. Keep it passive and small.",
+              "progression": "Increase duration slightly only if fully relaxed and no front stretch."
+            }
+          ]
+        },
+        {
+          "id": "w3_s4",
+          "title": "Evening relaxation & breathing",
+          "timeOfDay": "20:00",
+          "exercises": [
+            {
+              "name": "Neck gentle mobility",
+              "purpose": "Reduce neck tension and support sleep quality.",
+              "instructions": "Chin tucks 5 reps, head rotations 5 per side. Stay within comfortable range.",
+              "progression": "Increase reps slightly if helpful."
+            },
+            {
+              "name": "Hand and wrist pumps",
+              "purpose": "Promote blood flow and reduce swelling in the hand and forearm.",
+              "instructions": "Make a fist then open your hand wide 20 times. Spread fingers apart and together 20 times. Rotate wrist 10 times clockwise and 10 times counter-clockwise. Keep shoulder relaxed and forearm supported.",
+              "progression": "Increase repetitions gradually if swelling/stiffness persists."
+            },
+            {
+              "name": "Deep breathing",
+              "purpose": "Support relaxation and reduce guarding (useful for sleep quality).",
+              "instructions": "Inhale through nose for 4 seconds, belly expands. Exhale for 6 seconds. Repeat 5 breaths.",
+              "progression": "Increase to 8–10 breaths if helpful."
+            }
+          ]
+        },
+        {
+          "id": "w3_walk",
+          "title": "Daily walking",
+          "timeOfDay": "throughout day",
+          "exercises": [
+            {
+              "name": "Walking",
+              "purpose": "Improve circulation and maintain general conditioning without loading the shoulder.",
+              "instructions": "Do 2 walks of 20–30 minutes or 3 walks of 15–20 minutes. Wear your immobilizer and keep the arm supported. Avoid arm swing with the operated arm.",
+              "progression": "Increase duration gradually as tolerated. Prefer splitting into shorter walks if sling traction discomfort appears."
+            }
+          ]
+        }
+      ],
+      "label": "Week 3 (POD 21–28)",
+      "description": "Begin shoulder PROM (pain-guided) as allowed from week 3. Keep sessions short and truly passive. Continue distal mobility, scapular control, pendulums, and neck/thoracic mobility. No AROM yet.",
+      "gates": [
+        {
+          "id": "wound",
+          "title": "Wound/infection signs OK",
+          "detail": [
+            "No fever or increasing wound pain.",
+            "No spreading redness/warmth, pus, or foul-smelling drainage.",
+            "If unsure: contact your care team promptly."
+          ],
+          "category": "Safety",
+          "priority": 1,
+          "tags": [
+            "wound",
+            "infection"
+          ],
+          "check": {
+            "mode": "manual"
+          },
+          "references": [
+            "Protocol 8: wound monitoring / red flags"
+          ]
+        },
+        {
+          "id": "pain",
+          "title": "Pain rules met",
+          "detail": [
+            "Resting pain ≤ 3/10.",
+            "Exercise pain ≤ 6/10.",
+            "Pain returns to baseline within 30 minutes.",
+            "No increase > +3 points from baseline."
+          ],
+          "category": "Safety",
+          "priority": 1,
+          "tags": [
+            "pain-rules"
+          ],
+          "check": {
+            "mode": "manual"
+          },
+          "references": [
+            "Protocol 8: NPRS rules"
+          ]
+        },
+        {
+          "id": "sling",
+          "title": "Immobilizer compliance",
+          "detail": [
+            "Wear immobilizer during the day through week 5.",
+            "Wear immobilizer at night through week 6.",
+            "Remove only for hygiene and prescribed exercises, always support the arm."
+          ],
+          "category": "Protocol",
+          "priority": 1,
+          "tags": [
+            "sling",
+            "immobilizer"
+          ],
+          "check": {
+            "mode": "manual"
+          },
+          "references": [
+            "Protocol 8: immobilizer rules"
+          ]
+        },
+        {
+          "id": "protect",
+          "title": "Protection rules followed",
+          "detail": [
+            "No resistance exercises through week 6.",
+            "No resisted elbow flexion for the first 6 weeks (biceps brevis / conjoined tendon protection).",
+            "No weight-bearing through the operated arm."
+          ],
+          "category": "Protocol",
+          "priority": 1,
+          "tags": [
+            "no-resistance",
+            "no-biceps",
+            "no-weightbearing"
+          ],
+          "check": {
+            "mode": "manual"
+          },
+          "references": [
+            "Protocol 8: no resistance until after week 6; no resisted elbow flexion for 6 weeks"
+          ]
+        },
+        {
+          "id": "prom",
+          "title": "PROM allowed and tolerated (week 3+)",
+          "detail": [
+            "PROM is allowed from week 3 in all directions, pain-guided.",
+            "Keep sessions time-capped (3–7 minutes total).",
+            "No lingering discomfort: must settle to baseline within 30 minutes.",
+            "No next-day increase in stiffness or night pain."
+          ],
+          "category": "Protocol",
+          "priority": 1,
+          "tags": [
+            "prom"
+          ],
+          "check": {
+            "mode": "manual"
+          },
+          "references": [
+            "Protocol 8: PROM from week 3 (pain-guided)"
+          ]
+        },
+        {
+          "id": "no-arom",
+          "title": "No shoulder AROM before week 5",
+          "detail": [
+            "Do not actively lift the arm (AROM begins week 5).",
+            "Keep pendulums passive; do not use pendulums as a stretch."
+          ],
+          "category": "Protocol",
+          "priority": 1,
+          "tags": [
+            "no-arom"
+          ],
+          "check": {
+            "mode": "manual"
+          },
+          "references": [
+            "Protocol 8: AROM from week 5"
+          ]
+        }
+      ]
+    },
+    {
+      "weekNumber": 4,
+      "sessions": [
+        {
+          "id": "w4_s1",
+          "title": "Morning circulation & posture reset",
+          "timeOfDay": "08:00",
+          "exercises": [
+            {
+              "name": "Hand and wrist pumps",
+              "purpose": "Promote blood flow and reduce swelling in the hand and forearm.",
+              "instructions": "Make a fist then open your hand wide 20 times. Spread fingers apart and together 20 times. Rotate wrist 10 times clockwise and 10 times counter-clockwise. Keep shoulder relaxed and forearm supported.",
+              "progression": "Increase repetitions gradually if swelling/stiffness persists."
+            },
+            {
+              "name": "Elbow AROM",
+              "purpose": "Maintain elbow mobility without stressing the shoulder.",
+              "instructions": "With upper arm supported against your body, slowly bend and straighten the elbow 10–15 times. Keep shoulder quiet, do not lift the arm away from the body. No resistance.",
+              "progression": "Increase range gently as tolerated while keeping the shoulder still."
+            },
+            {
+              "name": "Isometric rotator cuff (ER/IR)",
+              "purpose": "Maintain rotator cuff activation without shoulder joint movement.",
+              "instructions": "Elbow at your side, bent ~90°. Place back of hand against a wall (or your other hand) and gently push as if rotating outward, without allowing movement. Hold 5 seconds. Repeat 5 reps. Then palm to wall and gently push inward (IR) 5 seconds, 5 reps. Effort ~20–30%, no visible shoulder movement. Stop if pain increases >+3 from baseline.",
+              "progression": "Progress to 8–10 reps or holds up to 10 seconds only if fully symptom-free and shoulder remains still."
+            },
+            {
+              "name": "Scapular setting",
+              "purpose": "Maintain scapular awareness and reduce guarding from sling posture.",
+              "instructions": "Gently draw shoulder blade back and down. Hold 3–5 seconds and relax. Repeat 6–8 times. Avoid shrugging.",
+              "progression": "Increase hold time gradually (up to 5 seconds) if pain-free and no shoulder hiking."
+            },
+            {
+              "name": "Cervical/Thoracic mobility",
+              "purpose": "Prevent neck and upper-back stiffness due to sling use.",
+              "instructions": "Chin tucks 5 reps (2-second hold). Head rotation left/right 5 reps per side. Side-bend ear toward shoulder 3 reps per side. Then seated thoracic: 5 slow chest-lift breaths + 5 small trunk rotations each side. Keep shoulder relaxed.",
+              "progression": "Increase repetitions slightly as comfort allows. Keep movements small and pain-free."
+            }
+          ]
+        },
+        {
+          "id": "w4_s2",
+          "title": "Midday pendulums & thoracic mobility",
+          "timeOfDay": "12:00",
+          "exercises": [
+            {
+              "name": "Passive pendulums",
+              "purpose": "Gentle, gravity-assisted shoulder motion with minimal muscle activation.",
+              "instructions": "Lean forward with your uninjured hand supported on a table. Let the operated arm hang heavy and relaxed. Use a tiny body sway so the arm swings forward/back, side/side, and small circles. Do 3–4 sets total, 15–30 seconds per set. Stop if shoulder muscles engage or if you feel front-of-shoulder stretch.",
+              "progression": "Increase time before range. Do not increase amplitude if you notice front stretch or guarding."
+            },
+            {
+              "name": "Cervical/Thoracic mobility",
+              "purpose": "Prevent neck and upper-back stiffness due to sling use.",
+              "instructions": "Chin tucks 5 reps (2-second hold). Head rotation left/right 5 reps per side. Side-bend ear toward shoulder 3 reps per side. Then seated thoracic: 5 slow chest-lift breaths + 5 small trunk rotations each side. Keep shoulder relaxed.",
+              "progression": "Increase repetitions slightly as comfort allows. Keep movements small and pain-free."
+            },
+            {
+              "name": "Scapular setting",
+              "purpose": "Maintain scapular awareness and reduce guarding from sling posture.",
+              "instructions": "Gently draw shoulder blade back and down. Hold 3–5 seconds and relax. Repeat 6–8 times. Avoid shrugging.",
+              "progression": "Increase hold time gradually (up to 5 seconds) if pain-free and no shoulder hiking."
+            }
+          ]
+        },
+        {
+          "id": "w4_prom",
+          "title": "Shoulder PROM add-on (time-capped)",
+          "timeOfDay": "13:00",
+          "exercises": [
+            {
+              "name": "PROM setup check (10 seconds)",
+              "purpose": "Ensure movements stay passive and safe.",
+              "instructions": "Before each rep: jaw relaxed, shoulder dropped, elbow supported. Exhale as you move. If you feel the operated shoulder muscles help, reduce range immediately."
+            },
+            {
+              "name": "PROM/AAROM table slide (forward/scaption)",
+              "purpose": "Introduce gentle shoulder PROM/AAROM to reduce stiffness while protecting the repair.",
+              "instructions": "Sit at a table. Place the operated forearm on a towel. Keep shoulder relaxed and heavy. Use your body to slide the arm forward (slight scaption, not straight out to the side). Stop at the first mild stretch or any front pressure. Slide back. 8–12 slow reps.",
+              "progression": "Increase reps to 12–15 before increasing range. Do not force end range."
+            },
+            {
+              "name": "Gentle ER PROM/AAROM at side (towel roll + stick)",
+              "purpose": "Restore external rotation gradually with minimal anterior stress.",
+              "instructions": "Elbow tucked to your side with a small towel roll. Hold a stick (broom handle). Use the non-operated hand to gently guide the operated forearm outward (ER). Keep shoulder relaxed. Stop early (first mild stretch, no front pressure). 6–10 slow reps.",
+              "progression": "Increase reps first. Keep ER conservative and never forced. If you feel guarding, reduce range."
+            },
+            {
+              "name": "Optional third PROM pattern",
+              "purpose": "Only if the first two feel fully relaxed and symptom response is calm.",
+              "instructions": "If you want a 3rd movement, use the scapular-plane abduction table slide for 6–10 reps. Skip if any guarding or front pressure appears."
+            }
+          ]
+        },
+        {
+          "id": "w4_s3",
+          "title": "Afternoon light mobility & circulation",
+          "timeOfDay": "16:00",
+          "exercises": [
+            {
+              "name": "Hand and wrist pumps",
+              "purpose": "Promote blood flow and reduce swelling in the hand and forearm.",
+              "instructions": "Make a fist then open your hand wide 20 times. Spread fingers apart and together 20 times. Rotate wrist 10 times clockwise and 10 times counter-clockwise. Keep shoulder relaxed and forearm supported.",
+              "progression": "Increase repetitions gradually if swelling/stiffness persists."
+            },
+            {
+              "name": "Elbow AROM",
+              "purpose": "Maintain elbow mobility without stressing the shoulder.",
+              "instructions": "With upper arm supported against your body, slowly bend and straighten the elbow 10–15 times. Keep shoulder quiet, do not lift the arm away from the body. No resistance.",
+              "progression": "Increase range gently as tolerated while keeping the shoulder still."
+            },
+            {
+              "name": "Scapular setting",
+              "purpose": "Maintain scapular awareness and reduce guarding from sling posture.",
+              "instructions": "Gently draw shoulder blade back and down. Hold 3–5 seconds and relax. Repeat 6–8 times. Avoid shrugging.",
+              "progression": "Increase hold time gradually (up to 5 seconds) if pain-free and no shoulder hiking."
+            },
+            {
+              "name": "Pendulums (short)",
+              "purpose": "Maintain gentle passive motion without stretching.",
+              "instructions": "1–2 short sets, 10–15 seconds each direction. Keep it passive and small.",
+              "progression": "Increase duration slightly only if fully relaxed and no front stretch."
+            }
+          ]
+        },
+        {
+          "id": "w4_s4",
+          "title": "Evening relaxation & breathing",
+          "timeOfDay": "20:00",
+          "exercises": [
+            {
+              "name": "Neck gentle mobility",
+              "purpose": "Reduce neck tension and support sleep quality.",
+              "instructions": "Chin tucks 5 reps, head rotations 5 per side. Stay within comfortable range.",
+              "progression": "Increase reps slightly if helpful."
+            },
+            {
+              "name": "Hand and wrist pumps",
+              "purpose": "Promote blood flow and reduce swelling in the hand and forearm.",
+              "instructions": "Make a fist then open your hand wide 20 times. Spread fingers apart and together 20 times. Rotate wrist 10 times clockwise and 10 times counter-clockwise. Keep shoulder relaxed and forearm supported.",
+              "progression": "Increase repetitions gradually if swelling/stiffness persists."
+            },
+            {
+              "name": "Deep breathing",
+              "purpose": "Support relaxation and reduce guarding (useful for sleep quality).",
+              "instructions": "Inhale through nose for 4 seconds, belly expands. Exhale for 6 seconds. Repeat 5 breaths.",
+              "progression": "Increase to 8–10 breaths if helpful."
+            }
+          ]
+        },
+        {
+          "id": "w4_walk",
+          "title": "Daily walking",
+          "timeOfDay": "throughout day",
+          "exercises": [
+            {
+              "name": "Walking",
+              "purpose": "Improve circulation and maintain general conditioning without loading the shoulder.",
+              "instructions": "Do 2 walks of 20–30 minutes or 3 walks of 15–20 minutes. Wear your immobilizer and keep the arm supported. Avoid arm swing with the operated arm.",
+              "progression": "Increase duration gradually as tolerated. Prefer splitting into shorter walks if sling traction discomfort appears."
+            }
+          ]
+        }
+      ],
+      "label": "Week 4 (POD 28–35)",
+      "description": "Begin shoulder PROM (pain-guided) as allowed from week 3. Keep sessions short and truly passive. Continue distal mobility, scapular control, pendulums, and neck/thoracic mobility. No AROM yet.",
+      "gates": [
+        {
+          "id": "wound",
+          "title": "Wound/infection signs OK",
+          "detail": [
+            "No fever or increasing wound pain.",
+            "No spreading redness/warmth, pus, or foul-smelling drainage.",
+            "If unsure: contact your care team promptly."
+          ],
+          "category": "Safety",
+          "priority": 1,
+          "tags": [
+            "wound",
+            "infection"
+          ],
+          "check": {
+            "mode": "manual"
+          },
+          "references": [
+            "Protocol 8: wound monitoring / red flags"
+          ]
+        },
+        {
+          "id": "pain",
+          "title": "Pain rules met",
+          "detail": [
+            "Resting pain ≤ 3/10.",
+            "Exercise pain ≤ 6/10.",
+            "Pain returns to baseline within 30 minutes.",
+            "No increase > +3 points from baseline."
+          ],
+          "category": "Safety",
+          "priority": 1,
+          "tags": [
+            "pain-rules"
+          ],
+          "check": {
+            "mode": "manual"
+          },
+          "references": [
+            "Protocol 8: NPRS rules"
+          ]
+        },
+        {
+          "id": "sling",
+          "title": "Immobilizer compliance",
+          "detail": [
+            "Wear immobilizer during the day through week 5.",
+            "Wear immobilizer at night through week 6.",
+            "Remove only for hygiene and prescribed exercises, always support the arm."
+          ],
+          "category": "Protocol",
+          "priority": 1,
+          "tags": [
+            "sling",
+            "immobilizer"
+          ],
+          "check": {
+            "mode": "manual"
+          },
+          "references": [
+            "Protocol 8: immobilizer rules"
+          ]
+        },
+        {
+          "id": "protect",
+          "title": "Protection rules followed",
+          "detail": [
+            "No resistance exercises through week 6.",
+            "No resisted elbow flexion for the first 6 weeks (biceps brevis / conjoined tendon protection).",
+            "No weight-bearing through the operated arm."
+          ],
+          "category": "Protocol",
+          "priority": 1,
+          "tags": [
+            "no-resistance",
+            "no-biceps",
+            "no-weightbearing"
+          ],
+          "check": {
+            "mode": "manual"
+          },
+          "references": [
+            "Protocol 8: no resistance until after week 6; no resisted elbow flexion for 6 weeks"
+          ]
+        },
+        {
+          "id": "prom",
+          "title": "PROM allowed and tolerated (week 3+)",
+          "detail": [
+            "PROM is allowed from week 3 in all directions, pain-guided.",
+            "Keep sessions time-capped (3–7 minutes total).",
+            "No lingering discomfort: must settle to baseline within 30 minutes.",
+            "No next-day increase in stiffness or night pain."
+          ],
+          "category": "Protocol",
+          "priority": 1,
+          "tags": [
+            "prom"
+          ],
+          "check": {
+            "mode": "manual"
+          },
+          "references": [
+            "Protocol 8: PROM from week 3 (pain-guided)"
+          ]
+        },
+        {
+          "id": "no-arom",
+          "title": "No shoulder AROM before week 5",
+          "detail": [
+            "Do not actively lift the arm (AROM begins week 5).",
+            "Keep pendulums passive; do not use pendulums as a stretch."
+          ],
+          "category": "Protocol",
+          "priority": 1,
+          "tags": [
+            "no-arom"
+          ],
+          "check": {
+            "mode": "manual"
+          },
+          "references": [
+            "Protocol 8: AROM from week 5"
+          ]
+        },
+        {
+          "id": "prom-frequency",
+          "title": "PROM frequency optional increase (week 4)",
+          "detail": [
+            "A second PROM micro-dose (same 3–5 minutes) is optional if response is calm for 3 consecutive days.",
+            "If next-day tightness increases, revert to once daily for 48 hours."
+          ],
+          "category": "Progression",
+          "priority": 2,
+          "tags": [
+            "prom",
+            "progression"
+          ],
+          "check": {
+            "mode": "manual"
+          },
+          "references": [
+            "Deep research: criterion-based progression anchored to protocol"
+          ]
+        }
+      ]
+    },
+    {
+      "weekNumber": 5,
+      "sessions": [
+        {
+          "id": "w5_s1",
+          "title": "Morning circulation & posture reset",
+          "timeOfDay": "08:00",
+          "exercises": [
+            {
+              "name": "Hand and wrist pumps",
+              "purpose": "Promote blood flow and reduce swelling in the hand and forearm.",
+              "instructions": "Make a fist then open your hand wide 20 times. Spread fingers apart and together 20 times. Rotate wrist 10 times clockwise and 10 times counter-clockwise. Keep shoulder relaxed and forearm supported.",
+              "progression": "Increase repetitions gradually if swelling/stiffness persists."
+            },
+            {
+              "name": "Elbow AROM",
+              "purpose": "Maintain elbow mobility without stressing the shoulder.",
+              "instructions": "With upper arm supported against your body, slowly bend and straighten the elbow 10–15 times. Keep shoulder quiet, do not lift the arm away from the body. No resistance.",
+              "progression": "Increase range gently as tolerated while keeping the shoulder still."
+            },
+            {
+              "name": "Isometric rotator cuff (ER/IR)",
+              "purpose": "Maintain rotator cuff activation without shoulder joint movement.",
+              "instructions": "Elbow at your side, bent ~90°. Place back of hand against a wall (or your other hand) and gently push as if rotating outward, without allowing movement. Hold 5 seconds. Repeat 5 reps. Then palm to wall and gently push inward (IR) 5 seconds, 5 reps. Effort ~20–30%, no visible shoulder movement. Stop if pain increases >+3 from baseline.",
+              "progression": "Progress to 8–10 reps or holds up to 10 seconds only if fully symptom-free and shoulder remains still."
+            },
+            {
+              "name": "Scapular setting",
+              "purpose": "Maintain scapular awareness and reduce guarding from sling posture.",
+              "instructions": "Gently draw shoulder blade back and down. Hold 3–5 seconds and relax. Repeat 6–8 times. Avoid shrugging.",
+              "progression": "Increase hold time gradually (up to 5 seconds) if pain-free and no shoulder hiking."
+            },
+            {
+              "name": "Cervical/Thoracic mobility",
+              "purpose": "Prevent neck and upper-back stiffness due to sling use.",
+              "instructions": "Chin tucks 5 reps (2-second hold). Head rotation left/right 5 reps per side. Side-bend ear toward shoulder 3 reps per side. Then seated thoracic: 5 slow chest-lift breaths + 5 small trunk rotations each side. Keep shoulder relaxed.",
+              "progression": "Increase repetitions slightly as comfort allows. Keep movements small and pain-free."
+            }
+          ]
+        },
+        {
+          "id": "w5_s2",
+          "title": "Midday pendulums & thoracic mobility",
+          "timeOfDay": "12:00",
+          "exercises": [
+            {
+              "name": "Passive pendulums",
+              "purpose": "Gentle, gravity-assisted shoulder motion with minimal muscle activation.",
+              "instructions": "Lean forward with your uninjured hand supported on a table. Let the operated arm hang heavy and relaxed. Use a tiny body sway so the arm swings forward/back, side/side, and small circles. Do 3–4 sets total, 15–30 seconds per set. Stop if shoulder muscles engage or if you feel front-of-shoulder stretch.",
+              "progression": "Increase time before range. Do not increase amplitude if you notice front stretch or guarding."
+            },
+            {
+              "name": "Cervical/Thoracic mobility",
+              "purpose": "Prevent neck and upper-back stiffness due to sling use.",
+              "instructions": "Chin tucks 5 reps (2-second hold). Head rotation left/right 5 reps per side. Side-bend ear toward shoulder 3 reps per side. Then seated thoracic: 5 slow chest-lift breaths + 5 small trunk rotations each side. Keep shoulder relaxed.",
+              "progression": "Increase repetitions slightly as comfort allows. Keep movements small and pain-free."
+            },
+            {
+              "name": "Scapular setting",
+              "purpose": "Maintain scapular awareness and reduce guarding from sling posture.",
+              "instructions": "Gently draw shoulder blade back and down. Hold 3–5 seconds and relax. Repeat 6–8 times. Avoid shrugging.",
+              "progression": "Increase hold time gradually (up to 5 seconds) if pain-free and no shoulder hiking."
+            }
+          ]
+        },
+        {
+          "id": "w5_arom",
+          "title": "Shoulder AROM add-on (quality-focused)",
+          "timeOfDay": "13:00",
+          "exercises": [
+            {
+              "name": "Warm-up pendulums (very small)",
+              "purpose": "Reduce guarding before AROM.",
+              "instructions": "1–2 short sets of passive pendulums (10–20 seconds), small range. Stop before any front stretch."
+            },
+            {
+              "name": "AROM scaption (quality-focused)",
+              "purpose": "Begin active shoulder motion with high movement quality (protocol allows AROM from week 5).",
+              "instructions": "Standing or seated. Lift the arm in the scapular plane (about 30° forward from your side) in a small, smooth arc. Stop before shrugging or guarding. 2×8–12 slow reps. Thumb up if comfortable.",
+              "progression": "Increase reps before increasing height. If shoulder hiking appears, reduce range and slow down."
+            },
+            {
+              "name": "AROM ER at side (elbow tucked)",
+              "purpose": "Begin active external rotation with elbow supported (pain-guided).",
+              "instructions": "Elbow at your side, bent ~90°, towel roll between elbow and torso. Rotate forearm outward slowly, small range, then return. 2×8–12 slow reps. Stop if you feel front pressure or guarding.",
+              "progression": "Increase reps before range. Keep movement slow and controlled."
+            },
+            {
+              "name": "Quality rule",
+              "purpose": "Prevent compensation patterns that irritate the shoulder/neck.",
+              "instructions": "If you notice shoulder hiking, neck tension, or trunk twisting, reduce range by 30–50% and slow the tempo."
+            }
+          ]
+        },
+        {
+          "id": "w5_s3",
+          "title": "Afternoon light mobility & circulation",
+          "timeOfDay": "16:00",
+          "exercises": [
+            {
+              "name": "Hand and wrist pumps",
+              "purpose": "Promote blood flow and reduce swelling in the hand and forearm.",
+              "instructions": "Make a fist then open your hand wide 20 times. Spread fingers apart and together 20 times. Rotate wrist 10 times clockwise and 10 times counter-clockwise. Keep shoulder relaxed and forearm supported.",
+              "progression": "Increase repetitions gradually if swelling/stiffness persists."
+            },
+            {
+              "name": "Elbow AROM",
+              "purpose": "Maintain elbow mobility without stressing the shoulder.",
+              "instructions": "With upper arm supported against your body, slowly bend and straighten the elbow 10–15 times. Keep shoulder quiet, do not lift the arm away from the body. No resistance.",
+              "progression": "Increase range gently as tolerated while keeping the shoulder still."
+            },
+            {
+              "name": "Scapular setting",
+              "purpose": "Maintain scapular awareness and reduce guarding from sling posture.",
+              "instructions": "Gently draw shoulder blade back and down. Hold 3–5 seconds and relax. Repeat 6–8 times. Avoid shrugging.",
+              "progression": "Increase hold time gradually (up to 5 seconds) if pain-free and no shoulder hiking."
+            },
+            {
+              "name": "Pendulums (short)",
+              "purpose": "Maintain gentle passive motion without stretching.",
+              "instructions": "1–2 short sets, 10–15 seconds each direction. Keep it passive and small.",
+              "progression": "Increase duration slightly only if fully relaxed and no front stretch."
+            }
+          ]
+        },
+        {
+          "id": "w5_s4",
+          "title": "Evening relaxation & breathing",
+          "timeOfDay": "20:00",
+          "exercises": [
+            {
+              "name": "Neck gentle mobility",
+              "purpose": "Reduce neck tension and support sleep quality.",
+              "instructions": "Chin tucks 5 reps, head rotations 5 per side. Stay within comfortable range.",
+              "progression": "Increase reps slightly if helpful."
+            },
+            {
+              "name": "Hand and wrist pumps",
+              "purpose": "Promote blood flow and reduce swelling in the hand and forearm.",
+              "instructions": "Make a fist then open your hand wide 20 times. Spread fingers apart and together 20 times. Rotate wrist 10 times clockwise and 10 times counter-clockwise. Keep shoulder relaxed and forearm supported.",
+              "progression": "Increase repetitions gradually if swelling/stiffness persists."
+            },
+            {
+              "name": "Deep breathing",
+              "purpose": "Support relaxation and reduce guarding (useful for sleep quality).",
+              "instructions": "Inhale through nose for 4 seconds, belly expands. Exhale for 6 seconds. Repeat 5 breaths.",
+              "progression": "Increase to 8–10 breaths if helpful."
+            }
+          ]
+        },
+        {
+          "id": "w5_walk",
+          "title": "Daily walking",
+          "timeOfDay": "throughout day",
+          "exercises": [
+            {
+              "name": "Walking",
+              "purpose": "Improve circulation and maintain general conditioning without loading the shoulder.",
+              "instructions": "Do 2 walks of 20–30 minutes or 3 walks of 15–20 minutes. Keep the arm supported; follow immobilizer rules. Avoid arm swing with the operated arm.",
+              "progression": "Increase duration gradually as tolerated. Prefer splitting into shorter walks if sling traction discomfort appears."
+            }
+          ]
+        }
+      ],
+      "label": "Week 5 (POD 35–42)",
+      "description": "Begin shoulder AROM (pain-guided) from week 5. Continue PROM as warm-up if helpful. No resistance exercises through week 6. Maintain scapular control and avoid shoulder hiking.",
+      "gates": [
+        {
+          "id": "wound",
+          "title": "Wound/infection signs OK",
+          "detail": [
+            "No fever or increasing wound pain.",
+            "No spreading redness/warmth, pus, or foul-smelling drainage.",
+            "If unsure: contact your care team promptly."
+          ],
+          "category": "Safety",
+          "priority": 1,
+          "tags": [
+            "wound",
+            "infection"
+          ],
+          "check": {
+            "mode": "manual"
+          },
+          "references": [
+            "Protocol 8: wound monitoring / red flags"
+          ]
+        },
+        {
+          "id": "pain",
+          "title": "Pain rules met",
+          "detail": [
+            "Resting pain ≤ 3/10.",
+            "Exercise pain ≤ 6/10.",
+            "Pain returns to baseline within 30 minutes.",
+            "No increase > +3 points from baseline."
+          ],
+          "category": "Safety",
+          "priority": 1,
+          "tags": [
+            "pain-rules"
+          ],
+          "check": {
+            "mode": "manual"
+          },
+          "references": [
+            "Protocol 8: NPRS rules"
+          ]
+        },
+        {
+          "id": "sling",
+          "title": "Immobilizer compliance",
+          "detail": [
+            "Wear immobilizer during the day through week 5.",
+            "Wear immobilizer at night through week 6.",
+            "Remove only for hygiene and prescribed exercises, always support the arm."
+          ],
+          "category": "Protocol",
+          "priority": 1,
+          "tags": [
+            "sling",
+            "immobilizer"
+          ],
+          "check": {
+            "mode": "manual"
+          },
+          "references": [
+            "Protocol 8: immobilizer rules"
+          ]
+        },
+        {
+          "id": "protect",
+          "title": "Protection rules followed",
+          "detail": [
+            "No resistance exercises through week 6.",
+            "No resisted elbow flexion for the first 6 weeks (biceps brevis / conjoined tendon protection).",
+            "No weight-bearing through the operated arm."
+          ],
+          "category": "Protocol",
+          "priority": 1,
+          "tags": [
+            "no-resistance",
+            "no-biceps",
+            "no-weightbearing"
+          ],
+          "check": {
+            "mode": "manual"
+          },
+          "references": [
+            "Protocol 8: no resistance until after week 6; no resisted elbow flexion for 6 weeks"
+          ]
+        },
+        {
+          "id": "arom",
+          "title": "AROM allowed and quality OK (week 5+)",
+          "detail": [
+            "AROM is allowed from week 5 in all directions, pain-guided.",
+            "Move smoothly without shoulder hiking or guarding.",
+            "No sharp pain or instability sensation."
+          ],
+          "category": "Protocol",
+          "priority": 1,
+          "tags": [
+            "arom"
+          ],
+          "check": {
+            "mode": "manual"
+          },
+          "references": [
+            "Protocol 8: AROM from week 5 (pain-guided)"
+          ]
+        },
+        {
+          "id": "no-resistance",
+          "title": "No resistance through week 6",
+          "detail": [
+            "Do not add bands/weights yet.",
+            "No push-ups or weight-bearing drills yet.",
+            "No resisted elbow flexion until after week 6."
+          ],
+          "category": "Protocol",
+          "priority": 1,
+          "tags": [
+            "no-resistance",
+            "no-biceps"
+          ],
+          "check": {
+            "mode": "manual"
+          },
+          "references": [
+            "Protocol 8: no resistance until after week 6; no resisted elbow flexion for 6 weeks"
+          ]
+        }
+      ]
+    },
+    {
+      "weekNumber": 6,
+      "sessions": [
+        {
+          "id": "w6_s1",
+          "title": "Morning circulation & posture reset",
+          "timeOfDay": "08:00",
+          "exercises": [
+            {
+              "name": "Hand and wrist pumps",
+              "purpose": "Promote blood flow and reduce swelling in the hand and forearm.",
+              "instructions": "Make a fist then open your hand wide 20 times. Spread fingers apart and together 20 times. Rotate wrist 10 times clockwise and 10 times counter-clockwise. Keep shoulder relaxed and forearm supported.",
+              "progression": "Increase repetitions gradually if swelling/stiffness persists."
+            },
+            {
+              "name": "Elbow AROM",
+              "purpose": "Maintain elbow mobility without stressing the shoulder.",
+              "instructions": "With upper arm supported against your body, slowly bend and straighten the elbow 10–15 times. Keep shoulder quiet, do not lift the arm away from the body. No resistance.",
+              "progression": "Increase range gently as tolerated while keeping the shoulder still."
+            },
+            {
+              "name": "Isometric rotator cuff (ER/IR)",
+              "purpose": "Maintain rotator cuff activation without shoulder joint movement.",
+              "instructions": "Elbow at your side, bent ~90°. Place back of hand against a wall (or your other hand) and gently push as if rotating outward, without allowing movement. Hold 5 seconds. Repeat 5 reps. Then palm to wall and gently push inward (IR) 5 seconds, 5 reps. Effort ~20–30%, no visible shoulder movement. Stop if pain increases >+3 from baseline.",
+              "progression": "Progress to 8–10 reps or holds up to 10 seconds only if fully symptom-free and shoulder remains still."
+            },
+            {
+              "name": "Scapular setting",
+              "purpose": "Maintain scapular awareness and reduce guarding from sling posture.",
+              "instructions": "Gently draw shoulder blade back and down. Hold 3–5 seconds and relax. Repeat 6–8 times. Avoid shrugging.",
+              "progression": "Increase hold time gradually (up to 5 seconds) if pain-free and no shoulder hiking."
+            },
+            {
+              "name": "Cervical/Thoracic mobility",
+              "purpose": "Prevent neck and upper-back stiffness due to sling use.",
+              "instructions": "Chin tucks 5 reps (2-second hold). Head rotation left/right 5 reps per side. Side-bend ear toward shoulder 3 reps per side. Then seated thoracic: 5 slow chest-lift breaths + 5 small trunk rotations each side. Keep shoulder relaxed.",
+              "progression": "Increase repetitions slightly as comfort allows. Keep movements small and pain-free."
+            }
+          ]
+        },
+        {
+          "id": "w6_s2",
+          "title": "Midday pendulums & thoracic mobility",
+          "timeOfDay": "12:00",
+          "exercises": [
+            {
+              "name": "Passive pendulums",
+              "purpose": "Gentle, gravity-assisted shoulder motion with minimal muscle activation.",
+              "instructions": "Lean forward with your uninjured hand supported on a table. Let the operated arm hang heavy and relaxed. Use a tiny body sway so the arm swings forward/back, side/side, and small circles. Do 3–4 sets total, 15–30 seconds per set. Stop if shoulder muscles engage or if you feel front-of-shoulder stretch.",
+              "progression": "Increase time before range. Do not increase amplitude if you notice front stretch or guarding."
+            },
+            {
+              "name": "Cervical/Thoracic mobility",
+              "purpose": "Prevent neck and upper-back stiffness due to sling use.",
+              "instructions": "Chin tucks 5 reps (2-second hold). Head rotation left/right 5 reps per side. Side-bend ear toward shoulder 3 reps per side. Then seated thoracic: 5 slow chest-lift breaths + 5 small trunk rotations each side. Keep shoulder relaxed.",
+              "progression": "Increase repetitions slightly as comfort allows. Keep movements small and pain-free."
+            },
+            {
+              "name": "Scapular setting",
+              "purpose": "Maintain scapular awareness and reduce guarding from sling posture.",
+              "instructions": "Gently draw shoulder blade back and down. Hold 3–5 seconds and relax. Repeat 6–8 times. Avoid shrugging.",
+              "progression": "Increase hold time gradually (up to 5 seconds) if pain-free and no shoulder hiking."
+            }
+          ]
+        },
+        {
+          "id": "w6_arom",
+          "title": "Shoulder AROM add-on (quality-focused)",
+          "timeOfDay": "13:00",
+          "exercises": [
+            {
+              "name": "Warm-up pendulums (very small)",
+              "purpose": "Reduce guarding before AROM.",
+              "instructions": "1–2 short sets of passive pendulums (10–20 seconds), small range. Stop before any front stretch."
+            },
+            {
+              "name": "AROM scaption (quality-focused)",
+              "purpose": "Begin active shoulder motion with high movement quality (protocol allows AROM from week 5).",
+              "instructions": "Standing or seated. Lift the arm in the scapular plane (about 30° forward from your side) in a small, smooth arc. Stop before shrugging or guarding. 2×8–12 slow reps. Thumb up if comfortable.",
+              "progression": "Increase reps before increasing height. If shoulder hiking appears, reduce range and slow down."
+            },
+            {
+              "name": "AROM ER at side (elbow tucked)",
+              "purpose": "Begin active external rotation with elbow supported (pain-guided).",
+              "instructions": "Elbow at your side, bent ~90°, towel roll between elbow and torso. Rotate forearm outward slowly, small range, then return. 2×8–12 slow reps. Stop if you feel front pressure or guarding.",
+              "progression": "Increase reps before range. Keep movement slow and controlled."
+            },
+            {
+              "name": "Quality rule",
+              "purpose": "Prevent compensation patterns that irritate the shoulder/neck.",
+              "instructions": "If you notice shoulder hiking, neck tension, or trunk twisting, reduce range by 30–50% and slow the tempo."
+            }
+          ]
+        },
+        {
+          "id": "w6_s3",
+          "title": "Afternoon light mobility & circulation",
+          "timeOfDay": "16:00",
+          "exercises": [
+            {
+              "name": "Hand and wrist pumps",
+              "purpose": "Promote blood flow and reduce swelling in the hand and forearm.",
+              "instructions": "Make a fist then open your hand wide 20 times. Spread fingers apart and together 20 times. Rotate wrist 10 times clockwise and 10 times counter-clockwise. Keep shoulder relaxed and forearm supported.",
+              "progression": "Increase repetitions gradually if swelling/stiffness persists."
+            },
+            {
+              "name": "Elbow AROM",
+              "purpose": "Maintain elbow mobility without stressing the shoulder.",
+              "instructions": "With upper arm supported against your body, slowly bend and straighten the elbow 10–15 times. Keep shoulder quiet, do not lift the arm away from the body. No resistance.",
+              "progression": "Increase range gently as tolerated while keeping the shoulder still."
+            },
+            {
+              "name": "Scapular setting",
+              "purpose": "Maintain scapular awareness and reduce guarding from sling posture.",
+              "instructions": "Gently draw shoulder blade back and down. Hold 3–5 seconds and relax. Repeat 6–8 times. Avoid shrugging.",
+              "progression": "Increase hold time gradually (up to 5 seconds) if pain-free and no shoulder hiking."
+            },
+            {
+              "name": "Pendulums (short)",
+              "purpose": "Maintain gentle passive motion without stretching.",
+              "instructions": "1–2 short sets, 10–15 seconds each direction. Keep it passive and small.",
+              "progression": "Increase duration slightly only if fully relaxed and no front stretch."
+            }
+          ]
+        },
+        {
+          "id": "w6_s4",
+          "title": "Evening relaxation & breathing",
+          "timeOfDay": "20:00",
+          "exercises": [
+            {
+              "name": "Neck gentle mobility",
+              "purpose": "Reduce neck tension and support sleep quality.",
+              "instructions": "Chin tucks 5 reps, head rotations 5 per side. Stay within comfortable range.",
+              "progression": "Increase reps slightly if helpful."
+            },
+            {
+              "name": "Hand and wrist pumps",
+              "purpose": "Promote blood flow and reduce swelling in the hand and forearm.",
+              "instructions": "Make a fist then open your hand wide 20 times. Spread fingers apart and together 20 times. Rotate wrist 10 times clockwise and 10 times counter-clockwise. Keep shoulder relaxed and forearm supported.",
+              "progression": "Increase repetitions gradually if swelling/stiffness persists."
+            },
+            {
+              "name": "Deep breathing",
+              "purpose": "Support relaxation and reduce guarding (useful for sleep quality).",
+              "instructions": "Inhale through nose for 4 seconds, belly expands. Exhale for 6 seconds. Repeat 5 breaths.",
+              "progression": "Increase to 8–10 breaths if helpful."
+            }
+          ]
+        },
+        {
+          "id": "w6_walk",
+          "title": "Daily walking",
+          "timeOfDay": "throughout day",
+          "exercises": [
+            {
+              "name": "Walking",
+              "purpose": "Improve circulation and maintain general conditioning without loading the shoulder.",
+              "instructions": "Do 2 walks of 20–30 minutes or 3 walks of 15–20 minutes. Keep the arm supported; follow immobilizer rules. Avoid arm swing with the operated arm.",
+              "progression": "Increase duration gradually as tolerated. Prefer splitting into shorter walks if sling traction discomfort appears."
+            }
+          ]
+        }
+      ],
+      "label": "Week 6 (POD 42–49)",
+      "description": "Begin shoulder AROM (pain-guided) from week 5. Continue PROM as warm-up if helpful. No resistance exercises through week 6. Maintain scapular control and avoid shoulder hiking.",
+      "gates": [
+        {
+          "id": "wound",
+          "title": "Wound/infection signs OK",
+          "detail": [
+            "No fever or increasing wound pain.",
+            "No spreading redness/warmth, pus, or foul-smelling drainage.",
+            "If unsure: contact your care team promptly."
+          ],
+          "category": "Safety",
+          "priority": 1,
+          "tags": [
+            "wound",
+            "infection"
+          ],
+          "check": {
+            "mode": "manual"
+          },
+          "references": [
+            "Protocol 8: wound monitoring / red flags"
+          ]
+        },
+        {
+          "id": "pain",
+          "title": "Pain rules met",
+          "detail": [
+            "Resting pain ≤ 3/10.",
+            "Exercise pain ≤ 6/10.",
+            "Pain returns to baseline within 30 minutes.",
+            "No increase > +3 points from baseline."
+          ],
+          "category": "Safety",
+          "priority": 1,
+          "tags": [
+            "pain-rules"
+          ],
+          "check": {
+            "mode": "manual"
+          },
+          "references": [
+            "Protocol 8: NPRS rules"
+          ]
+        },
+        {
+          "id": "sling",
+          "title": "Immobilizer compliance",
+          "detail": [
+            "Wear immobilizer during the day through week 5.",
+            "Wear immobilizer at night through week 6.",
+            "Remove only for hygiene and prescribed exercises, always support the arm."
+          ],
+          "category": "Protocol",
+          "priority": 1,
+          "tags": [
+            "sling",
+            "immobilizer"
+          ],
+          "check": {
+            "mode": "manual"
+          },
+          "references": [
+            "Protocol 8: immobilizer rules"
+          ]
+        },
+        {
+          "id": "protect",
+          "title": "Protection rules followed",
+          "detail": [
+            "No resistance exercises through week 6.",
+            "No resisted elbow flexion for the first 6 weeks (biceps brevis / conjoined tendon protection).",
+            "No weight-bearing through the operated arm."
+          ],
+          "category": "Protocol",
+          "priority": 1,
+          "tags": [
+            "no-resistance",
+            "no-biceps",
+            "no-weightbearing"
+          ],
+          "check": {
+            "mode": "manual"
+          },
+          "references": [
+            "Protocol 8: no resistance until after week 6; no resisted elbow flexion for 6 weeks"
+          ]
+        },
+        {
+          "id": "arom",
+          "title": "AROM allowed and quality OK (week 5+)",
+          "detail": [
+            "AROM is allowed from week 5 in all directions, pain-guided.",
+            "Move smoothly without shoulder hiking or guarding.",
+            "No sharp pain or instability sensation."
+          ],
+          "category": "Protocol",
+          "priority": 1,
+          "tags": [
+            "arom"
+          ],
+          "check": {
+            "mode": "manual"
+          },
+          "references": [
+            "Protocol 8: AROM from week 5 (pain-guided)"
+          ]
+        },
+        {
+          "id": "no-resistance",
+          "title": "No resistance through week 6",
+          "detail": [
+            "Do not add bands/weights yet.",
+            "No push-ups or weight-bearing drills yet.",
+            "No resisted elbow flexion until after week 6."
+          ],
+          "category": "Protocol",
+          "priority": 1,
+          "tags": [
+            "no-resistance",
+            "no-biceps"
+          ],
+          "check": {
+            "mode": "manual"
+          },
+          "references": [
+            "Protocol 8: no resistance until after week 6; no resisted elbow flexion for 6 weeks"
+          ]
+        }
+      ]
+    },
+    {
+      "weekNumber": 7,
+      "sessions": [
+        {
+          "id": "w7_s1",
+          "title": "Morning ROM + scapular control",
+          "timeOfDay": "08:00",
+          "exercises": [
+            {
+              "name": "Scapular setting",
+              "purpose": "Maintain scapular awareness and reduce guarding from sling posture.",
+              "instructions": "Gently draw shoulder blade back and down. Hold 3–5 seconds and relax. Repeat 6–8 times. Avoid shrugging.",
+              "progression": "Increase hold time gradually (up to 5 seconds) if pain-free and no shoulder hiking."
+            },
+            {
+              "name": "AROM scaption (≤ shoulder height unless cleared)",
+              "purpose": "Build controlled ROM with good scapular mechanics.",
+              "instructions": "2×8–12 slow reps in scapular plane. Stop before shrugging. Keep below shoulder height unless clinician cleared higher.",
+              "progression": "Increase reps before height. If next-day stiffness increases, reduce volume 30–50% for 48 hours."
+            },
+            {
+              "name": "Gentle ER/IR AROM at side",
+              "purpose": "Maintain rotation control without anterior stress.",
+              "instructions": "Elbow tucked with towel roll. 2×10–12 each direction, slow.",
+              "progression": "Increase reps before range."
+            },
+            {
+              "name": "Cervical/Thoracic mobility",
+              "purpose": "Prevent neck and upper-back stiffness due to sling use.",
+              "instructions": "Chin tucks 5 reps (2-second hold). Head rotation left/right 5 reps per side. Side-bend ear toward shoulder 3 reps per side. Then seated thoracic: 5 slow chest-lift breaths + 5 small trunk rotations each side. Keep shoulder relaxed.",
+              "progression": "Increase repetitions slightly as comfort allows. Keep movements small and pain-free."
+            }
+          ]
+        },
+        {
+          "id": "w7_strength",
+          "title": "Strength session (3×/week, nonconsecutive)",
+          "timeOfDay": "Mon/Wed/Fri 12:00",
+          "exercises": [
+            {
+              "name": "Band ER/IR at side (very light)",
+              "purpose": "Begin low-load rotator cuff strengthening once resistance is allowed (after week 6).",
+              "instructions": "Elbow at side with towel roll. Very light band. ER 2×12–15 slow reps, then IR 2×12–15. No trunk twist, shoulder stays down. Stop if pain spikes or form breaks.",
+              "progression": "Progress reps → 15, then minimal band increase. If next-day flare: reduce volume 30–50% for 48 hours."
+            },
+            {
+              "name": "Seated row (light band)",
+              "purpose": "Strengthen scapular retractors to support shoulder mechanics.",
+              "instructions": "Band anchored at chest height. Elbows close to body. Pull to ribs 2×12–15, pause 1–2 seconds, slow return.",
+              "progression": "Progress reps first. Avoid shrugging. Increase tension only when effortless and symptom-free."
+            },
+            {
+              "name": "Serratus punches (supine)",
+              "purpose": "Improve scapular protraction control without overhead loading.",
+              "instructions": "Lying on back. Arm supported; reach toward ceiling by moving shoulder blade forward, then return. 2×12–15.",
+              "progression": "Add a very light weight only if symptom-free and no next-day soreness."
+            },
+            {
+              "name": "Optional wall stability (only if response is calm)",
+              "purpose": "Add proprioception without heavy load.",
+              "instructions": "If pain response is calm for 1 week: add wall stability 2×30–45 seconds at chest height. No shrugging.",
+              "progression": "Increase duration before changing angle."
+            }
+          ]
+        },
+        {
+          "id": "w7_walk",
+          "title": "Daily walking & cardio",
+          "timeOfDay": "throughout day",
+          "exercises": [
+            {
+              "name": "Walking / stationary bike",
+              "purpose": "Maintain cardiovascular fitness without shoulder loading.",
+              "instructions": "Walk 30–45 minutes total (split if preferred), and/or stationary bike 20–30 minutes. Avoid bouncing of the operated arm; keep shoulder relaxed.",
+              "progression": "Increase duration gradually. Keep intensity conversational."
+            }
+          ]
+        },
+        {
+          "id": "w7_s4",
+          "title": "Evening mobility + downshift",
+          "timeOfDay": "20:00",
+          "exercises": [
+            {
+              "name": "Neck gentle mobility",
+              "purpose": "Reduce neck tension and support sleep quality.",
+              "instructions": "Chin tucks 5 reps, rotations 5 each side, small range.",
+              "progression": "Increase reps slightly if helpful."
+            },
+            {
+              "name": "Deep breathing",
+              "purpose": "Support relaxation and reduce guarding (useful for sleep quality).",
+              "instructions": "Inhale through nose for 4 seconds, belly expands. Exhale for 6 seconds. Repeat 5 breaths.",
+              "progression": "Increase to 8–10 breaths if helpful."
+            },
+            {
+              "name": "Scapula reset",
+              "purpose": "Reduce guarding after the day.",
+              "instructions": "3–5 scapular setting reps (3 seconds each), then fully relax."
+            }
+          ]
+        }
+      ],
+      "label": "Week 7 (POD 49–56)",
+      "description": "Phase 2 (weeks 7–12): focus on expanding ROM, scapular mechanics, coordination, strength and stability, then gradual ADL return. Work above shoulder height and sport are not appropriate yet. Overhead sports (including contact) only after 6 months.",
+      "gates": [
+        {
+          "id": "phase2-focus",
+          "title": "Phase 2 focus (no overhead work/sport yet)",
+          "detail": [
+            "Build ROM, scapula control, coordination, strength and stability.",
+            "Do not return to overhead work/sport in weeks 7–12."
+          ],
+          "category": "Protocol",
+          "priority": 1,
+          "tags": [
+            "phase2",
+            "no-overhead"
+          ],
+          "check": {
+            "mode": "manual"
+          },
+          "references": [
+            "Protocol 8: Phase 2 description (weeks 7–12)"
+          ]
+        },
+        {
+          "id": "strength-dose",
+          "title": "Strength dose is controlled",
+          "detail": [
+            "Strength work is 3×/week (nonconsecutive).",
+            "Progress reps and control first, then minimal load increases.",
+            "If next-day flare: reduce volume 30–50% for 48 hours."
+          ],
+          "category": "Progression",
+          "priority": 2,
+          "tags": [
+            "strength",
+            "progression"
+          ],
+          "check": {
+            "mode": "manual"
+          },
+          "references": [
+            "Deep research: criterion-based progression anchored to protocol"
+          ]
+        },
+        {
+          "id": "sport-limit",
+          "title": "Sport limits respected",
+          "detail": [
+            "No overhead sport until after 6 months.",
+            "No contact sport until after 6 months."
+          ],
+          "category": "Protocol",
+          "priority": 1,
+          "tags": [
+            "sport",
+            "no-overhead"
+          ],
+          "check": {
+            "mode": "manual"
+          },
+          "references": [
+            "Protocol 8: overhead sport after 6 months"
+          ]
+        },
+        {
+          "id": "pain",
+          "title": "Pain rules met",
+          "detail": [
+            "Resting pain ≤ 3/10.",
+            "Exercise pain ≤ 6/10.",
+            "Pain returns to baseline within 30 minutes.",
+            "No increase > +3 points from baseline."
+          ],
+          "category": "Safety",
+          "priority": 1,
+          "tags": [
+            "pain-rules"
+          ],
+          "check": {
+            "mode": "manual"
+          },
+          "references": [
+            "Protocol 8: NPRS rules"
+          ]
+        },
+        {
+          "id": "sling",
+          "title": "Immobilizer compliance",
+          "detail": [
+            "Immobilizer daytime weaning starts after week 5 (symptom-guided).",
+            "Night immobilizer through week 6.",
+            "From week 7 onward: use only if advised by clinician or for comfort."
+          ],
+          "category": "Protocol",
+          "priority": 1,
+          "tags": [
+            "sling",
+            "immobilizer"
+          ],
+          "check": {
+            "mode": "manual"
+          },
+          "references": [
+            "Protocol 8: immobilizer rules"
+          ]
+        },
+        {
+          "id": "protect",
+          "title": "Protection rules followed",
+          "detail": [
+            "No resistance exercises through week 6.",
+            "No resisted elbow flexion for the first 6 weeks (biceps brevis / conjoined tendon protection).",
+            "No weight-bearing through the operated arm."
+          ],
+          "category": "Protocol",
+          "priority": 1,
+          "tags": [
+            "no-resistance",
+            "no-biceps",
+            "no-weightbearing"
+          ],
+          "check": {
+            "mode": "manual"
+          },
+          "references": [
+            "Protocol 8: no resistance until after week 6; no resisted elbow flexion for 6 weeks"
+          ]
+        }
+      ]
+    },
+    {
+      "weekNumber": 8,
+      "sessions": [
+        {
+          "id": "w8_s1",
+          "title": "Morning ROM + scapular control",
+          "timeOfDay": "08:00",
+          "exercises": [
+            {
+              "name": "Scapular setting",
+              "purpose": "Maintain scapular awareness and reduce guarding from sling posture.",
+              "instructions": "Gently draw shoulder blade back and down. Hold 3–5 seconds and relax. Repeat 6–8 times. Avoid shrugging.",
+              "progression": "Increase hold time gradually (up to 5 seconds) if pain-free and no shoulder hiking."
+            },
+            {
+              "name": "AROM scaption (≤ shoulder height unless cleared)",
+              "purpose": "Build controlled ROM with good scapular mechanics.",
+              "instructions": "2×8–12 slow reps in scapular plane. Stop before shrugging. Keep below shoulder height unless clinician cleared higher.",
+              "progression": "Increase reps before height. If next-day stiffness increases, reduce volume 30–50% for 48 hours."
+            },
+            {
+              "name": "Gentle ER/IR AROM at side",
+              "purpose": "Maintain rotation control without anterior stress.",
+              "instructions": "Elbow tucked with towel roll. 2×10–12 each direction, slow.",
+              "progression": "Increase reps before range."
+            },
+            {
+              "name": "Cervical/Thoracic mobility",
+              "purpose": "Prevent neck and upper-back stiffness due to sling use.",
+              "instructions": "Chin tucks 5 reps (2-second hold). Head rotation left/right 5 reps per side. Side-bend ear toward shoulder 3 reps per side. Then seated thoracic: 5 slow chest-lift breaths + 5 small trunk rotations each side. Keep shoulder relaxed.",
+              "progression": "Increase repetitions slightly as comfort allows. Keep movements small and pain-free."
+            }
+          ]
+        },
+        {
+          "id": "w8_strength",
+          "title": "Strength session (3×/week, nonconsecutive)",
+          "timeOfDay": "Mon/Wed/Fri 12:00",
+          "exercises": [
+            {
+              "name": "Band ER/IR at side (very light)",
+              "purpose": "Begin low-load rotator cuff strengthening once resistance is allowed (after week 6).",
+              "instructions": "Elbow at side with towel roll. Very light band. ER 2×12–15 slow reps, then IR 2×12–15. No trunk twist, shoulder stays down. Stop if pain spikes or form breaks.",
+              "progression": "Progress reps → 15, then minimal band increase. If next-day flare: reduce volume 30–50% for 48 hours."
+            },
+            {
+              "name": "Seated row (light band)",
+              "purpose": "Strengthen scapular retractors to support shoulder mechanics.",
+              "instructions": "Band anchored at chest height. Elbows close to body. Pull to ribs 2×12–15, pause 1–2 seconds, slow return.",
+              "progression": "Progress reps first. Avoid shrugging. Increase tension only when effortless and symptom-free."
+            },
+            {
+              "name": "Serratus punches (supine)",
+              "purpose": "Improve scapular protraction control without overhead loading.",
+              "instructions": "Lying on back. Arm supported; reach toward ceiling by moving shoulder blade forward, then return. 2×12–15.",
+              "progression": "Add a very light weight only if symptom-free and no next-day soreness."
+            },
+            {
+              "name": "Optional wall stability (only if response is calm)",
+              "purpose": "Add proprioception without heavy load.",
+              "instructions": "If pain response is calm for 1 week: add wall stability 2×30–45 seconds at chest height. No shrugging.",
+              "progression": "Increase duration before changing angle."
+            }
+          ]
+        },
+        {
+          "id": "w8_walk",
+          "title": "Daily walking & cardio",
+          "timeOfDay": "throughout day",
+          "exercises": [
+            {
+              "name": "Walking / stationary bike",
+              "purpose": "Maintain cardiovascular fitness without shoulder loading.",
+              "instructions": "Walk 30–45 minutes total (split if preferred), and/or stationary bike 20–30 minutes. Avoid bouncing of the operated arm; keep shoulder relaxed.",
+              "progression": "Increase duration gradually. Keep intensity conversational."
+            }
+          ]
+        },
+        {
+          "id": "w8_s4",
+          "title": "Evening mobility + downshift",
+          "timeOfDay": "20:00",
+          "exercises": [
+            {
+              "name": "Neck gentle mobility",
+              "purpose": "Reduce neck tension and support sleep quality.",
+              "instructions": "Chin tucks 5 reps, rotations 5 each side, small range.",
+              "progression": "Increase reps slightly if helpful."
+            },
+            {
+              "name": "Deep breathing",
+              "purpose": "Support relaxation and reduce guarding (useful for sleep quality).",
+              "instructions": "Inhale through nose for 4 seconds, belly expands. Exhale for 6 seconds. Repeat 5 breaths.",
+              "progression": "Increase to 8–10 breaths if helpful."
+            },
+            {
+              "name": "Scapula reset",
+              "purpose": "Reduce guarding after the day.",
+              "instructions": "3–5 scapular setting reps (3 seconds each), then fully relax."
+            }
+          ]
+        }
+      ],
+      "label": "Week 8 (POD 56–63)",
+      "description": "Phase 2 (weeks 7–12): focus on expanding ROM, scapular mechanics, coordination, strength and stability, then gradual ADL return. Work above shoulder height and sport are not appropriate yet. Overhead sports (including contact) only after 6 months.",
+      "gates": [
+        {
+          "id": "phase2-focus",
+          "title": "Phase 2 focus (no overhead work/sport yet)",
+          "detail": [
+            "Build ROM, scapula control, coordination, strength and stability.",
+            "Do not return to overhead work/sport in weeks 7–12."
+          ],
+          "category": "Protocol",
+          "priority": 1,
+          "tags": [
+            "phase2",
+            "no-overhead"
+          ],
+          "check": {
+            "mode": "manual"
+          },
+          "references": [
+            "Protocol 8: Phase 2 description (weeks 7–12)"
+          ]
+        },
+        {
+          "id": "strength-dose",
+          "title": "Strength dose is controlled",
+          "detail": [
+            "Strength work is 3×/week (nonconsecutive).",
+            "Progress reps and control first, then minimal load increases.",
+            "If next-day flare: reduce volume 30–50% for 48 hours."
+          ],
+          "category": "Progression",
+          "priority": 2,
+          "tags": [
+            "strength",
+            "progression"
+          ],
+          "check": {
+            "mode": "manual"
+          },
+          "references": [
+            "Deep research: criterion-based progression anchored to protocol"
+          ]
+        },
+        {
+          "id": "sport-limit",
+          "title": "Sport limits respected",
+          "detail": [
+            "No overhead sport until after 6 months.",
+            "No contact sport until after 6 months."
+          ],
+          "category": "Protocol",
+          "priority": 1,
+          "tags": [
+            "sport",
+            "no-overhead"
+          ],
+          "check": {
+            "mode": "manual"
+          },
+          "references": [
+            "Protocol 8: overhead sport after 6 months"
+          ]
+        },
+        {
+          "id": "pain",
+          "title": "Pain rules met",
+          "detail": [
+            "Resting pain ≤ 3/10.",
+            "Exercise pain ≤ 6/10.",
+            "Pain returns to baseline within 30 minutes.",
+            "No increase > +3 points from baseline."
+          ],
+          "category": "Safety",
+          "priority": 1,
+          "tags": [
+            "pain-rules"
+          ],
+          "check": {
+            "mode": "manual"
+          },
+          "references": [
+            "Protocol 8: NPRS rules"
+          ]
+        },
+        {
+          "id": "sling",
+          "title": "Immobilizer compliance",
+          "detail": [
+            "Immobilizer daytime weaning starts after week 5 (symptom-guided).",
+            "Night immobilizer through week 6.",
+            "From week 7 onward: use only if advised by clinician or for comfort."
+          ],
+          "category": "Protocol",
+          "priority": 1,
+          "tags": [
+            "sling",
+            "immobilizer"
+          ],
+          "check": {
+            "mode": "manual"
+          },
+          "references": [
+            "Protocol 8: immobilizer rules"
+          ]
+        },
+        {
+          "id": "protect",
+          "title": "Protection rules followed",
+          "detail": [
+            "No resistance exercises through week 6.",
+            "No resisted elbow flexion for the first 6 weeks (biceps brevis / conjoined tendon protection).",
+            "No weight-bearing through the operated arm."
+          ],
+          "category": "Protocol",
+          "priority": 1,
+          "tags": [
+            "no-resistance",
+            "no-biceps",
+            "no-weightbearing"
+          ],
+          "check": {
+            "mode": "manual"
+          },
+          "references": [
+            "Protocol 8: no resistance until after week 6; no resisted elbow flexion for 6 weeks"
+          ]
+        }
+      ]
+    },
+    {
+      "weekNumber": 9,
+      "sessions": [
+        {
+          "id": "w9_s1",
+          "title": "Morning ROM + scapular control",
+          "timeOfDay": "08:00",
+          "exercises": [
+            {
+              "name": "Scapular setting",
+              "purpose": "Maintain scapular awareness and reduce guarding from sling posture.",
+              "instructions": "Gently draw shoulder blade back and down. Hold 3–5 seconds and relax. Repeat 6–8 times. Avoid shrugging.",
+              "progression": "Increase hold time gradually (up to 5 seconds) if pain-free and no shoulder hiking."
+            },
+            {
+              "name": "AROM scaption (≤ shoulder height unless cleared)",
+              "purpose": "Build controlled ROM with good scapular mechanics.",
+              "instructions": "2×8–12 slow reps in scapular plane. Stop before shrugging. Keep below shoulder height unless clinician cleared higher.",
+              "progression": "Increase reps before height. If next-day stiffness increases, reduce volume 30–50% for 48 hours."
+            },
+            {
+              "name": "Gentle ER/IR AROM at side",
+              "purpose": "Maintain rotation control without anterior stress.",
+              "instructions": "Elbow tucked with towel roll. 2×10–12 each direction, slow.",
+              "progression": "Increase reps before range."
+            },
+            {
+              "name": "Cervical/Thoracic mobility",
+              "purpose": "Prevent neck and upper-back stiffness due to sling use.",
+              "instructions": "Chin tucks 5 reps (2-second hold). Head rotation left/right 5 reps per side. Side-bend ear toward shoulder 3 reps per side. Then seated thoracic: 5 slow chest-lift breaths + 5 small trunk rotations each side. Keep shoulder relaxed.",
+              "progression": "Increase repetitions slightly as comfort allows. Keep movements small and pain-free."
+            }
+          ]
+        },
+        {
+          "id": "w9_strength",
+          "title": "Strength session (3×/week, nonconsecutive)",
+          "timeOfDay": "Mon/Wed/Fri 12:00",
+          "exercises": [
+            {
+              "name": "Band ER/IR at side (very light)",
+              "purpose": "Begin low-load rotator cuff strengthening once resistance is allowed (after week 6).",
+              "instructions": "Elbow at side with towel roll. Very light band. ER 2×12–15 slow reps, then IR 2×12–15. No trunk twist, shoulder stays down. Stop if pain spikes or form breaks.",
+              "progression": "Progress reps → 15, then minimal band increase. If next-day flare: reduce volume 30–50% for 48 hours."
+            },
+            {
+              "name": "Seated row (light band)",
+              "purpose": "Strengthen scapular retractors to support shoulder mechanics.",
+              "instructions": "Band anchored at chest height. Elbows close to body. Pull to ribs 2×12–15, pause 1–2 seconds, slow return.",
+              "progression": "Progress reps first. Avoid shrugging. Increase tension only when effortless and symptom-free."
+            },
+            {
+              "name": "Serratus punches (supine)",
+              "purpose": "Improve scapular protraction control without overhead loading.",
+              "instructions": "Lying on back. Arm supported; reach toward ceiling by moving shoulder blade forward, then return. 2×12–15.",
+              "progression": "Add a very light weight only if symptom-free and no next-day soreness."
+            },
+            {
+              "name": "Optional wall stability (only if response is calm)",
+              "purpose": "Add proprioception without heavy load.",
+              "instructions": "If pain response is calm for 1 week: add wall stability 2×30–45 seconds at chest height. No shrugging.",
+              "progression": "Increase duration before changing angle."
+            }
+          ]
+        },
+        {
+          "id": "w9_walk",
+          "title": "Daily walking & cardio",
+          "timeOfDay": "throughout day",
+          "exercises": [
+            {
+              "name": "Walking / stationary bike",
+              "purpose": "Maintain cardiovascular fitness without shoulder loading.",
+              "instructions": "Walk 30–45 minutes total (split if preferred), and/or stationary bike 20–30 minutes. Avoid bouncing of the operated arm; keep shoulder relaxed.",
+              "progression": "Increase duration gradually. Keep intensity conversational."
+            }
+          ]
+        },
+        {
+          "id": "w9_s4",
+          "title": "Evening mobility + downshift",
+          "timeOfDay": "20:00",
+          "exercises": [
+            {
+              "name": "Neck gentle mobility",
+              "purpose": "Reduce neck tension and support sleep quality.",
+              "instructions": "Chin tucks 5 reps, rotations 5 each side, small range.",
+              "progression": "Increase reps slightly if helpful."
+            },
+            {
+              "name": "Deep breathing",
+              "purpose": "Support relaxation and reduce guarding (useful for sleep quality).",
+              "instructions": "Inhale through nose for 4 seconds, belly expands. Exhale for 6 seconds. Repeat 5 breaths.",
+              "progression": "Increase to 8–10 breaths if helpful."
+            },
+            {
+              "name": "Scapula reset",
+              "purpose": "Reduce guarding after the day.",
+              "instructions": "3–5 scapular setting reps (3 seconds each), then fully relax."
+            }
+          ]
+        }
+      ],
+      "label": "Week 9 (POD 63–70)",
+      "description": "Phase 2 (weeks 7–12): focus on expanding ROM, scapular mechanics, coordination, strength and stability, then gradual ADL return. Work above shoulder height and sport are not appropriate yet. Overhead sports (including contact) only after 6 months.",
+      "gates": [
+        {
+          "id": "phase2-focus",
+          "title": "Phase 2 focus (no overhead work/sport yet)",
+          "detail": [
+            "Build ROM, scapula control, coordination, strength and stability.",
+            "Do not return to overhead work/sport in weeks 7–12."
+          ],
+          "category": "Protocol",
+          "priority": 1,
+          "tags": [
+            "phase2",
+            "no-overhead"
+          ],
+          "check": {
+            "mode": "manual"
+          },
+          "references": [
+            "Protocol 8: Phase 2 description (weeks 7–12)"
+          ]
+        },
+        {
+          "id": "strength-dose",
+          "title": "Strength dose is controlled",
+          "detail": [
+            "Strength work is 3×/week (nonconsecutive).",
+            "Progress reps and control first, then minimal load increases.",
+            "If next-day flare: reduce volume 30–50% for 48 hours."
+          ],
+          "category": "Progression",
+          "priority": 2,
+          "tags": [
+            "strength",
+            "progression"
+          ],
+          "check": {
+            "mode": "manual"
+          },
+          "references": [
+            "Deep research: criterion-based progression anchored to protocol"
+          ]
+        },
+        {
+          "id": "sport-limit",
+          "title": "Sport limits respected",
+          "detail": [
+            "No overhead sport until after 6 months.",
+            "No contact sport until after 6 months."
+          ],
+          "category": "Protocol",
+          "priority": 1,
+          "tags": [
+            "sport",
+            "no-overhead"
+          ],
+          "check": {
+            "mode": "manual"
+          },
+          "references": [
+            "Protocol 8: overhead sport after 6 months"
+          ]
+        },
+        {
+          "id": "pain",
+          "title": "Pain rules met",
+          "detail": [
+            "Resting pain ≤ 3/10.",
+            "Exercise pain ≤ 6/10.",
+            "Pain returns to baseline within 30 minutes.",
+            "No increase > +3 points from baseline."
+          ],
+          "category": "Safety",
+          "priority": 1,
+          "tags": [
+            "pain-rules"
+          ],
+          "check": {
+            "mode": "manual"
+          },
+          "references": [
+            "Protocol 8: NPRS rules"
+          ]
+        },
+        {
+          "id": "sling",
+          "title": "Immobilizer compliance",
+          "detail": [
+            "Immobilizer daytime weaning starts after week 5 (symptom-guided).",
+            "Night immobilizer through week 6.",
+            "From week 7 onward: use only if advised by clinician or for comfort."
+          ],
+          "category": "Protocol",
+          "priority": 1,
+          "tags": [
+            "sling",
+            "immobilizer"
+          ],
+          "check": {
+            "mode": "manual"
+          },
+          "references": [
+            "Protocol 8: immobilizer rules"
+          ]
+        },
+        {
+          "id": "protect",
+          "title": "Protection rules followed",
+          "detail": [
+            "No resistance exercises through week 6.",
+            "No resisted elbow flexion for the first 6 weeks (biceps brevis / conjoined tendon protection).",
+            "No weight-bearing through the operated arm."
+          ],
+          "category": "Protocol",
+          "priority": 1,
+          "tags": [
+            "no-resistance",
+            "no-biceps",
+            "no-weightbearing"
+          ],
+          "check": {
+            "mode": "manual"
+          },
+          "references": [
+            "Protocol 8: no resistance until after week 6; no resisted elbow flexion for 6 weeks"
+          ]
+        }
+      ]
+    },
+    {
+      "weekNumber": 10,
+      "sessions": [
+        {
+          "id": "w10_s1",
+          "title": "Morning ROM + scapular control",
+          "timeOfDay": "08:00",
+          "exercises": [
+            {
+              "name": "Scapular setting",
+              "purpose": "Maintain scapular awareness and reduce guarding from sling posture.",
+              "instructions": "Gently draw shoulder blade back and down. Hold 3–5 seconds and relax. Repeat 6–8 times. Avoid shrugging.",
+              "progression": "Increase hold time gradually (up to 5 seconds) if pain-free and no shoulder hiking."
+            },
+            {
+              "name": "AROM scaption (≤ shoulder height unless cleared)",
+              "purpose": "Build controlled ROM with good scapular mechanics.",
+              "instructions": "2×8–12 slow reps in scapular plane. Stop before shrugging. Keep below shoulder height unless clinician cleared higher.",
+              "progression": "Increase reps before height. If next-day stiffness increases, reduce volume 30–50% for 48 hours."
+            },
+            {
+              "name": "Gentle ER/IR AROM at side",
+              "purpose": "Maintain rotation control without anterior stress.",
+              "instructions": "Elbow tucked with towel roll. 2×10–12 each direction, slow.",
+              "progression": "Increase reps before range."
+            },
+            {
+              "name": "Cervical/Thoracic mobility",
+              "purpose": "Prevent neck and upper-back stiffness due to sling use.",
+              "instructions": "Chin tucks 5 reps (2-second hold). Head rotation left/right 5 reps per side. Side-bend ear toward shoulder 3 reps per side. Then seated thoracic: 5 slow chest-lift breaths + 5 small trunk rotations each side. Keep shoulder relaxed.",
+              "progression": "Increase repetitions slightly as comfort allows. Keep movements small and pain-free."
+            }
+          ]
+        },
+        {
+          "id": "w10_strength",
+          "title": "Strength session (3×/week, nonconsecutive)",
+          "timeOfDay": "Mon/Wed/Fri 12:00",
+          "exercises": [
+            {
+              "name": "Band ER/IR at side (very light)",
+              "purpose": "Begin low-load rotator cuff strengthening once resistance is allowed (after week 6).",
+              "instructions": "Elbow at side with towel roll. Very light band. ER 2×12–15 slow reps, then IR 2×12–15. No trunk twist, shoulder stays down. Stop if pain spikes or form breaks.",
+              "progression": "Progress reps → 15, then minimal band increase. If next-day flare: reduce volume 30–50% for 48 hours."
+            },
+            {
+              "name": "Seated row (light band)",
+              "purpose": "Strengthen scapular retractors to support shoulder mechanics.",
+              "instructions": "Band anchored at chest height. Elbows close to body. Pull to ribs 2×12–15, pause 1–2 seconds, slow return.",
+              "progression": "Progress reps first. Avoid shrugging. Increase tension only when effortless and symptom-free."
+            },
+            {
+              "name": "Serratus punches (supine)",
+              "purpose": "Improve scapular protraction control without overhead loading.",
+              "instructions": "Lying on back. Arm supported; reach toward ceiling by moving shoulder blade forward, then return. 2×12–15.",
+              "progression": "Add a very light weight only if symptom-free and no next-day soreness."
+            },
+            {
+              "name": "Optional wall stability (only if response is calm)",
+              "purpose": "Add proprioception without heavy load.",
+              "instructions": "If pain response is calm for 1 week: add wall stability 2×30–45 seconds at chest height. No shrugging.",
+              "progression": "Increase duration before changing angle."
+            }
+          ]
+        },
+        {
+          "id": "w10_walk",
+          "title": "Daily walking & cardio",
+          "timeOfDay": "throughout day",
+          "exercises": [
+            {
+              "name": "Walking / stationary bike",
+              "purpose": "Maintain cardiovascular fitness without shoulder loading.",
+              "instructions": "Walk 30–45 minutes total (split if preferred), and/or stationary bike 20–30 minutes. Avoid bouncing of the operated arm; keep shoulder relaxed.",
+              "progression": "Increase duration gradually. Keep intensity conversational."
+            }
+          ]
+        },
+        {
+          "id": "w10_s4",
+          "title": "Evening mobility + downshift",
+          "timeOfDay": "20:00",
+          "exercises": [
+            {
+              "name": "Neck gentle mobility",
+              "purpose": "Reduce neck tension and support sleep quality.",
+              "instructions": "Chin tucks 5 reps, rotations 5 each side, small range.",
+              "progression": "Increase reps slightly if helpful."
+            },
+            {
+              "name": "Deep breathing",
+              "purpose": "Support relaxation and reduce guarding (useful for sleep quality).",
+              "instructions": "Inhale through nose for 4 seconds, belly expands. Exhale for 6 seconds. Repeat 5 breaths.",
+              "progression": "Increase to 8–10 breaths if helpful."
+            },
+            {
+              "name": "Scapula reset",
+              "purpose": "Reduce guarding after the day.",
+              "instructions": "3–5 scapular setting reps (3 seconds each), then fully relax."
+            }
+          ]
+        }
+      ],
+      "label": "Week 10 (POD 70–77)",
+      "description": "Phase 2 (weeks 7–12): focus on expanding ROM, scapular mechanics, coordination, strength and stability, then gradual ADL return. Work above shoulder height and sport are not appropriate yet. Overhead sports (including contact) only after 6 months.",
+      "gates": [
+        {
+          "id": "phase2-focus",
+          "title": "Phase 2 focus (no overhead work/sport yet)",
+          "detail": [
+            "Build ROM, scapula control, coordination, strength and stability.",
+            "Do not return to overhead work/sport in weeks 7–12."
+          ],
+          "category": "Protocol",
+          "priority": 1,
+          "tags": [
+            "phase2",
+            "no-overhead"
+          ],
+          "check": {
+            "mode": "manual"
+          },
+          "references": [
+            "Protocol 8: Phase 2 description (weeks 7–12)"
+          ]
+        },
+        {
+          "id": "strength-dose",
+          "title": "Strength dose is controlled",
+          "detail": [
+            "Strength work is 3×/week (nonconsecutive).",
+            "Progress reps and control first, then minimal load increases.",
+            "If next-day flare: reduce volume 30–50% for 48 hours."
+          ],
+          "category": "Progression",
+          "priority": 2,
+          "tags": [
+            "strength",
+            "progression"
+          ],
+          "check": {
+            "mode": "manual"
+          },
+          "references": [
+            "Deep research: criterion-based progression anchored to protocol"
+          ]
+        },
+        {
+          "id": "sport-limit",
+          "title": "Sport limits respected",
+          "detail": [
+            "No overhead sport until after 6 months.",
+            "No contact sport until after 6 months."
+          ],
+          "category": "Protocol",
+          "priority": 1,
+          "tags": [
+            "sport",
+            "no-overhead"
+          ],
+          "check": {
+            "mode": "manual"
+          },
+          "references": [
+            "Protocol 8: overhead sport after 6 months"
+          ]
+        },
+        {
+          "id": "pain",
+          "title": "Pain rules met",
+          "detail": [
+            "Resting pain ≤ 3/10.",
+            "Exercise pain ≤ 6/10.",
+            "Pain returns to baseline within 30 minutes.",
+            "No increase > +3 points from baseline."
+          ],
+          "category": "Safety",
+          "priority": 1,
+          "tags": [
+            "pain-rules"
+          ],
+          "check": {
+            "mode": "manual"
+          },
+          "references": [
+            "Protocol 8: NPRS rules"
+          ]
+        },
+        {
+          "id": "sling",
+          "title": "Immobilizer compliance",
+          "detail": [
+            "Immobilizer daytime weaning starts after week 5 (symptom-guided).",
+            "Night immobilizer through week 6.",
+            "From week 7 onward: use only if advised by clinician or for comfort."
+          ],
+          "category": "Protocol",
+          "priority": 1,
+          "tags": [
+            "sling",
+            "immobilizer"
+          ],
+          "check": {
+            "mode": "manual"
+          },
+          "references": [
+            "Protocol 8: immobilizer rules"
+          ]
+        },
+        {
+          "id": "protect",
+          "title": "Protection rules followed",
+          "detail": [
+            "No resistance exercises through week 6.",
+            "No resisted elbow flexion for the first 6 weeks (biceps brevis / conjoined tendon protection).",
+            "No weight-bearing through the operated arm."
+          ],
+          "category": "Protocol",
+          "priority": 1,
+          "tags": [
+            "no-resistance",
+            "no-biceps",
+            "no-weightbearing"
+          ],
+          "check": {
+            "mode": "manual"
+          },
+          "references": [
+            "Protocol 8: no resistance until after week 6; no resisted elbow flexion for 6 weeks"
+          ]
+        }
+      ]
+    },
+    {
+      "weekNumber": 11,
+      "sessions": [
+        {
+          "id": "w11_s1",
+          "title": "Morning ROM + scapular control",
+          "timeOfDay": "08:00",
+          "exercises": [
+            {
+              "name": "Scapular setting",
+              "purpose": "Maintain scapular awareness and reduce guarding from sling posture.",
+              "instructions": "Gently draw shoulder blade back and down. Hold 3–5 seconds and relax. Repeat 6–8 times. Avoid shrugging.",
+              "progression": "Increase hold time gradually (up to 5 seconds) if pain-free and no shoulder hiking."
+            },
+            {
+              "name": "AROM scaption (≤ shoulder height unless cleared)",
+              "purpose": "Build controlled ROM with good scapular mechanics.",
+              "instructions": "2×8–12 slow reps in scapular plane. Stop before shrugging. Keep below shoulder height unless clinician cleared higher.",
+              "progression": "Increase reps before height. If next-day stiffness increases, reduce volume 30–50% for 48 hours."
+            },
+            {
+              "name": "Gentle ER/IR AROM at side",
+              "purpose": "Maintain rotation control without anterior stress.",
+              "instructions": "Elbow tucked with towel roll. 2×10–12 each direction, slow.",
+              "progression": "Increase reps before range."
+            },
+            {
+              "name": "Cervical/Thoracic mobility",
+              "purpose": "Prevent neck and upper-back stiffness due to sling use.",
+              "instructions": "Chin tucks 5 reps (2-second hold). Head rotation left/right 5 reps per side. Side-bend ear toward shoulder 3 reps per side. Then seated thoracic: 5 slow chest-lift breaths + 5 small trunk rotations each side. Keep shoulder relaxed.",
+              "progression": "Increase repetitions slightly as comfort allows. Keep movements small and pain-free."
+            }
+          ]
+        },
+        {
+          "id": "w11_strength",
+          "title": "Strength session (3×/week, nonconsecutive)",
+          "timeOfDay": "Mon/Wed/Fri 12:00",
+          "exercises": [
+            {
+              "name": "Band ER/IR at side (very light)",
+              "purpose": "Begin low-load rotator cuff strengthening once resistance is allowed (after week 6).",
+              "instructions": "Elbow at side with towel roll. Very light band. ER 2×12–15 slow reps, then IR 2×12–15. No trunk twist, shoulder stays down. Stop if pain spikes or form breaks.",
+              "progression": "Progress reps → 15, then minimal band increase. If next-day flare: reduce volume 30–50% for 48 hours."
+            },
+            {
+              "name": "Seated row (light band)",
+              "purpose": "Strengthen scapular retractors to support shoulder mechanics.",
+              "instructions": "Band anchored at chest height. Elbows close to body. Pull to ribs 2×12–15, pause 1–2 seconds, slow return.",
+              "progression": "Progress reps first. Avoid shrugging. Increase tension only when effortless and symptom-free."
+            },
+            {
+              "name": "Serratus punches (supine)",
+              "purpose": "Improve scapular protraction control without overhead loading.",
+              "instructions": "Lying on back. Arm supported; reach toward ceiling by moving shoulder blade forward, then return. 2×12–15.",
+              "progression": "Add a very light weight only if symptom-free and no next-day soreness."
+            },
+            {
+              "name": "Optional wall stability (only if response is calm)",
+              "purpose": "Add proprioception without heavy load.",
+              "instructions": "If pain response is calm for 1 week: add wall stability 2×30–45 seconds at chest height. No shrugging.",
+              "progression": "Increase duration before changing angle."
+            }
+          ]
+        },
+        {
+          "id": "w11_walk",
+          "title": "Daily walking & cardio",
+          "timeOfDay": "throughout day",
+          "exercises": [
+            {
+              "name": "Walking / stationary bike",
+              "purpose": "Maintain cardiovascular fitness without shoulder loading.",
+              "instructions": "Walk 30–45 minutes total (split if preferred), and/or stationary bike 20–30 minutes. Avoid bouncing of the operated arm; keep shoulder relaxed.",
+              "progression": "Increase duration gradually. Keep intensity conversational."
+            }
+          ]
+        },
+        {
+          "id": "w11_s4",
+          "title": "Evening mobility + downshift",
+          "timeOfDay": "20:00",
+          "exercises": [
+            {
+              "name": "Neck gentle mobility",
+              "purpose": "Reduce neck tension and support sleep quality.",
+              "instructions": "Chin tucks 5 reps, rotations 5 each side, small range.",
+              "progression": "Increase reps slightly if helpful."
+            },
+            {
+              "name": "Deep breathing",
+              "purpose": "Support relaxation and reduce guarding (useful for sleep quality).",
+              "instructions": "Inhale through nose for 4 seconds, belly expands. Exhale for 6 seconds. Repeat 5 breaths.",
+              "progression": "Increase to 8–10 breaths if helpful."
+            },
+            {
+              "name": "Scapula reset",
+              "purpose": "Reduce guarding after the day.",
+              "instructions": "3–5 scapular setting reps (3 seconds each), then fully relax."
+            }
+          ]
+        }
+      ],
+      "label": "Week 11 (POD 77–84)",
+      "description": "Phase 2 (weeks 7–12): focus on expanding ROM, scapular mechanics, coordination, strength and stability, then gradual ADL return. Work above shoulder height and sport are not appropriate yet. Overhead sports (including contact) only after 6 months.",
+      "gates": [
+        {
+          "id": "phase2-focus",
+          "title": "Phase 2 focus (no overhead work/sport yet)",
+          "detail": [
+            "Build ROM, scapula control, coordination, strength and stability.",
+            "Do not return to overhead work/sport in weeks 7–12."
+          ],
+          "category": "Protocol",
+          "priority": 1,
+          "tags": [
+            "phase2",
+            "no-overhead"
+          ],
+          "check": {
+            "mode": "manual"
+          },
+          "references": [
+            "Protocol 8: Phase 2 description (weeks 7–12)"
+          ]
+        },
+        {
+          "id": "strength-dose",
+          "title": "Strength dose is controlled",
+          "detail": [
+            "Strength work is 3×/week (nonconsecutive).",
+            "Progress reps and control first, then minimal load increases.",
+            "If next-day flare: reduce volume 30–50% for 48 hours."
+          ],
+          "category": "Progression",
+          "priority": 2,
+          "tags": [
+            "strength",
+            "progression"
+          ],
+          "check": {
+            "mode": "manual"
+          },
+          "references": [
+            "Deep research: criterion-based progression anchored to protocol"
+          ]
+        },
+        {
+          "id": "sport-limit",
+          "title": "Sport limits respected",
+          "detail": [
+            "No overhead sport until after 6 months.",
+            "No contact sport until after 6 months."
+          ],
+          "category": "Protocol",
+          "priority": 1,
+          "tags": [
+            "sport",
+            "no-overhead"
+          ],
+          "check": {
+            "mode": "manual"
+          },
+          "references": [
+            "Protocol 8: overhead sport after 6 months"
+          ]
+        },
+        {
+          "id": "pain",
+          "title": "Pain rules met",
+          "detail": [
+            "Resting pain ≤ 3/10.",
+            "Exercise pain ≤ 6/10.",
+            "Pain returns to baseline within 30 minutes.",
+            "No increase > +3 points from baseline."
+          ],
+          "category": "Safety",
+          "priority": 1,
+          "tags": [
+            "pain-rules"
+          ],
+          "check": {
+            "mode": "manual"
+          },
+          "references": [
+            "Protocol 8: NPRS rules"
+          ]
+        },
+        {
+          "id": "sling",
+          "title": "Immobilizer compliance",
+          "detail": [
+            "Immobilizer daytime weaning starts after week 5 (symptom-guided).",
+            "Night immobilizer through week 6.",
+            "From week 7 onward: use only if advised by clinician or for comfort."
+          ],
+          "category": "Protocol",
+          "priority": 1,
+          "tags": [
+            "sling",
+            "immobilizer"
+          ],
+          "check": {
+            "mode": "manual"
+          },
+          "references": [
+            "Protocol 8: immobilizer rules"
+          ]
+        },
+        {
+          "id": "protect",
+          "title": "Protection rules followed",
+          "detail": [
+            "No resistance exercises through week 6.",
+            "No resisted elbow flexion for the first 6 weeks (biceps brevis / conjoined tendon protection).",
+            "No weight-bearing through the operated arm."
+          ],
+          "category": "Protocol",
+          "priority": 1,
+          "tags": [
+            "no-resistance",
+            "no-biceps",
+            "no-weightbearing"
+          ],
+          "check": {
+            "mode": "manual"
+          },
+          "references": [
+            "Protocol 8: no resistance until after week 6; no resisted elbow flexion for 6 weeks"
+          ]
+        }
+      ]
+    }
+  ]
+}
