@@ -750,7 +750,7 @@ const css = `
 .dcd{border-color:color-mix(in srgb,var(--ok) 28%,var(--bd2))}
 .dco{border-color:color-mix(in srgb,var(--wa) 26%,var(--bd2))}
 
-.tl{display:flex;align-items:center;gap:12px;min-height:62px;padding:12px;border-radius:18px;border:1px solid var(--bd);background:var(--s1);backdrop-filter:blur(16px) saturate(1.2);-webkit-backdrop-filter:blur(16px) saturate(1.2);box-shadow:0 10px 26px rgba(0,0,0,.08);touch-action:manipulation}
+.tl{display:flex;align-items:center;gap:12px;min-height:62px;padding:12px;border-radius:18px;border:1px solid var(--bd);background:var(--s1);color:var(--tx);backdrop-filter:blur(16px) saturate(1.2);-webkit-backdrop-filter:blur(16px) saturate(1.2);box-shadow:0 10px 26px rgba(0,0,0,.08);touch-action:manipulation}
 .tl:hover{border-color:var(--bd2)}
 .tl.od{border-color:color-mix(in srgb,var(--wa) 45%,var(--bd2))}
 .tl.dn{opacity:.62;box-shadow:0 6px 16px rgba(0,0,0,.06)}
