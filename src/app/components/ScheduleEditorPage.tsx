@@ -164,6 +164,7 @@ const WeekEditor = memo(function WeekEditor({
   weekIndex,
   onChange,
   onRemove,
+  canDeleteWeek,
   onSessionChange,
   onSessionRemove,
   onSessionAdd,
@@ -178,6 +179,7 @@ const WeekEditor = memo(function WeekEditor({
   weekIndex: number;
   onChange: (patch: Partial<ScheduleWeek>) => void;
   onRemove: () => void;
+  canDeleteWeek: boolean;
   onSessionChange: (sessionIndex: number, patch: Partial<ScheduleSession>) => void;
   onSessionRemove: (sessionIndex: number) => void;
   onSessionAdd: () => void;
@@ -192,7 +194,14 @@ const WeekEditor = memo(function WeekEditor({
     <div className="pnl edWeek">
       <div className="edWeekTop">
         <div className="edWeekTitle">Week {week.weekNumber}</div>
-        <button type="button" className="ib" title="Delete week" aria-label={`Delete week ${week.weekNumber}`} onClick={onRemove}>
+        <button
+          type="button"
+          className="ib"
+          title={canDeleteWeek ? "Delete week" : "A schedule must have at least one week."}
+          aria-label={`Delete week ${week.weekNumber}`}
+          onClick={onRemove}
+          disabled={!canDeleteWeek}
+        >
           <Trash2 className="h-[18px] w-[18px]" />
         </button>
       </div>
@@ -354,6 +363,7 @@ export function ScheduleEditorPage({ schedule, setSchedule, onOpenUpload, onDown
             weekIndex={weekIndex}
             onChange={(patch) => setSchedule((prev) => updateWeek(prev, weekIndex, patch))}
             onRemove={() => setSchedule((prev) => removeWeek(prev, weekIndex))}
+            canDeleteWeek={schedule.weeks.length > 1}
             onSessionChange={(sessionIndex, patch) => setSchedule((prev) => updateSession(prev, weekIndex, sessionIndex, patch))}
             onSessionRemove={(sessionIndex) => setSchedule((prev) => removeSession(prev, weekIndex, sessionIndex))}
             onSessionAdd={() => setSchedule((prev) => addSession(prev, weekIndex))}

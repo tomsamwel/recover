@@ -29,6 +29,12 @@ describe("scheduleEditorMutations", () => {
     expect(removed.weeks.length).toBe(TEMPLATE_SCHEDULE.weeks.length);
   });
 
+
+  it("does not remove the last remaining week", () => {
+    const removed = removeWeek(TEMPLATE_SCHEDULE, 0);
+    expect(removed.weeks.length).toBe(1);
+    expect(removed.weeks[0].weekNumber).toBe(TEMPLATE_SCHEDULE.weeks[0].weekNumber);
+  });
   it("updates nested entities immutably", () => {
     const w = 0;
     const updatedWeek = updateWeek(TEMPLATE_SCHEDULE, w, { label: "Changed" });

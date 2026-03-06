@@ -98,6 +98,7 @@ export function addWeek(schedule: Schedule): Schedule {
 }
 
 export function removeWeek(schedule: Schedule, weekIndex: number): Schedule {
+  if (schedule.weeks.length <= 1) return schedule;
   return { ...schedule, weeks: schedule.weeks.filter((_, idx) => idx !== weekIndex) };
 }
 
