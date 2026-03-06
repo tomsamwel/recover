@@ -15,6 +15,7 @@ import type { DefaultScheduleEntry, Schedule } from "./domain/schedule";
 import { GateChecklist } from "./app/components/GateChecklist";
 import { ScheduleHeader } from "./app/components/ScheduleHeader";
 import { SessionTimeline } from "./app/components/SessionTimeline";
+import { ScheduleEditorPage } from "./app/components/ScheduleEditorPage";
 import {
   buildSessionsFromWeek,
   emptyDone,
@@ -44,6 +45,8 @@ import {
   Moon,
   Info,
   RefreshCcw,
+  PencilRuler,
+  Timer,
 } from "lucide-react";
 
 const clamp = (n: number, a: number, b: number) => Math.max(a, Math.min(b, n));
@@ -185,6 +188,9 @@ export default function App() {
     }
   });
   const [defaultSchedules, setDefaultSchedules] = useState<DefaultScheduleEntry[]>([]);
+  const [page, setPage] = useState<"timeline" | "editor">(() =>
+    typeof window !== "undefined" && window.location.hash === "#/editor" ? "editor" : "timeline"
+  );
   const [selectedDefaultId, setSelectedDefaultId] = useState("");
   const [defaultMenuOpen, setDefaultMenuOpen] = useState(false);
   const [defaultState, setDefaultState] = useState<{ loading: boolean; error: string | null }>({ loading: false, error: null });
@@ -201,6 +207,19 @@ export default function App() {
     } catch {}
   }, [dm]);
   useEffect(() => saveSchedule(schedule), [schedule]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const nextHash = page === "editor" ? "#/editor" : "#/timeline";
+    if (window.location.hash !== nextHash) window.history.replaceState(null, "", nextHash);
+  }, [page]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const onHashChange = () => setPage(window.location.hash === "#/editor" ? "editor" : "timeline");
+    window.addEventListener("hashchange", onHashChange);
+    return () => window.removeEventListener("hashchange", onHashChange);
+  }, []);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -419,10 +438,31 @@ export default function App() {
       try {
         const parsed = JSON.parse(String(fr.result ?? ""));
         const result = parseSchedule(parsed);
-        if (result.ok) setSchedule(result.value);
-      } catch {}
+        if (result.ok) {
+          setSchedule(result.value);
+          setUploadError(null);
+        } else {
+          setUploadError(result.errors[0] ?? "Invalid schedule JSON.");
+        }
+      } catch {
+        setUploadError("Invalid JSON file.");
+      }
     };
     fr.readAsText(file);
+  };
+
+  const [uploadError, setUploadError] = useState<string | null>(null);
+
+  const downloadSchedule = () => {
+    const blob = new Blob([JSON.stringify(schedule, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `schedule-v${schedule.version}.json`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
   };
 
   const applyDefaultSchedule = async (scheduleId?: string) => {
@@ -433,6 +473,7 @@ export default function App() {
     try {
       const next = await loadDefaultSchedule(entry);
       setSchedule(next);
+      setUploadError(null);
       setSelectedDefaultId(entry.id);
       setDefaultMenuOpen(false);
       setDefaultState({ loading: false, error: null });
@@ -489,39 +530,64 @@ export default function App() {
           clsx={clsx}
         />
 
-        <GateChecklist
-          gatesOpen={gatesOpen}
-          setGatesOpen={setGatesOpen}
-          gateProgress={gateProgress}
-          gates={gates}
-          gateDone={gateDone}
-          toggleGate={toggleGate}
-          showGateInfo={(gateId) => setOpen({ kind: "gate", gateId })}
-          clsx={clsx}
-        />
-
-        <SessionTimeline
-          containerRef={containerRef}
-          nowY={nowY}
-          sessions={sessions}
-          totals={totals}
-          isOverdue={isOverdue}
-          toggleSession={toggleSession}
-          dotRefs={dotRefs}
-          ICONS={ICONS}
-          done={done}
-          toggleItem={toggleItem}
-          setOpenExercise={(sessionId, itemId) => setOpen({ kind: "exercise", sessionId, itemId })}
-          Tile={Tile}
-          SessionDot={SessionDot}
-        />
-
-        <div className="fab">
-          <motion.button type="button" onClick={resetToday} whileTap={{ scale: 0.98 }} className="rb" aria-label="Reset today">
-            <RefreshCcw className="h-4 w-4" />
-            Reset
-          </motion.button>
+        <div className="pageTabs" role="tablist" aria-label="Pages">
+          <button type="button" className={clsx("pageTab", page === "timeline" && "pageTabOn")} onClick={() => setPage("timeline")}>
+            <Timer className="h-4 w-4" />
+            Timeline
+          </button>
+          <button type="button" className={clsx("pageTab", page === "editor" && "pageTabOn")} onClick={() => setPage("editor")}>
+            <PencilRuler className="h-4 w-4" />
+            Schedule editor
+          </button>
         </div>
+
+        {page === "timeline" ? (
+          <>
+            <GateChecklist
+              gatesOpen={gatesOpen}
+              setGatesOpen={setGatesOpen}
+              gateProgress={gateProgress}
+              gates={gates}
+              gateDone={gateDone}
+              toggleGate={toggleGate}
+              showGateInfo={(gateId) => setOpen({ kind: "gate", gateId })}
+              clsx={clsx}
+            />
+
+            <SessionTimeline
+              containerRef={containerRef}
+              nowY={nowY}
+              sessions={sessions}
+              totals={totals}
+              isOverdue={isOverdue}
+              toggleSession={toggleSession}
+              dotRefs={dotRefs}
+              ICONS={ICONS}
+              done={done}
+              toggleItem={toggleItem}
+              setOpenExercise={(sessionId, itemId) => setOpen({ kind: "exercise", sessionId, itemId })}
+              Tile={Tile}
+              SessionDot={SessionDot}
+            />
+          </>
+        ) : (
+          <ScheduleEditorPage
+            schedule={schedule}
+            setSchedule={setSchedule}
+            onOpenUpload={() => fileRef.current?.click()}
+            onDownload={downloadSchedule}
+            uploadError={uploadError}
+          />
+        )}
+
+        {page === "timeline" ? (
+          <div className="fab">
+            <motion.button type="button" onClick={resetToday} whileTap={{ scale: 0.98 }} className="rb" aria-label="Reset today">
+              <RefreshCcw className="h-4 w-4" />
+              Reset
+            </motion.button>
+          </div>
+        ) : null}
 
         <AnimatePresence>
           {open && (
@@ -702,6 +768,45 @@ const css = `
 
 .ib{width:36px;height:36px;border-radius:14px;display:grid;place-items:center;border:1px solid var(--bd);background:var(--s1);color:var(--txm);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:0 6px 18px rgba(0,0,0,.08);touch-action:manipulation}
 .ib:hover{border-color:var(--bd2);color:var(--tx)}
+
+.pageTabs{margin:10px 0 14px;display:inline-flex;gap:8px;padding:6px;border-radius:16px;border:1px solid var(--bd);background:color-mix(in srgb,var(--s1) 74%,transparent);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.pageTab{display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:12px;border:1px solid transparent;background:transparent;color:var(--txm);font-weight:700;touch-action:manipulation}
+.pageTabOn{background:var(--s2);border-color:var(--bd2);color:var(--tx)}
+
+.edWrap{display:grid;gap:14px;min-width:0}
+.edTop{padding:16px;display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.edTopTitle{min-width:0;max-width:560px}
+.edActions{display:flex;gap:10px;flex-wrap:wrap}
+.edActionBtn{min-height:40px}
+.edErr{padding:10px 12px;border-radius:14px;border:1px solid color-mix(in srgb,var(--wa) 45%,var(--bd2));background:color-mix(in srgb,var(--wa) 16%,transparent);color:var(--tx);overflow-wrap:anywhere}
+.edVal{padding:10px 12px;border-radius:14px;border:1px solid var(--bd2);background:color-mix(in srgb,var(--s1) 75%,transparent)}
+.edValHead{display:flex;align-items:center;gap:8px;font-weight:680}
+.edValList{margin:8px 0 0;padding-left:18px;color:var(--txm);display:grid;gap:4px;font-size:13px}
+.edValOk{border-color:color-mix(in srgb,var(--ok) 40%,var(--bd2))}
+.edValBad{border-color:color-mix(in srgb,var(--wa) 50%,var(--bd2));background:color-mix(in srgb,var(--wa) 12%,transparent)}
+.edMeta{padding:16px}
+.edSectionHead{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:2px;flex-wrap:wrap}
+.edWeeks{display:grid;gap:14px;min-width:0}
+.edWeek{padding:16px;display:grid;gap:14px;min-width:0;overflow:hidden}
+.edWeekTop{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.edWeekTitle{font-size:17px;font-weight:760;letter-spacing:-.01em;min-width:0;overflow-wrap:anywhere}
+.edSession,.edExercise,.edGateRow{border:1px solid var(--bd);border-radius:14px;padding:12px;background:color-mix(in srgb,var(--s1) 55%,transparent);min-width:0;overflow:hidden}
+.edExercise{margin-top:10px}
+.edSessionTop{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
+.edInlineBtn{width:max-content;max-width:100%;padding:9px 12px;font-size:13px;white-space:nowrap}
+.edGrid2,.edGrid3{display:grid;gap:10px;min-width:0}
+.edGrid2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.edGrid3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.edSpan2{grid-column:span 2}
+.edField{display:grid;gap:6px;font-size:12px;color:var(--txm);min-width:0}
+.edField span{white-space:nowrap;text-overflow:ellipsis;overflow:hidden}
+.edField input,.edField textarea{width:100%;max-width:100%;border-radius:10px;border:1px solid var(--bd);background:var(--s2);color:var(--tx);padding:9px 10px;font:inherit;min-width:0;box-sizing:border-box}
+.edField textarea{resize:vertical}
+.edGates{display:grid;gap:10px}
+.edGatesTop{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+
+@media (max-width:860px){.edGrid3{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:560px){.edGrid2,.edGrid3{grid-template-columns:1fr}.edSpan2{grid-column:auto}.pageTabs{display:flex}.edInlineBtn{width:100%;justify-content:center}.edActionBtn{width:100%;justify-content:center}}
 
 .tb{width:64px;height:36px;border-radius:999px;border:1px solid var(--bd);background:var(--s1);backdrop-filter:blur(14px) saturate(1.2);-webkit-backdrop-filter:blur(14px) saturate(1.2);box-shadow:0 6px 18px rgba(0,0,0,.08);display:grid;grid-template-columns:1fr 1fr;overflow:hidden}
 .tseg{border:none;background:transparent;border-radius:0;display:grid;place-items:center;color:var(--txm);touch-action:manipulation;height:100%;width:100%}
