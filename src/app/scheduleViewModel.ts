@@ -1,6 +1,7 @@
 import type { Gate, Schedule, ScheduleWeek } from "../domain/schedule";
 import { parseHHMM } from "../domain/schedule";
 import { DONE_STORAGE_KEY, GATES_STORAGE_KEY, SCHEDULE_STORAGE_KEY } from "./storage/keys";
+import { readJson, updateJson, writeJson } from "./storage/store";
 
 export type Item = { id: string; title: string; icon: IconName; how: string[]; why: string; progress?: string };
 export type Session = { id: string; time: string; title: string; items: Item[] };
@@ -9,6 +10,8 @@ export type DoneState = Record<string, Record<string, boolean>>;
 export type IconName = "hand" | "bone" | "pendulum" | "rotate" | "thoraxUp" | "scapula" | "breath" | "sleep";
 
 const pad2 = (n: number) => String(n).padStart(2, "0");
+
+const isRecord = (value: unknown): value is Record<string, unknown> => typeof value === "object" && value !== null && !Array.isArray(value);
 
 export const todayKey = () => {
   const d = new Date();
@@ -88,10 +91,9 @@ export function buildSessionsFromWeek(week: ScheduleWeek): Session[] {
 }
 
 export function loadSchedule<T>(fallback: T, parse: (value: unknown) => T | null): T {
+  const parsed = readJson<unknown | null>(SCHEDULE_STORAGE_KEY, null);
+  if (parsed == null) return fallback;
   try {
-    const raw = localStorage.getItem(SCHEDULE_STORAGE_KEY);
-    if (!raw) return fallback;
-    const parsed = JSON.parse(raw);
     return parse(parsed) ?? fallback;
   } catch {
     return fallback;
@@ -99,9 +101,7 @@ export function loadSchedule<T>(fallback: T, parse: (value: unknown) => T | null
 }
 
 export function saveSchedule(s: Schedule) {
-  try {
-    localStorage.setItem(SCHEDULE_STORAGE_KEY, JSON.stringify(s));
-  } catch {}
+  writeJson(SCHEDULE_STORAGE_KEY, s);
 }
 
 export function emptyDone(sessions: Session[]): DoneState {
@@ -115,50 +115,42 @@ export function emptyDone(sessions: Session[]): DoneState {
 
 export function loadDone(doneKey: string, sessions: Session[]): DoneState {
   const base = emptyDone(sessions);
-  try {
-    const raw = localStorage.getItem(DONE_STORAGE_KEY);
-    if (!raw) return base;
-    const parsed = JSON.parse(raw) as Record<string, DoneState>;
-    const saved = parsed?.[doneKey];
-    if (!saved) return base;
-    for (const s of sessions) for (const it of s.items) base[s.id][it.id] = Boolean(saved?.[s.id]?.[it.id]);
-    return base;
-  } catch {
-    return base;
+  const parsed = readJson<unknown>(DONE_STORAGE_KEY, {});
+  if (!isRecord(parsed)) return base;
+  const saved = parsed[doneKey];
+  if (!isRecord(saved)) return base;
+
+  for (const s of sessions) {
+    const sessionState = isRecord(saved[s.id]) ? saved[s.id] : {};
+    for (const it of s.items) base[s.id][it.id] = Boolean(sessionState[it.id]);
   }
+
+  return base;
 }
 
 export function saveDone(doneKey: string, done: DoneState) {
-  try {
-    const raw = localStorage.getItem(DONE_STORAGE_KEY);
-    const parsed = raw ? (JSON.parse(raw) as Record<string, DoneState>) : {};
-    parsed[doneKey] = done;
-    localStorage.setItem(DONE_STORAGE_KEY, JSON.stringify(parsed));
-  } catch {}
+  updateJson<Record<string, DoneState>>(DONE_STORAGE_KEY, {}, (current) => ({
+    ...current,
+    [doneKey]: done,
+  }));
 }
 
 export const emptyGateState = (gates: Gate[]) => Object.fromEntries(gates.map((g) => [g.id, false])) as Record<string, boolean>;
 
 export function loadGates(key: string, gates: Gate[]) {
   const base = emptyGateState(gates);
-  try {
-    const raw = localStorage.getItem(GATES_STORAGE_KEY);
-    if (!raw) return base;
-    const parsed = JSON.parse(raw) as Record<string, Record<string, boolean>>;
-    const saved = parsed?.[key];
-    if (!saved) return base;
-    for (const g of gates) base[g.id] = Boolean(saved[g.id]);
-    return base;
-  } catch {
-    return base;
-  }
+  const parsed = readJson<unknown>(GATES_STORAGE_KEY, {});
+  if (!isRecord(parsed)) return base;
+  const saved = parsed[key];
+  if (!isRecord(saved)) return base;
+
+  for (const g of gates) base[g.id] = Boolean(saved[g.id]);
+  return base;
 }
 
 export function saveGates(key: string, state: Record<string, boolean>) {
-  try {
-    const raw = localStorage.getItem(GATES_STORAGE_KEY);
-    const parsed = raw ? (JSON.parse(raw) as Record<string, Record<string, boolean>>) : {};
-    parsed[key] = state;
-    localStorage.setItem(GATES_STORAGE_KEY, JSON.stringify(parsed));
-  } catch {}
+  updateJson<Record<string, Record<string, boolean>>>(GATES_STORAGE_KEY, {}, (current) => ({
+    ...current,
+    [key]: state,
+  }));
 }
