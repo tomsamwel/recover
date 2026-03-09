@@ -46,4 +46,36 @@ describe("parseSchedule", () => {
       expect(result.errors.some((x) => x.includes("instructions are required"))).toBe(true);
     }
   });
+
+  it("normalizes legacy non-strict time strings into structured timing", () => {
+    const fixture = loadFixture("template-v1.json");
+    fixture.weeks[0].sessions[0].timeOfDay = "throughout day";
+    const recurringSession = JSON.parse(JSON.stringify(fixture.weeks[0].sessions[0]));
+    recurringSession.id = "strength";
+    recurringSession.title = "Strength";
+    recurringSession.timeOfDay = "Mon/Wed/Fri 12:00";
+    fixture.weeks[0].sessions.push(recurringSession);
+
+    const result = parseSchedule(fixture);
+    expect(result.ok).toBe(true);
+    if (result.ok) {
+      expect(result.value.weeks[0].sessions[0].timing).toEqual({ mode: "anytime", label: "Throughout day" });
+      expect(result.value.weeks[0].sessions[1].timing).toEqual({
+        mode: "recurring",
+        days: ["Mon", "Wed", "Fri"],
+        time: "12:00",
+        label: "Mon/Wed/Fri 12:00",
+      });
+    }
+  });
+
+  it("rejects malformed structured timing", () => {
+    const fixture = loadFixture("template-v1.json");
+    fixture.weeks[0].sessions[0].timing = { mode: "recurring", days: [], time: "99:99" };
+    const result = parseSchedule(fixture);
+    expect(result.ok).toBe(false);
+    if (!result.ok) {
+      expect(result.errors.some((x) => x.includes("invalid recurring days"))).toBe(true);
+    }
+  });
 });

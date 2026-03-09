@@ -170,7 +170,11 @@
               "instructions": "Do 2 walks of 20–30 minutes or 3 walks of 15–20 minutes. Wear your immobilizer and keep the arm supported. Avoid arm swing with the operated arm.",
               "progression": "Increase duration gradually as tolerated. Prefer splitting into shorter walks if sling traction discomfort appears."
             }
-          ]
+          ],
+          "timing": {
+            "mode": "anytime",
+            "label": "Throughout day"
+          }
         }
       ],
       "label": "Week 0 (POD 0–7)",
@@ -416,7 +420,11 @@
               "instructions": "Do 2 walks of 20–30 minutes or 3 walks of 15–20 minutes. Wear your immobilizer and keep the arm supported. Avoid arm swing with the operated arm.",
               "progression": "Increase duration gradually as tolerated. Prefer splitting into shorter walks if sling traction discomfort appears."
             }
-          ]
+          ],
+          "timing": {
+            "mode": "anytime",
+            "label": "Throughout day"
+          }
         }
       ],
       "label": "Week 1 (POD 7–14)",
@@ -662,7 +670,11 @@
               "instructions": "Do 2 walks of 20–30 minutes or 3 walks of 15–20 minutes. Wear your immobilizer and keep the arm supported. Avoid arm swing with the operated arm.",
               "progression": "Increase duration gradually as tolerated. Prefer splitting into shorter walks if sling traction discomfort appears."
             }
-          ]
+          ],
+          "timing": {
+            "mode": "anytime",
+            "label": "Throughout day"
+          }
         }
       ],
       "label": "Week 2 (POD 14–21)",
@@ -937,7 +949,11 @@
               "instructions": "Do 2 walks of 20–30 minutes or 3 walks of 15–20 minutes. Wear your immobilizer and keep the arm supported. Avoid arm swing with the operated arm.",
               "progression": "Increase duration gradually as tolerated. Prefer splitting into shorter walks if sling traction discomfort appears."
             }
-          ]
+          ],
+          "timing": {
+            "mode": "anytime",
+            "label": "Throughout day"
+          }
         }
       ],
       "label": "Week 3 (POD 21–28)",
@@ -1231,7 +1247,11 @@
               "instructions": "Do 2 walks of 20–30 minutes or 3 walks of 15–20 minutes. Wear your immobilizer and keep the arm supported. Avoid arm swing with the operated arm.",
               "progression": "Increase duration gradually as tolerated. Prefer splitting into shorter walks if sling traction discomfort appears."
             }
-          ]
+          ],
+          "timing": {
+            "mode": "anytime",
+            "label": "Throughout day"
+          }
         }
       ],
       "label": "Week 4 (POD 28–35)",
@@ -1545,7 +1565,11 @@
               "instructions": "Do 2 walks of 20–30 minutes or 3 walks of 15–20 minutes. Keep the arm supported; follow immobilizer rules. Avoid arm swing with the operated arm.",
               "progression": "Increase duration gradually as tolerated. Prefer splitting into shorter walks if sling traction discomfort appears."
             }
-          ]
+          ],
+          "timing": {
+            "mode": "anytime",
+            "label": "Throughout day"
+          }
         }
       ],
       "label": "Week 5 (POD 35–42)",
@@ -1840,7 +1864,11 @@
               "instructions": "Do 2 walks of 20–30 minutes or 3 walks of 15–20 minutes. Keep the arm supported; follow immobilizer rules. Avoid arm swing with the operated arm.",
               "progression": "Increase duration gradually as tolerated. Prefer splitting into shorter walks if sling traction discomfort appears."
             }
-          ]
+          ],
+          "timing": {
+            "mode": "anytime",
+            "label": "Throughout day"
+          }
         }
       ],
       "label": "Week 6 (POD 42–49)",
@@ -2037,7 +2065,17 @@
               "instructions": "If pain response is calm for 1 week: add wall stability 2×30–45 seconds at chest height. No shrugging.",
               "progression": "Increase duration before changing angle."
             }
-          ]
+          ],
+          "timing": {
+            "mode": "recurring",
+            "days": [
+              "Mon",
+              "Wed",
+              "Fri"
+            ],
+            "time": "12:00",
+            "label": "Mon/Wed/Fri 12:00"
+          }
         },
         {
           "id": "w7_walk",
@@ -2050,7 +2088,11 @@
               "instructions": "Walk 30–45 minutes total (split if preferred), and/or stationary bike 20–30 minutes. Avoid bouncing of the operated arm; keep shoulder relaxed.",
               "progression": "Increase duration gradually. Keep intensity conversational."
             }
-          ]
+          ],
+          "timing": {
+            "mode": "anytime",
+            "label": "Throughout day"
+          }
         },
         {
           "id": "w7_s4",
@@ -2270,7 +2312,17 @@
               "instructions": "If pain response is calm for 1 week: add wall stability 2×30–45 seconds at chest height. No shrugging.",
               "progression": "Increase duration before changing angle."
             }
-          ]
+          ],
+          "timing": {
+            "mode": "recurring",
+            "days": [
+              "Mon",
+              "Wed",
+              "Fri"
+            ],
+            "time": "12:00",
+            "label": "Mon/Wed/Fri 12:00"
+          }
         },
         {
           "id": "w8_walk",
@@ -2283,7 +2335,11 @@
               "instructions": "Walk 30–45 minutes total (split if preferred), and/or stationary bike 20–30 minutes. Avoid bouncing of the operated arm; keep shoulder relaxed.",
               "progression": "Increase duration gradually. Keep intensity conversational."
             }
-          ]
+          ],
+          "timing": {
+            "mode": "anytime",
+            "label": "Throughout day"
+          }
         },
         {
           "id": "w8_s4",
@@ -2503,7 +2559,17 @@
               "instructions": "If pain response is calm for 1 week: add wall stability 2×30–45 seconds at chest height. No shrugging.",
               "progression": "Increase duration before changing angle."
             }
-          ]
+          ],
+          "timing": {
+            "mode": "recurring",
+            "days": [
+              "Mon",
+              "Wed",
+              "Fri"
+            ],
+            "time": "12:00",
+            "label": "Mon/Wed/Fri 12:00"
+          }
         },
         {
           "id": "w9_walk",
@@ -2516,7 +2582,11 @@
               "instructions": "Walk 30–45 minutes total (split if preferred), and/or stationary bike 20–30 minutes. Avoid bouncing of the operated arm; keep shoulder relaxed.",
               "progression": "Increase duration gradually. Keep intensity conversational."
             }
-          ]
+          ],
+          "timing": {
+            "mode": "anytime",
+            "label": "Throughout day"
+          }
         },
         {
           "id": "w9_s4",
@@ -2736,7 +2806,17 @@
               "instructions": "If pain response is calm for 1 week: add wall stability 2×30–45 seconds at chest height. No shrugging.",
               "progression": "Increase duration before changing angle."
             }
-          ]
+          ],
+          "timing": {
+            "mode": "recurring",
+            "days": [
+              "Mon",
+              "Wed",
+              "Fri"
+            ],
+            "time": "12:00",
+            "label": "Mon/Wed/Fri 12:00"
+          }
         },
         {
           "id": "w10_walk",
@@ -2749,7 +2829,11 @@
               "instructions": "Walk 30–45 minutes total (split if preferred), and/or stationary bike 20–30 minutes. Avoid bouncing of the operated arm; keep shoulder relaxed.",
               "progression": "Increase duration gradually. Keep intensity conversational."
             }
-          ]
+          ],
+          "timing": {
+            "mode": "anytime",
+            "label": "Throughout day"
+          }
         },
         {
           "id": "w10_s4",
@@ -2969,7 +3053,17 @@
               "instructions": "If pain response is calm for 1 week: add wall stability 2×30–45 seconds at chest height. No shrugging.",
               "progression": "Increase duration before changing angle."
             }
-          ]
+          ],
+          "timing": {
+            "mode": "recurring",
+            "days": [
+              "Mon",
+              "Wed",
+              "Fri"
+            ],
+            "time": "12:00",
+            "label": "Mon/Wed/Fri 12:00"
+          }
         },
         {
           "id": "w11_walk",
@@ -2982,7 +3076,11 @@
               "instructions": "Walk 30–45 minutes total (split if preferred), and/or stationary bike 20–30 minutes. Avoid bouncing of the operated arm; keep shoulder relaxed.",
               "progression": "Increase duration gradually. Keep intensity conversational."
             }
-          ]
+          ],
+          "timing": {
+            "mode": "anytime",
+            "label": "Throughout day"
+          }
         },
         {
           "id": "w11_s4",

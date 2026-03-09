@@ -13,8 +13,28 @@ export type ScheduleSession = {
   id: string;
   title: string;
   timeOfDay?: string | null;
+  timing?: ScheduleSessionTiming;
   exercises: ScheduleExercise[];
 };
+
+export type ScheduleDayOfWeek = "Mon" | "Tue" | "Wed" | "Thu" | "Fri" | "Sat" | "Sun";
+
+export type ScheduleSessionTiming =
+  | {
+      mode: "exact";
+      time: string;
+      label?: string;
+    }
+  | {
+      mode: "anytime";
+      label?: string;
+    }
+  | {
+      mode: "recurring";
+      days: ScheduleDayOfWeek[];
+      time?: string;
+      label?: string;
+    };
 
 export type SchedulePeriod = { id: string; label: string; startDay: number; endDay: number };
 

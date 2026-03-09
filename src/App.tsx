@@ -86,9 +86,16 @@ function Tile({
   onInfo: () => void;
 }) {
   return (
-    <motion.button
-      type="button"
+    <motion.div
+      role="button"
+      tabIndex={0}
       onClick={onToggle}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          onToggle();
+        }
+      }}
       whileTap={{ scale: 0.985 }}
       whileHover={{ y: -1 }}
       transition={{ duration: 0.12 }}
@@ -110,7 +117,7 @@ function Tile({
       >
         <Info className="h-[18px] w-[18px]" />
       </button>
-    </motion.button>
+    </motion.div>
   );
 }
 
@@ -336,6 +343,10 @@ export default function App() {
   useEffect(() => saveGates(gateKey, gateDone), [gateKey, gateDone]);
 
   useEffect(() => {
+    if (page !== "timeline") {
+      setDotPos({});
+      return;
+    }
     const el = containerRef.current;
     if (!el) return;
     const measure = () => {
@@ -349,15 +360,16 @@ export default function App() {
       }
       setDotPos(next);
     };
-    measure();
+    const rafId = window.requestAnimationFrame(measure);
     const ro = new ResizeObserver(measure);
     ro.observe(el);
     window.addEventListener("resize", measure);
     return () => {
+      window.cancelAnimationFrame(rafId);
       ro.disconnect();
       window.removeEventListener("resize", measure);
     };
-  }, [done, open, sessions, gates]);
+  }, [page, done, open, sessions, gates]);
 
   const totals = useMemo(() => {
     const out: Record<string, { done: number; total: number; progress: number }> = {};
@@ -378,7 +390,7 @@ export default function App() {
   const timePoints = useMemo(() => {
     const pts = sessions
       .map((s) => {
-        const t = parseHHMM(s.time);
+        const t = parseHHMM(s.clockTime);
         const y = dotPos[s.id];
         return Number.isFinite(t) && Number.isFinite(y) ? { id: s.id, t: t as number, y } : null;
       })
@@ -426,7 +438,7 @@ export default function App() {
     const t = minutesOfDay(now);
     const s = sessions.find((x) => x.id === sessionId);
     if (!s) return false;
-    const st = parseHHMM(s.time);
+    const st = parseHHMM(s.clockTime);
     if (!Number.isFinite(st)) return false;
     const tot = totals[sessionId];
     return t > st + 10 && tot.done < tot.total;

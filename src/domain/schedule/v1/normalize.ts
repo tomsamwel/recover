@@ -1,4 +1,47 @@
-import type { Schedule, ScheduleMeta, ScheduleWeek } from "../model";
+import type { Schedule, ScheduleDayOfWeek, ScheduleMeta, ScheduleSessionTiming, ScheduleWeek } from "../model";
+import { isAnytimeLabel, parseHHMM, parseRecurringTimingLabel } from "../utils";
+
+const DAY_ORDER: ScheduleDayOfWeek[] = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+
+function normalizeDays(raw: unknown): ScheduleDayOfWeek[] {
+  if (!Array.isArray(raw)) return [];
+  const set = new Set<ScheduleDayOfWeek>();
+  for (const item of raw) {
+    if (typeof item !== "string") continue;
+    if (DAY_ORDER.includes(item as ScheduleDayOfWeek)) set.add(item as ScheduleDayOfWeek);
+  }
+  return DAY_ORDER.filter((d) => set.has(d));
+}
+
+function normalizeTimingFromRaw(raw: any): ScheduleSessionTiming | undefined {
+  if (!raw || typeof raw !== "object") return undefined;
+  const mode = typeof raw.mode === "string" ? raw.mode : "";
+  const label = typeof raw.label === "string" ? raw.label : undefined;
+
+  if (mode === "exact") {
+    const time = typeof raw.time === "string" ? raw.time.trim() : "";
+    return { mode: "exact", time, label };
+  }
+
+  if (mode === "anytime") return label ? { mode: "anytime", label } : { mode: "anytime" };
+
+  if (mode === "recurring") {
+    const days = normalizeDays(raw.days);
+    const time = typeof raw.time === "string" ? raw.time : undefined;
+    return { mode: "recurring", days, time, label };
+  }
+
+  return undefined;
+}
+
+function normalizeTimingFromLegacy(timeOfDay: string): ScheduleSessionTiming {
+  const trimmed = timeOfDay.trim();
+  if (Number.isFinite(parseHHMM(trimmed))) return { mode: "exact", time: trimmed };
+  if (isAnytimeLabel(trimmed)) return { mode: "anytime", label: "Throughout day" };
+  const recurring = parseRecurringTimingLabel(trimmed);
+  if (recurring) return { mode: "recurring", days: recurring.days, time: recurring.time, label: trimmed };
+  return { mode: "anytime", label: trimmed };
+}
 
 export function normalizeMeta(raw: any): ScheduleMeta | undefined {
   if (!raw || typeof raw !== "object") return undefined;
@@ -43,21 +86,31 @@ export function normalizeScheduleV1(raw: any): Schedule | null {
         : [],
       sessions: w.sessions
         .filter((s: any) => s && typeof s === "object" && typeof s.id === "string" && Array.isArray(s.exercises))
-        .map((s: any) => ({
-          id: String(s.id),
-          title: typeof s.title === "string" ? s.title : String(s.id),
-          timeOfDay: typeof s.timeOfDay === "string" ? s.timeOfDay : s.timeOfDay ?? null,
-          exercises: s.exercises
-            .filter((e: any) => e && typeof e === "object")
-            .map((e: any) => ({
-              id: typeof e.id === "string" ? e.id : undefined,
-              name: String(e.name ?? ""),
-              purpose: String(e.purpose ?? ""),
-              instructions: String(e.instructions ?? ""),
-              progression: typeof e.progression === "string" ? e.progression : undefined,
-              link: typeof e.link === "string" ? e.link : undefined,
-            })),
-        })),
+        .map((s: any) => {
+          const legacyTime = typeof s.timeOfDay === "string" ? s.timeOfDay : s.timeOfDay ?? null;
+          const hasRawTiming = s.timing && typeof s.timing === "object";
+          const timing = hasRawTiming
+            ? normalizeTimingFromRaw(s.timing)
+            : typeof legacyTime === "string" && legacyTime.trim()
+              ? normalizeTimingFromLegacy(legacyTime)
+              : undefined;
+          return {
+            id: String(s.id),
+            title: typeof s.title === "string" ? s.title : String(s.id),
+            timeOfDay: legacyTime,
+            timing,
+            exercises: s.exercises
+              .filter((e: any) => e && typeof e === "object")
+              .map((e: any) => ({
+                id: typeof e.id === "string" ? e.id : undefined,
+                name: String(e.name ?? ""),
+                purpose: String(e.purpose ?? ""),
+                instructions: String(e.instructions ?? ""),
+                progression: typeof e.progression === "string" ? e.progression : undefined,
+                link: typeof e.link === "string" ? e.link : undefined,
+              })),
+          };
+        }),
     }));
 
   if (!weeks.length) return null;

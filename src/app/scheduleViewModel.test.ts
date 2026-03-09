@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { Gate, Schedule } from "../domain/schedule";
+import type { Gate, Schedule, ScheduleWeek } from "../domain/schedule";
 import type { Session } from "./scheduleViewModel";
-import { loadDone, loadGates, loadSchedule, saveDone, saveGates, saveSchedule } from "./scheduleViewModel";
+import { buildSessionsFromWeek, loadDone, loadGates, loadSchedule, saveDone, saveGates, saveSchedule } from "./scheduleViewModel";
 import { DONE_STORAGE_KEY, GATES_STORAGE_KEY, SCHEDULE_STORAGE_KEY } from "./storage/keys";
 
 class LocalStorageMock {
@@ -28,6 +28,7 @@ const sessions: Session[] = [
   {
     id: "am",
     time: "08:00",
+    clockTime: "08:00",
     title: "AM",
     items: [
       { id: "a", title: "A", icon: "hand", how: [], why: "" },
@@ -118,5 +119,30 @@ describe("scheduleViewModel storage behavior", () => {
       g1: false,
       g2: false,
     });
+  });
+
+  it("orders exact-time sessions before flexible sessions", () => {
+    const week: ScheduleWeek = {
+      weekNumber: 0,
+      gates: [],
+      sessions: [
+        {
+          id: "any",
+          title: "Any",
+          timing: { mode: "anytime", label: "Throughout day" },
+          exercises: [{ name: "A", purpose: "", instructions: "x" }],
+        },
+        {
+          id: "exact",
+          title: "Exact",
+          timing: { mode: "exact", time: "08:00" },
+          exercises: [{ name: "B", purpose: "", instructions: "y" }],
+        },
+      ],
+    };
+    const result = buildSessionsFromWeek(week);
+    expect(result.map((x) => x.id)).toEqual(["exact", "any"]);
+    expect(result[0].clockTime).toBe("08:00");
+    expect(result[1].clockTime).toBe("");
   });
 });

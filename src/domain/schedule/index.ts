@@ -2,14 +2,26 @@ export type {
   Gate,
   Schedule,
   ScheduleAnchor,
+  ScheduleDayOfWeek,
   ScheduleExercise,
   ScheduleMeta,
   SchedulePeriod,
   ScheduleSession,
+  ScheduleSessionTiming,
   ScheduleWeek,
 } from "./model";
 export { TEMPLATE_SCHEDULE } from "./template";
-export { activePeriod, getAnchorDate, parseHHMM, weekIndexFromDay } from "./utils";
+export {
+  activePeriod,
+  getAnchorDate,
+  getSessionDisplayTime,
+  getSessionStrictClockTime,
+  getSessionSortableMinutes,
+  isAnytimeLabel,
+  parseHHMM,
+  parseRecurringTimingLabel,
+  weekIndexFromDay,
+} from "./utils";
 export type { ParseScheduleResult } from "./parse";
 export { parseSchedule } from "./parse";
 

@@ -1,10 +1,10 @@
-import type { Gate, Schedule, ScheduleWeek } from "../domain/schedule";
-import { parseHHMM } from "../domain/schedule";
+import type { Gate, Schedule, ScheduleSession, ScheduleWeek } from "../domain/schedule";
+import { getSessionDisplayTime, getSessionSortableMinutes, getSessionStrictClockTime } from "../domain/schedule";
 import { DONE_STORAGE_KEY, GATES_STORAGE_KEY, SCHEDULE_STORAGE_KEY } from "./storage/keys";
 import { readJson, updateJson, writeJson } from "./storage/store";
 
 export type Item = { id: string; title: string; icon: IconName; how: string[]; why: string; progress?: string };
-export type Session = { id: string; time: string; title: string; items: Item[] };
+export type Session = { id: string; time: string; title: string; items: Item[]; clockTime: string };
 export type DoneState = Record<string, Record<string, boolean>>;
 
 export type IconName = "hand" | "bone" | "pendulum" | "rotate" | "thoraxUp" | "scapula" | "breath" | "sleep";
@@ -37,17 +37,26 @@ function hash32(str: string) {
 }
 
 export function scheduleId(s: Schedule) {
+  const timingParts = (timing: ScheduleSession["timing"]): [string, string, string[], string] => {
+    if (!timing) return ["", "", [], ""];
+    if (timing.mode === "exact") return [timing.mode, timing.time, [], timing.label ?? ""];
+    if (timing.mode === "anytime") return [timing.mode, "", [], timing.label ?? ""];
+    return [timing.mode, timing.time ?? "", timing.days, timing.label ?? ""];
+  };
   const m = s.metadata ?? {};
   const slim = {
     v: s.version,
     a: m.anchor?.at ?? m.surgeryStart ?? "",
     p: Array.isArray(m.periods) ? m.periods.map((x) => [x.id, x.label, x.startDay, x.endDay]) : [],
     w: s.weeks.map((wk) => [
-      wk.weekNumber,
-      wk.label ?? "",
-      wk.gates?.map((g) => [g.id, g.title]) ?? [],
-      wk.sessions.map((ss) => [ss.id, ss.title, ss.timeOfDay ?? "", ss.exercises.map((e) => e.id ?? e.name)]),
-    ]),
+        wk.weekNumber,
+        wk.label ?? "",
+        wk.gates?.map((g) => [g.id, g.title]) ?? [],
+        wk.sessions.map((ss) => {
+          const [mode, time, days, label] = timingParts(ss.timing);
+          return [ss.id, ss.title, ss.timeOfDay ?? "", mode, time, days, label, ss.exercises.map((e) => e.id ?? e.name)];
+        }),
+      ]),
   };
   return hash32(JSON.stringify(slim));
 }
@@ -66,8 +75,8 @@ function iconFor(title: string): IconName {
 
 export function buildSessionsFromWeek(week: ScheduleWeek): Session[] {
   return week.sessions
-    .map((s) => ({ ...s, t: parseHHMM(s.timeOfDay) }))
-    .sort((a, b) => (Number.isFinite(a.t) ? a.t : 1e9) - (Number.isFinite(b.t) ? b.t : 1e9))
+    .map((s) => ({ ...s, t: getSessionSortableMinutes(s) }))
+    .sort((a, b) => (typeof a.t === "number" ? a.t : 1e9) - (typeof b.t === "number" ? b.t : 1e9))
     .map((s) => {
       const items: Item[] = s.exercises.map((e, i) => {
         const lines = (e.instructions || "")
@@ -76,9 +85,9 @@ export function buildSessionsFromWeek(week: ScheduleWeek): Session[] {
           .split("\n")
           .map((x) => x.trim())
           .filter(Boolean);
-        const id = (e.id || `${s.id}__${i}__${e.name || "exercise"}`).trim().toLowerCase().replaceAll(" ", "-");
+        const normalizedId = (e.id || `${s.id}__${i}__${e.name || "exercise"}`).trim().toLowerCase().replace(/ /g, "-");
         return {
-          id,
+          id: normalizedId,
           title: e.name || "Exercise",
           icon: iconFor(e.name || "exercise"),
           how: lines.length ? lines : [e.instructions].filter(Boolean),
@@ -86,7 +95,13 @@ export function buildSessionsFromWeek(week: ScheduleWeek): Session[] {
           progress: e.progression,
         };
       });
-      return { id: s.id, time: typeof s.timeOfDay === "string" ? s.timeOfDay : "", title: s.title, items };
+      return {
+        id: s.id,
+        time: getSessionDisplayTime(s),
+        clockTime: getSessionStrictClockTime(s) ?? "",
+        title: s.title,
+        items,
+      };
     });
 }
 
@@ -121,7 +136,8 @@ export function loadDone(doneKey: string, sessions: Session[]): DoneState {
   if (!isRecord(saved)) return base;
 
   for (const s of sessions) {
-    const sessionState = isRecord(saved[s.id]) ? saved[s.id] : {};
+    const maybeSessionState = saved[s.id];
+    const sessionState: Record<string, unknown> = isRecord(maybeSessionState) ? maybeSessionState : {};
     for (const it of s.items) base[s.id][it.id] = Boolean(sessionState[it.id]);
   }
 

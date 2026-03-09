@@ -1,7 +1,8 @@
 import React, { memo, useCallback, useMemo } from "react";
 import { motion } from "framer-motion";
 import { AlertTriangle, Download, Plus, Trash2, Upload } from "lucide-react";
-import type { Gate, Schedule, ScheduleExercise, ScheduleSession, ScheduleWeek } from "../../domain/schedule";
+import { isAnytimeLabel, parseHHMM, parseRecurringTimingLabel } from "../../domain/schedule";
+import type { Gate, Schedule, ScheduleDayOfWeek, ScheduleExercise, ScheduleSession, ScheduleSessionTiming, ScheduleWeek } from "../../domain/schedule";
 import {
   addExercise,
   addGate,
@@ -32,6 +33,40 @@ const parseLines = (value: string) =>
     .map((x) => x.trim())
     .filter(Boolean);
 const joinLines = (items: string[]) => items.join("\n");
+const DAY_OPTIONS: ScheduleDayOfWeek[] = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+
+function normalizeTimingForEditor(session: ScheduleSession): ScheduleSessionTiming {
+  const t = session.timing;
+  if (t?.mode === "exact") {
+    const time = typeof t.time === "string" && t.time.trim() ? t.time.trim() : "08:00";
+    const label = typeof t.label === "string" ? t.label : undefined;
+    return { mode: "exact", time, label };
+  }
+  if (t?.mode === "anytime") {
+    const label = typeof t.label === "string" ? t.label : undefined;
+    return label ? { mode: "anytime", label } : { mode: "anytime" };
+  }
+  if (t?.mode === "recurring") {
+    const days = Array.isArray(t.days) ? t.days.filter((d): d is ScheduleDayOfWeek => DAY_OPTIONS.includes(d as ScheduleDayOfWeek)) : [];
+    const label = typeof t.label === "string" ? t.label : undefined;
+    const time = typeof t.time === "string" ? t.time : undefined;
+    return { mode: "recurring", days, time, label };
+  }
+  const raw = typeof session.timeOfDay === "string" ? session.timeOfDay.trim() : "";
+  if (!raw) return { mode: "exact", time: "08:00" };
+  if (Number.isFinite(parseHHMM(raw))) return { mode: "exact", time: raw };
+  if (isAnytimeLabel(raw)) return { mode: "anytime", label: "Throughout day" };
+  const recurring = parseRecurringTimingLabel(raw);
+  if (recurring) return { mode: "recurring", days: recurring.days, time: recurring.time, label: raw };
+  return { mode: "anytime", label: raw };
+}
+
+function legacyTimeFromTiming(timing: ScheduleSessionTiming): string {
+  if (timing.mode === "exact") return timing.time;
+  if (timing.mode === "anytime") return timing.label?.trim() || "throughout day";
+  if (timing.label?.trim()) return timing.label.trim();
+  return `${timing.days.join("/")}${timing.time ? ` ${timing.time}` : ""}`.trim();
+}
 
 const ExerciseEditor = memo(function ExerciseEditor({
   exercise,
@@ -87,6 +122,9 @@ const SessionEditor = memo(function SessionEditor({
   onExerciseChange: (exerciseIndex: number, patch: Partial<ScheduleExercise>) => void;
   onExerciseRemove: (exerciseIndex: number) => void;
 }) {
+  const timing = normalizeTimingForEditor(session);
+  const applyTiming = (next: ScheduleSessionTiming) => onChange({ timing: next, timeOfDay: legacyTimeFromTiming(next) });
+
   return (
     <div className="edSession">
       <div className="edSessionTop">
@@ -106,10 +144,80 @@ const SessionEditor = memo(function SessionEditor({
           <input type="text" value={session.title} onChange={(e) => onChange({ title: e.target.value })} />
         </label>
         <label className="edField">
-          <span>Time (HH:MM)</span>
-          <input type="text" value={session.timeOfDay ?? ""} onChange={(e) => onChange({ timeOfDay: e.target.value })} />
+          <span>Timing mode</span>
+          <select
+            value={timing.mode}
+            onChange={(e) => {
+              const mode = e.target.value as ScheduleSessionTiming["mode"];
+              if (mode === "exact") applyTiming({ mode: "exact", time: "08:00" });
+              if (mode === "anytime") applyTiming({ mode: "anytime", label: "Throughout day" });
+              if (mode === "recurring") applyTiming({ mode: "recurring", days: ["Mon", "Wed", "Fri"], time: "12:00" });
+            }}
+          >
+            <option value="exact">Exact time</option>
+            <option value="anytime">Any time</option>
+            <option value="recurring">Recurring days</option>
+          </select>
         </label>
       </div>
+
+      {timing.mode === "exact" ? (
+        <div className="edGrid3">
+          <label className="edField">
+            <span>Time (HH:MM)</span>
+            <input type="text" value={timing.time} onChange={(e) => applyTiming({ ...timing, time: e.target.value })} />
+          </label>
+          <label className="edField edSpan2">
+            <span>Display label (optional)</span>
+            <input type="text" value={timing.label ?? ""} onChange={(e) => applyTiming({ ...timing, label: e.target.value || undefined })} />
+          </label>
+        </div>
+      ) : null}
+
+      {timing.mode === "anytime" ? (
+        <div className="edGrid3">
+          <label className="edField edSpan2">
+            <span>Label (optional)</span>
+            <input type="text" value={timing.label ?? ""} onChange={(e) => applyTiming({ ...timing, label: e.target.value || undefined })} />
+          </label>
+        </div>
+      ) : null}
+
+      {timing.mode === "recurring" ? (
+        <div className="edGrid3">
+          <div className="edField edSpan2">
+            <span>Days</span>
+            <div className="edGrid3">
+              {DAY_OPTIONS.map((day) => {
+                const checked = timing.days.includes(day);
+                return (
+                  <label key={day} className="edField">
+                    <span>{day}</span>
+                    <input
+                      type="checkbox"
+                      checked={checked}
+                      onChange={() =>
+                        applyTiming({
+                          ...timing,
+                          days: checked ? timing.days.filter((x) => x !== day) : [...timing.days, day],
+                        })
+                      }
+                    />
+                  </label>
+                );
+              })}
+            </div>
+          </div>
+          <label className="edField">
+            <span>Time (optional HH:MM)</span>
+            <input type="text" value={timing.time ?? ""} onChange={(e) => applyTiming({ ...timing, time: e.target.value || undefined })} />
+          </label>
+          <label className="edField">
+            <span>Display label (optional)</span>
+            <input type="text" value={timing.label ?? ""} onChange={(e) => applyTiming({ ...timing, label: e.target.value || undefined })} />
+          </label>
+        </div>
+      ) : null}
 
       {session.exercises.map((exercise, exerciseIndex) => (
         <ExerciseEditor
