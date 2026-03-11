@@ -827,7 +827,7 @@ const css = `
 .ti{width:16px;height:16px;transition:opacity .12s ease}
 
 .gt{margin-top:12px;padding:12px 14px}
-.gth{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;background:transparent;border:none;padding:0;text-align:left;cursor:pointer;touch-action:manipulation}
+.gth{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;background:transparent;border:none;padding:0;text-align:left;cursor:pointer;touch-action:manipulation;color:var(--tx)}
 .gtr{display:flex;align-items:center;gap:10px}
 .car{width:18px;height:18px;color:var(--txm);transition:transform .16s ease}
 .carOn{transform:rotate(180deg)}
@@ -840,6 +840,7 @@ const css = `
 .gcOn{border-color:color-mix(in srgb,var(--ok) 55%,var(--bd2));background:color-mix(in srgb,var(--ok) 70%,white 30%)}
 .gtx{font-weight:720;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .gpm{display:flex;align-items:center;gap:10px}
+.gpm .numS{color:var(--txm)}
 .gpb{width:120px;height:8px;border-radius:999px;background:color-mix(in srgb,var(--bd) 70%,transparent);overflow:hidden}
 .gpf{height:100%;border-radius:999px;background:linear-gradient(90deg,color-mix(in srgb,var(--ac) 80%,white 20%),color-mix(in srgb,var(--ac) 50%,white 50%))}
 
