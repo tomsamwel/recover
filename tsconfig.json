@@ -10,7 +10,7 @@
     "jsx": "react-jsx",
     "strict": true,
     "noEmit": true,
-    "types": ["vitest/globals"]
+    "types": ["vitest/globals", "vite/client"]
   },
   "include": ["src", "src/App.tsx"]
 }

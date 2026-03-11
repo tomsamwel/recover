@@ -4,6 +4,9 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "sync:defaults": "node scripts/sync-default-schedules.mjs",
+    "predev": "npm run sync:defaults",
+    "prebuild": "npm run sync:defaults",
     "dev": "vite",
     "build": "vite build",
     "test": "vitest run"

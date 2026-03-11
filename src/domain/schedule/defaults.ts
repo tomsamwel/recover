@@ -8,7 +8,18 @@ export type DefaultScheduleEntry = {
   path: string;
 };
 
-export const DEFAULT_SCHEDULES_DIR = "/schedules/defaults/";
+function normalizeBaseUrl(baseUrl: string) {
+  const withLeadingSlash = baseUrl.startsWith("/") ? baseUrl : `/${baseUrl}`;
+  return withLeadingSlash.endsWith("/") ? withLeadingSlash : `${withLeadingSlash}/`;
+}
+
+function joinBasePath(path: string) {
+  const baseUrl = normalizeBaseUrl(import.meta.env.BASE_URL ?? "/");
+  const trimmedPath = path.replace(/^\/+/, "");
+  return `${baseUrl}${trimmedPath}`;
+}
+
+export const DEFAULT_SCHEDULES_DIR = joinBasePath("schedules/defaults/");
 export const PREFERRED_DEFAULT_SCHEDULE_ID = "latarjet_schedule.json";
 
 const KNOWN_DEFAULT_SCHEDULE_FILES = [

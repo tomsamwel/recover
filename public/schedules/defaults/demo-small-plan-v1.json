@@ -1,0 +1,61 @@
+{
+  "version": 1,
+  "metadata": {
+    "anchor": { "type": "demoStart", "at": "2026-03-01T08:00:00+01:00" },
+    "weekLengthDays": 7,
+    "periods": [
+      { "id": "d0", "label": "Demo Week 0", "startDay": 0, "endDay": 6 }
+    ]
+  },
+  "weeks": [
+    {
+      "weekNumber": 0,
+      "label": "Demo Small Plan",
+      "description": "Simple demo default with two sessions.",
+      "gates": [
+        {
+          "id": "demo-pain-check",
+          "title": "Pain stable",
+          "detail": [
+            "Rest pain <= 3/10",
+            "No sharp pain during session"
+          ]
+        }
+      ],
+      "sessions": [
+        {
+          "id": "am",
+          "title": "Morning",
+          "timeOfDay": "08:30",
+          "exercises": [
+            {
+              "id": "breath-1",
+              "name": "Breath reset",
+              "purpose": "Calm shoulder and trunk.",
+              "instructions": "Inhale 4 sec\nExhale 6 sec\nRepeat 8 rounds"
+            },
+            {
+              "id": "hand-pump-demo",
+              "name": "Hand pump",
+              "purpose": "Promote circulation.",
+              "instructions": "Open/close hand 20x"
+            }
+          ]
+        },
+        {
+          "id": "pm",
+          "title": "Evening",
+          "timeOfDay": "18:00",
+          "exercises": [
+            {
+              "id": "scap-set-demo",
+              "name": "Scapula setting",
+              "purpose": "Light activation.",
+              "instructions": "Gentle scap squeeze 10x\nHold each 3 sec"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
