@@ -74,6 +74,24 @@ describe("surgeryDate", () => {
     expect(dateOnlyFromDateTime(datetime)).toBe(formatDateOnly(new Date(datetime)));
   });
 
+  it("preserves valid date-only schedule anchors", () => {
+    expect(dateOnlyFromDateTime("2026-03-11")).toBe("2026-03-11");
+  });
+
+  it("rejects invalid date-only schedule anchors instead of rolling forward", () => {
+    expect(dateOnlyFromDateTime("2026-02-30")).toBeNull();
+  });
+
+  it("falls back to today when schedule anchor is invalid date-only", () => {
+    const now = new Date(2026, 2, 11, 21, 45);
+    const resolved = resolveSurgeryDate({
+      scheduleAnchorAt: "2026-02-30",
+      now,
+    });
+    expect(resolved.source).toBe("today");
+    expect(resolved.value).toBe(formatDateOnly(now));
+  });
+
   it("computes calendar day differences without time-of-day drift", () => {
     const anchor = new Date(2026, 2, 11, 0, 1);
     expect(calendarDayDiff(new Date(2026, 2, 11, 23, 59), anchor)).toBe(0);

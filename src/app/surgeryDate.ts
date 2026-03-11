@@ -51,7 +51,12 @@ export function normalizeDateOnly(value?: string | null): string | null {
 
 export function dateOnlyFromDateTime(value?: string | null): string | null {
   if (typeof value !== "string") return null;
-  const d = new Date(value);
+  const s = value.trim();
+  const normalizedDateOnly = normalizeDateOnly(s);
+  if (normalizedDateOnly) return normalizedDateOnly;
+  if (DATE_ONLY_RE.test(s)) return null;
+
+  const d = new Date(s);
   if (!Number.isFinite(d.getTime())) return null;
   return formatDateOnly(d);
 }
