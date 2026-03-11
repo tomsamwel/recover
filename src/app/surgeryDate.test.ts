@@ -74,6 +74,10 @@ describe("surgeryDate", () => {
     expect(dateOnlyFromDateTime(datetime)).toBe(formatDateOnly(new Date(datetime)));
   });
 
+  it("preserves date-only inputs without UTC day shifting", () => {
+    expect(dateOnlyFromDateTime("2026-03-11")).toBe("2026-03-11");
+  });
+
   it("computes calendar day differences without time-of-day drift", () => {
     const anchor = new Date(2026, 2, 11, 0, 1);
     expect(calendarDayDiff(new Date(2026, 2, 11, 23, 59), anchor)).toBe(0);
