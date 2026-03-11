@@ -770,6 +770,10 @@ export default function App() {
 }
 
 const css = `
+html,body,#root{margin:0;padding:0;min-height:100%;width:100%;max-width:100%}
+body{overflow-x:hidden}
+*,*::before,*::after{box-sizing:border-box}
+
 .app{
   cursor:default;
 }
@@ -869,7 +873,7 @@ const css = `
 .weekpill-t{font-variant-numeric:tabular-nums}
 .wk{margin:12px 0 6px}
 
-.ib{width:36px;height:36px;border-radius:14px;display:grid;place-items:center;border:1px solid var(--bd);background:var(--s1);color:var(--txm);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:0 6px 18px rgba(0,0,0,.08);touch-action:manipulation}
+.ib{width:36px;height:36px;border-radius:14px;display:grid;place-items:center;border:1px solid var(--bd);background:var(--s1);color:var(--txm);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:0 6px 18px rgba(0,0,0,.08);touch-action:manipulation;flex:0 0 auto}
 .ib:hover{border-color:var(--bd2);color:var(--tx)}
 
 .pageTabs{margin:10px 0 14px;display:inline-flex;gap:8px;padding:6px;border-radius:16px;border:1px solid var(--bd);background:color-mix(in srgb,var(--s1) 74%,transparent);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
@@ -959,7 +963,7 @@ const css = `
 .dcd{border-color:color-mix(in srgb,var(--ok) 28%,var(--bd2))}
 .dco{border-color:color-mix(in srgb,var(--wa) 26%,var(--bd2))}
 
-.tl{display:flex;align-items:center;gap:12px;min-height:62px;padding:12px;border-radius:18px;border:1px solid var(--bd);background:var(--s1);color:var(--tx);backdrop-filter:blur(16px) saturate(1.2);-webkit-backdrop-filter:blur(16px) saturate(1.2);box-shadow:0 10px 26px rgba(0,0,0,.08);touch-action:manipulation}
+.tl{display:flex;align-items:center;gap:12px;min-height:62px;padding:12px;border-radius:18px;border:1px solid var(--bd);background:var(--s1);color:var(--tx);backdrop-filter:blur(16px) saturate(1.2);-webkit-backdrop-filter:blur(16px) saturate(1.2);box-shadow:0 10px 26px rgba(0,0,0,.08);touch-action:manipulation;min-width:0}
 .tl:hover{border-color:var(--bd2)}
 .tl.od{border-color:color-mix(in srgb,var(--wa) 45%,var(--bd2))}
 .tl.dn{opacity:.62;box-shadow:0 6px 16px rgba(0,0,0,.06)}
@@ -983,6 +987,7 @@ const css = `
 
 @media (max-width:760px){.row{gap:12px}.rt{font-size:23px}}
 @media (max-width:560px){.dateAccordionHead{padding:10px}.dateAccValue{font-size:26px}}
+@media (max-width:560px){.tlt{white-space:normal;overflow-wrap:anywhere}}
 @media (max-width:420px){.hdr{flex-wrap:wrap}.st{flex-basis:100%}.dateAccordionHead{align-items:flex-end}.dateAccIcon{width:32px;height:32px}}
 @media (prefers-reduced-motion:reduce){.car,.weekpill-dot,.dateAccIcon,.dateAccChevron,.datePanelWrap{transition:none}}
 `;
