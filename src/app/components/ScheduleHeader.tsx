@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { ChevronDown, Moon, Sun, Upload } from "lucide-react";
+import { ChevronDown, Moon, RefreshCcw, Sun, Upload } from "lucide-react";
 import type { DefaultScheduleEntry, ScheduleAnchor, SchedulePeriod, ScheduleWeek } from "../../domain/schedule";
+import { canResetSurgeryDate, formatSurgeryDateLabel, surgeryDateSourceHint, type SurgeryDateSource } from "../surgeryDate";
 
 type Props = {
   dm: boolean;
@@ -19,6 +20,10 @@ type Props = {
   period: SchedulePeriod | null;
   anchor: ScheduleAnchor | undefined;
   anchorLabel: string;
+  surgeryDateValue: string;
+  onSurgeryDateChange: (value: string) => void;
+  onClearSurgeryDateOverride: () => void;
+  surgeryDateSource: SurgeryDateSource;
   weeks: ScheduleWeek[];
   selectedWeek: number;
   autoWeek: number;
@@ -44,6 +49,10 @@ export function ScheduleHeader(props: Props) {
     period,
     anchor,
     anchorLabel,
+    surgeryDateValue,
+    onSurgeryDateChange,
+    onClearSurgeryDateOverride,
+    surgeryDateSource,
     weeks,
     selectedWeek,
     autoWeek,
@@ -51,6 +60,11 @@ export function ScheduleHeader(props: Props) {
     week,
     clsx,
   } = props;
+
+  const [dateSettingsOpen, setDateSettingsOpen] = useState(false);
+  const surgeryDateLabel = formatSurgeryDateLabel(surgeryDateValue);
+  const sourceHint = surgeryDateSourceHint(surgeryDateSource);
+  const showReset = canResetSurgeryDate(surgeryDateSource);
 
   return (
     <>
@@ -119,9 +133,47 @@ export function ScheduleHeader(props: Props) {
             </>
           ) : null}
         </div>
-        <div className="fnt">
-          Anchor: <span className="ak" title={anchor?.at}>{anchorLabel}</span>
-          {anchor?.type ? <span className="atk"> · {anchor.type}</span> : null}
+        <div className={clsx("dateAccordion", dateSettingsOpen && "dateAccordionOn")}>
+          <motion.button
+            type="button"
+            whileTap={{ scale: 0.995 }}
+            className="dateAccordionHead"
+            onClick={() => setDateSettingsOpen((v) => !v)}
+            aria-expanded={dateSettingsOpen}
+            aria-controls="surgery-date-settings"
+          >
+            <div className="dateAccLeft">
+              <div className="cap">Surgery date</div>
+              <div className="dateAccValue">{surgeryDateLabel}</div>
+              <div className="dateAccHint">{sourceHint}</div>
+            </div>
+            <div className="dateAccIcon" aria-hidden>
+              <ChevronDown className={clsx("h-4 w-4", "dateAccChevron", dateSettingsOpen && "dateAccChevronOn")} />
+            </div>
+          </motion.button>
+          <div id="surgery-date-settings" className={clsx("datePanelWrap", dateSettingsOpen && "datePanelWrapOn")} aria-hidden={!dateSettingsOpen}>
+            <div className="datePanel">
+              <div className="dateField">
+                <label className="cap" htmlFor="surgery-date-picker">
+                  Select date
+                </label>
+                <input id="surgery-date-picker" type="date" className="dateIn" value={surgeryDateValue} onChange={(e) => onSurgeryDateChange(e.target.value)} />
+              </div>
+              <div className="dateMetaRow">
+                <span className="dateHint">{sourceHint}</span>
+                {showReset ? (
+                  <motion.button type="button" whileTap={{ scale: 0.98 }} className="dateResetAction" onClick={onClearSurgeryDateOverride}>
+                    <RefreshCcw className="h-3.5 w-3.5" />
+                    Use schedule date
+                  </motion.button>
+                ) : null}
+              </div>
+              <div className="dateAnchor">
+                Schedule anchor: <span className="ak" title={anchor?.at}>{anchorLabel}</span>
+                {anchor?.type ? <span className="atk"> · {anchor.type}</span> : null}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 

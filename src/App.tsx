@@ -1,9 +1,8 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   TEMPLATE_SCHEDULE,
   activePeriod,
-  getAnchorDate,
   loadDefaultSchedule,
   loadDefaultScheduleManifest,
   parseHHMM,
@@ -15,7 +14,6 @@ import type { DefaultScheduleEntry, Schedule } from "./domain/schedule";
 import { GateChecklist } from "./app/components/GateChecklist";
 import { ScheduleHeader } from "./app/components/ScheduleHeader";
 import { SessionTimeline } from "./app/components/SessionTimeline";
-import { ScheduleEditorPage } from "./app/components/ScheduleEditorPage";
 import {
   buildSessionsFromWeek,
   emptyDone,
@@ -29,11 +27,19 @@ import {
   saveGates,
   saveSchedule,
   scheduleId,
-  todayKey,
   type DoneState,
 } from "./app/scheduleViewModel";
 import { migrateLocalState } from "./app/storage/migrate";
 import { SCHEDULE_STORAGE_KEY, SELECTED_WEEK_KEY, THEME_KEY } from "./app/storage/keys";
+import {
+  calendarDayDiff,
+  loadManualSurgeryDateOverride,
+  normalizeDateOnly,
+  resolveSurgeryDate,
+  saveManualSurgeryDateOverride,
+} from "./app/surgeryDate";
+import { attachTimelineMeasurement, scheduleTimelineMeasurement } from "./app/timelineMeasurement";
+import { useNowMinute } from "./app/useNowMinute";
 import {
   Hand,
   Bone,
@@ -68,7 +74,26 @@ const ICONS = {
 
 const clsx = (...v: Array<string | false | null | undefined>) => v.filter(Boolean).join(" ");
 
-const postOpDay = (now: Date, anchor: Date) => Math.floor((now.getTime() - anchor.getTime()) / 86400000);
+const ScheduleEditorPage = React.lazy(async () => {
+  const mod = await import("./app/components/ScheduleEditorPage");
+  return { default: mod.ScheduleEditorPage };
+});
+
+function sameDotPositions(a: Record<string, number>, b: Record<string, number>) {
+  const aKeys = Object.keys(a);
+  const bKeys = Object.keys(b);
+  if (aKeys.length !== bKeys.length) return false;
+  for (const key of aKeys) {
+    if (!Object.prototype.hasOwnProperty.call(b, key)) return false;
+    if (Math.abs(a[key] - b[key]) > 0.25) return false;
+  }
+  return true;
+}
+
+function dayKeyFromDate(d: Date) {
+  const pad2 = (n: number) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
+}
 
 function Tile({
   title,
@@ -275,12 +300,30 @@ export default function App() {
   const weeks = useMemo(() => schedule.weeks.slice().sort((a, b) => a.weekNumber - b.weekNumber), [schedule]);
   const schedId = useMemo(() => scheduleId(schedule), [schedule]);
 
-  const [now, setNow] = useState<Date>(() => new Date());
-  const anchor = useMemo(() => getAnchorDate(schedule), [schedule]);
-  const day = useMemo(() => postOpDay(now, anchor), [now, anchor]);
+  const now = useNowMinute();
+  const todayLabel = useMemo(() => dayKeyFromDate(now), [now]);
+  const [manualSurgeryDate, setManualSurgeryDate] = useState<string | null>(() =>
+    typeof window === "undefined" ? null : loadManualSurgeryDateOverride()
+  );
+  const resolvedSurgeryDate = useMemo(
+    () =>
+      resolveSurgeryDate({
+        manualSelection: manualSurgeryDate,
+        scheduleAnchorAt: schedule.metadata?.anchor?.at,
+        scheduleSurgeryStart: typeof schedule.metadata?.surgeryStart === "string" ? schedule.metadata.surgeryStart : null,
+        now,
+      }),
+    [manualSurgeryDate, now, schedule.metadata?.anchor?.at, schedule.metadata?.surgeryStart]
+  );
+  const anchor = resolvedSurgeryDate.date;
+  const day = useMemo(() => calendarDayDiff(now, anchor), [now, anchor]);
   const period = useMemo(() => activePeriod(schedule.metadata, day), [schedule, day]);
   const a = schedule.metadata?.anchor;
   const aTxt = a?.at ? fmtAt(a.at) : "(missing)";
+
+  useEffect(() => {
+    saveManualSurgeryDateOverride(manualSurgeryDate);
+  }, [manualSurgeryDate]);
 
   const autoWeek = useMemo(() => {
     const idx = weekIndexFromDay(schedule.metadata, day);
@@ -313,7 +356,7 @@ export default function App() {
   const week = useMemo(() => weeks.find((w) => w.weekNumber === selectedWeek) ?? weeks[0], [weeks, selectedWeek]);
   const sessions = useMemo(() => buildSessionsFromWeek(week), [week]);
 
-  const doneKey = useMemo(() => `${schedId}|${todayKey()}|w${week.weekNumber}`, [schedId, week.weekNumber]);
+  const doneKey = useMemo(() => `${schedId}|${todayLabel}|w${week.weekNumber}`, [schedId, todayLabel, week.weekNumber]);
   const [done, setDone] = useState<DoneState>(() => (typeof window === "undefined" ? emptyDone(sessions) : loadDone(doneKey, sessions)));
 
   const gates = useMemo(() => week.gates ?? [], [week]);
@@ -332,15 +375,36 @@ export default function App() {
   const dotRefs = useRef<Record<string, HTMLButtonElement | null>>({});
   const [dotPos, setDotPos] = useState<Record<string, number>>({});
 
-  useEffect(() => {
-    const id = window.setInterval(() => setNow(new Date()), 1000);
-    return () => window.clearInterval(id);
+  const onSurgeryDateChange = useCallback((value: string) => {
+    if (!value) {
+      setManualSurgeryDate(null);
+      return;
+    }
+    const normalized = normalizeDateOnly(value);
+    if (!normalized) return;
+    setManualSurgeryDate(normalized);
   }, []);
+
+  const onClearSurgeryDateOverride = useCallback(() => setManualSurgeryDate(null), []);
 
   useEffect(() => setDone(loadDone(doneKey, sessions)), [doneKey, sessions]);
   useEffect(() => saveDone(doneKey, done), [doneKey, done]);
   useEffect(() => setGateDone(loadGates(gateKey, gates)), [gateKey, gates]);
   useEffect(() => saveGates(gateKey, gateDone), [gateKey, gateDone]);
+
+  const measureDotPositions = useCallback(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const cr = el.getBoundingClientRect();
+    const next: Record<string, number> = {};
+    for (const s of sessions) {
+      const btn = dotRefs.current[s.id];
+      if (!btn) continue;
+      const r = btn.getBoundingClientRect();
+      next[s.id] = r.top - cr.top + r.height / 2;
+    }
+    setDotPos((prev) => (sameDotPositions(prev, next) ? prev : next));
+  }, [sessions]);
 
   useEffect(() => {
     if (page !== "timeline") {
@@ -349,27 +413,13 @@ export default function App() {
     }
     const el = containerRef.current;
     if (!el) return;
-    const measure = () => {
-      const cr = el.getBoundingClientRect();
-      const next: Record<string, number> = {};
-      for (const s of sessions) {
-        const btn = dotRefs.current[s.id];
-        if (!btn) continue;
-        const r = btn.getBoundingClientRect();
-        next[s.id] = r.top - cr.top + r.height / 2;
-      }
-      setDotPos(next);
-    };
-    const rafId = window.requestAnimationFrame(measure);
-    const ro = new ResizeObserver(measure);
-    ro.observe(el);
-    window.addEventListener("resize", measure);
-    return () => {
-      window.cancelAnimationFrame(rafId);
-      ro.disconnect();
-      window.removeEventListener("resize", measure);
-    };
-  }, [page, done, open, sessions, gates]);
+    return attachTimelineMeasurement(el, measureDotPositions);
+  }, [page, measureDotPositions]);
+
+  useEffect(() => {
+    if (page !== "timeline") return;
+    return scheduleTimelineMeasurement(measureDotPositions);
+  }, [page, measureDotPositions, done, open]);
 
   const totals = useMemo(() => {
     const out: Record<string, { done: number; total: number; progress: number }> = {};
@@ -418,33 +468,42 @@ export default function App() {
     return timePoints[0].y;
   }, [now, timePoints, firstT, lastT]);
 
-  const toggleItem = (sessionId: string, itemId: string) =>
-    setDone((p) => ({ ...p, [sessionId]: { ...p[sessionId], [itemId]: !p[sessionId]?.[itemId] } }));
+  const toggleItem = useCallback(
+    (sessionId: string, itemId: string) =>
+      setDone((p) => ({ ...p, [sessionId]: { ...p[sessionId], [itemId]: !p[sessionId]?.[itemId] } })),
+    []
+  );
 
-  const toggleSession = (sessionId: string) => {
-    const s = sessions.find((x) => x.id === sessionId);
-    if (!s) return;
-    setDone((p) => {
-      const allDone = s.items.every((it) => Boolean(p[sessionId]?.[it.id]));
-      const next: DoneState = { ...p, [sessionId]: { ...p[sessionId] } };
-      for (const it of s.items) next[sessionId][it.id] = !allDone;
-      return next;
-    });
-  };
+  const toggleSession = useCallback(
+    (sessionId: string) => {
+      const s = sessions.find((x) => x.id === sessionId);
+      if (!s) return;
+      setDone((p) => {
+        const allDone = s.items.every((it) => Boolean(p[sessionId]?.[it.id]));
+        const next: DoneState = { ...p, [sessionId]: { ...p[sessionId] } };
+        for (const it of s.items) next[sessionId][it.id] = !allDone;
+        return next;
+      });
+    },
+    [sessions]
+  );
 
-  const toggleGate = (gateId: string) => setGateDone((p) => ({ ...p, [gateId]: !p[gateId] }));
+  const toggleGate = useCallback((gateId: string) => setGateDone((p) => ({ ...p, [gateId]: !p[gateId] })), []);
 
-  const isOverdue = (sessionId: string) => {
-    const t = minutesOfDay(now);
-    const s = sessions.find((x) => x.id === sessionId);
-    if (!s) return false;
-    const st = parseHHMM(s.clockTime);
-    if (!Number.isFinite(st)) return false;
-    const tot = totals[sessionId];
-    return t > st + 10 && tot.done < tot.total;
-  };
+  const isOverdue = useCallback(
+    (sessionId: string) => {
+      const t = minutesOfDay(now);
+      const s = sessions.find((x) => x.id === sessionId);
+      if (!s) return false;
+      const st = parseHHMM(s.clockTime);
+      if (!Number.isFinite(st)) return false;
+      const tot = totals[sessionId];
+      return t > st + 10 && tot.done < tot.total;
+    },
+    [now, sessions, totals]
+  );
 
-  const onUpload = (file: File) => {
+  const onUpload = useCallback((file: File) => {
     const fr = new FileReader();
     fr.onload = () => {
       try {
@@ -461,11 +520,11 @@ export default function App() {
       }
     };
     fr.readAsText(file);
-  };
+  }, []);
 
   const [uploadError, setUploadError] = useState<string | null>(null);
 
-  const downloadSchedule = () => {
+  const downloadSchedule = useCallback(() => {
     const blob = new Blob([JSON.stringify(schedule, null, 2)], { type: "application/json" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -475,9 +534,9 @@ export default function App() {
     a.click();
     a.remove();
     URL.revokeObjectURL(url);
-  };
+  }, [schedule]);
 
-  const applyDefaultSchedule = async (scheduleId?: string) => {
+  const applyDefaultSchedule = useCallback(async (scheduleId?: string) => {
     const id = scheduleId ?? selectedDefaultId;
     const entry = defaultSchedules.find((x) => x.id === id);
     if (!entry) return;
@@ -492,12 +551,15 @@ export default function App() {
     } catch (err: any) {
       setDefaultState({ loading: false, error: err instanceof Error ? err.message : "Failed to load default schedule." });
     }
-  };
+  }, [defaultSchedules, selectedDefaultId]);
 
-  const resetToday = () => {
+  const resetToday = useCallback(() => {
     setDone(emptyDone(sessions));
     setOpen(null);
-  };
+  }, [sessions]);
+
+  const showGateInfo = useCallback((gateId: string) => setOpen({ kind: "gate", gateId }), []);
+  const setOpenExercise = useCallback((sessionId: string, itemId: string) => setOpen({ kind: "exercise", sessionId, itemId }), []);
 
   const gateById = useMemo(() => new Map(gates.map((g) => [g.id, g] as const)), [gates]);
 
@@ -529,11 +591,15 @@ export default function App() {
           selectedDefaultId={selectedDefaultId}
           applyDefaultSchedule={applyDefaultSchedule}
           defaultState={defaultState}
-          todayLabel={todayKey()}
+          todayLabel={todayLabel}
           day={day}
           period={period}
           anchor={a}
           anchorLabel={aTxt}
+          surgeryDateValue={resolvedSurgeryDate.value}
+          onSurgeryDateChange={onSurgeryDateChange}
+          onClearSurgeryDateOverride={onClearSurgeryDateOverride}
+          surgeryDateSource={resolvedSurgeryDate.source}
           weeks={weeks}
           selectedWeek={selectedWeek}
           autoWeek={autoWeek}
@@ -562,7 +628,7 @@ export default function App() {
               gates={gates}
               gateDone={gateDone}
               toggleGate={toggleGate}
-              showGateInfo={(gateId) => setOpen({ kind: "gate", gateId })}
+              showGateInfo={showGateInfo}
               clsx={clsx}
             />
 
@@ -577,19 +643,21 @@ export default function App() {
               ICONS={ICONS}
               done={done}
               toggleItem={toggleItem}
-              setOpenExercise={(sessionId, itemId) => setOpen({ kind: "exercise", sessionId, itemId })}
+              setOpenExercise={setOpenExercise}
               Tile={Tile}
               SessionDot={SessionDot}
             />
           </>
         ) : (
-          <ScheduleEditorPage
-            schedule={schedule}
-            setSchedule={setSchedule}
-            onOpenUpload={() => fileRef.current?.click()}
-            onDownload={downloadSchedule}
-            uploadError={uploadError}
-          />
+          <Suspense fallback={<div className="pnl edMeta"><div className="mut">Loading editor…</div></div>}>
+            <ScheduleEditorPage
+              schedule={schedule}
+              setSchedule={setSchedule}
+              onOpenUpload={() => fileRef.current?.click()}
+              onDownload={downloadSchedule}
+              uploadError={uploadError}
+            />
+          </Suspense>
         )}
 
         {page === "timeline" ? (
@@ -745,7 +813,6 @@ const css = `
 .h1{font-size:30px;font-weight:760;letter-spacing:-.02em}
 .sub{font-size:14px;color:var(--txm)}
 .mut{font-size:14px;color:var(--txm)}
-.fnt{font-size:12px;color:var(--txf);margin-top:8px}
 .ak{display:inline-flex;align-items:center;padding:2px 8px;border-radius:999px;border:1px solid var(--bd);background:color-mix(in srgb,var(--s2) 65%,transparent);color:var(--txm);font-variant-numeric:tabular-nums}
 .atk{color:var(--txf)}
 .cap{font-size:12px;font-weight:760;letter-spacing:.10em;text-transform:uppercase;color:var(--txf)}
@@ -757,6 +824,30 @@ const css = `
 .pnl:before{content:"";position:absolute;inset:0;border-radius:inherit;background:linear-gradient(180deg,rgba(255,255,255,.85),rgba(255,255,255,0));opacity:.38;pointer-events:none}
 .ph{padding:12px 14px;margin-bottom:10px}
 .phl{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+.dateAccordion{margin-top:12px;border-radius:14px;border:1px solid color-mix(in srgb,var(--bd2) 55%,transparent);background:color-mix(in srgb,var(--s1) 55%,transparent)}
+.dateAccordionOn{border-color:var(--bd2);background:color-mix(in srgb,var(--s2) 58%,transparent)}
+.dateAccordionHead{width:100%;display:flex;align-items:flex-start;justify-content:space-between;gap:14px;padding:12px;border:none;background:transparent;text-align:left;touch-action:manipulation}
+.dateAccordionHead:hover{color:var(--tx)}
+.dateAccLeft{display:grid;gap:4px;min-width:0}
+.dateAccValue{font-size:31px;font-weight:760;letter-spacing:-.02em;line-height:1.06;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--tx)}
+.dateAccHint{font-size:12px;color:var(--txf)}
+.dateAccIcon{width:34px;height:34px;display:grid;place-items:center;border-radius:10px;border:1px solid var(--bd);background:color-mix(in srgb,var(--s1) 72%,transparent);color:var(--txm);flex:0 0 auto;transition:transform .2s ease,color .16s ease,border-color .16s ease}
+.dateAccChevron{transition:transform .26s cubic-bezier(.22,1,.36,1)}
+.dateAccChevronOn{transform:rotate(180deg)}
+.datePanelWrap{max-height:0;opacity:0;transform:translateY(-6px);overflow:hidden;visibility:hidden;border-top:1px solid transparent;transition:max-height .42s cubic-bezier(.22,1,.36,1),opacity .24s ease,transform .32s cubic-bezier(.22,1,.36,1),visibility 0s linear .42s,border-color .24s ease}
+.datePanelWrapOn{max-height:320px;opacity:1;transform:translateY(0);visibility:visible;border-top:1px solid color-mix(in srgb,var(--bd2) 50%,transparent);transition:max-height .42s cubic-bezier(.22,1,.36,1),opacity .24s ease,transform .32s cubic-bezier(.22,1,.36,1),visibility 0s}
+.datePanel{padding:12px;display:grid;gap:12px;transform-origin:top center}
+.dateField{display:grid;gap:6px}
+.dateIn{height:36px;min-width:170px;max-width:250px;border-radius:12px;border:1px solid var(--bd);background:var(--s2);color:var(--tx);padding:0 10px;font:inherit;box-sizing:border-box}
+.dateIn:focus-visible{outline:2px solid color-mix(in srgb,var(--ac) 55%,white 45%);outline-offset:1px}
+.dateMetaRow{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.dateHint{font-size:12px;color:var(--txf)}
+.dateResetAction{display:inline-flex;align-items:center;gap:6px;border:none;background:transparent;color:color-mix(in srgb,var(--ac) 78%,white 22%);font-size:12px;font-weight:760;letter-spacing:.02em;padding:0}
+.dateResetAction:hover{color:color-mix(in srgb,var(--ac) 92%,white 8%)}
+.dateAnchor{font-size:12px;color:var(--txf);display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.app .dateIn{color-scheme:light}
+.app.d .dateIn,.app.d .dateIn::-webkit-datetime-edit,.app.d .dateIn::-webkit-datetime-edit-text,.app.d .dateIn::-webkit-datetime-edit-month-field,.app.d .dateIn::-webkit-datetime-edit-day-field,.app.d .dateIn::-webkit-datetime-edit-year-field{color:var(--tx)}
+.app.d .dateIn{color-scheme:dark;-webkit-text-fill-color:var(--tx)}
 .upl{position:relative;display:flex;align-items:center;height:36px;border-radius:14px;border:1px solid var(--bd);background:var(--s1);color:var(--txm);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:0 6px 18px rgba(0,0,0,.08);overflow:visible}
 .uplOn,.upl:hover{border-color:var(--bd2);color:var(--tx)}
 .uplPart{height:100%;display:grid;place-items:center;border:none;background:transparent;color:inherit;padding:0;touch-action:manipulation}
@@ -891,6 +982,7 @@ const css = `
 .list li{margin:6px 0}
 
 @media (max-width:760px){.row{gap:12px}.rt{font-size:23px}}
-@media (max-width:420px){.hdr{flex-wrap:wrap}.st{flex-basis:100%}}
-@media (prefers-reduced-motion:reduce){.car,.weekpill-dot{transition:none}}
+@media (max-width:560px){.dateAccordionHead{padding:10px}.dateAccValue{font-size:26px}}
+@media (max-width:420px){.hdr{flex-wrap:wrap}.st{flex-basis:100%}.dateAccordionHead{align-items:flex-end}.dateAccIcon{width:32px;height:32px}}
+@media (prefers-reduced-motion:reduce){.car,.weekpill-dot,.dateAccIcon,.dateAccChevron,.datePanelWrap{transition:none}}
 `;

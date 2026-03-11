@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { motion } from "framer-motion";
 import type { Session } from "../scheduleViewModel";
 import type { IconName, DoneState } from "../scheduleViewModel";
@@ -32,7 +32,21 @@ type Props = {
   }>;
 };
 
-export function SessionTimeline({ containerRef, nowY, sessions, totals, isOverdue, toggleSession, dotRefs, ICONS, done, toggleItem, setOpenExercise, Tile, SessionDot }: Props) {
+export const SessionTimeline = memo(function SessionTimeline({
+  containerRef,
+  nowY,
+  sessions,
+  totals,
+  isOverdue,
+  toggleSession,
+  dotRefs,
+  ICONS,
+  done,
+  toggleItem,
+  setOpenExercise,
+  Tile,
+  SessionDot,
+}: Props) {
   return (
     <div ref={containerRef} className="tlw">
       <div className="rail" aria-hidden />
@@ -87,4 +101,4 @@ export function SessionTimeline({ containerRef, nowY, sessions, totals, isOverdu
       </div>
     </div>
   );
-}
+});
