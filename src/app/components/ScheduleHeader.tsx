@@ -1,12 +1,10 @@
 import React, { useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
-import { ChevronDown, Moon, RefreshCcw, Sun, Upload } from "lucide-react";
+import { motion } from "framer-motion";
+import { CalendarDays, ChevronDown, FolderOpen, RefreshCcw, Upload } from "lucide-react";
 import type { DefaultScheduleEntry, ScheduleAnchor, SchedulePeriod, ScheduleWeek } from "../../domain/schedule";
 import { canResetSurgeryDate, formatSurgeryDateLabel, surgeryDateSourceHint, type SurgeryDateSource } from "../surgeryDate";
 
 type Props = {
-  dm: boolean;
-  setDm: (value: boolean) => void;
   defaultsRef: React.RefObject<HTMLDivElement | null>;
   defaultMenuOpen: boolean;
   setDefaultMenuOpen: (v: boolean | ((cur: boolean) => boolean)) => void;
@@ -15,7 +13,6 @@ type Props = {
   selectedDefaultId: string;
   applyDefaultSchedule: (id: string) => void;
   defaultState: { loading: boolean; error: string | null };
-  todayLabel: string;
   day: number;
   period: SchedulePeriod | null;
   anchor: ScheduleAnchor | undefined;
@@ -29,13 +26,12 @@ type Props = {
   autoWeek: number;
   setSelectedWeek: (weekNumber: number) => void;
   week: ScheduleWeek;
-  clsx: (...v: Array<string | false | null | undefined>) => string;
 };
+
+const clsx = (...v: Array<string | false | null | undefined>) => v.filter(Boolean).join(" ");
 
 export function ScheduleHeader(props: Props) {
   const {
-    dm,
-    setDm,
     defaultsRef,
     defaultMenuOpen,
     setDefaultMenuOpen,
@@ -44,7 +40,6 @@ export function ScheduleHeader(props: Props) {
     selectedDefaultId,
     applyDefaultSchedule,
     defaultState,
-    todayLabel,
     day,
     period,
     anchor,
@@ -58,142 +53,156 @@ export function ScheduleHeader(props: Props) {
     autoWeek,
     setSelectedWeek,
     week,
-    clsx,
   } = props;
 
   const [dateSettingsOpen, setDateSettingsOpen] = useState(false);
   const surgeryDateLabel = formatSurgeryDateLabel(surgeryDateValue);
   const sourceHint = surgeryDateSourceHint(surgeryDateSource);
   const showReset = canResetSurgeryDate(surgeryDateSource);
+  const selectedDefaultLabel = defaultSchedules.find((entry) => entry.id === selectedDefaultId)?.label ?? "Load default";
 
   return (
-    <>
-      <div className="top">
-        <div>
-          <div className="h1">Timeline</div>
-        </div>
-
-        <div className="topr">
-          <div className="tb" role="group" aria-label="Theme toggle">
-            <motion.button type="button" whileTap={{ scale: 0.98 }} className={clsx("tseg", !dm && "tsegOn")} onClick={() => setDm(false)}>
-              <Sun className="ti" />
-            </motion.button>
-            <motion.button type="button" whileTap={{ scale: 0.98 }} className={clsx("tseg", dm && "tsegOn")} onClick={() => setDm(true)}>
-              <Moon className="ti" />
-            </motion.button>
+    <div className="railSections">
+      <section className="railSection railSectionStatus" aria-label="Current recovery status">
+        <div className="sectionLabel">Current status</div>
+        <div className="statusMetricRow">
+          <div className="statusMetric">
+            <div className="metricValue">{day}</div>
+            <div className="metricLabel">Post-op day</div>
           </div>
-          <div ref={defaultsRef} className={clsx("upl", defaultMenuOpen && "uplOn")}>
-            <motion.button type="button" whileTap={{ scale: 0.98 }} className="uplPart uplMain" onClick={() => fileRef.current?.click()}>
-              <Upload className="h-[15px] w-[15px]" />
+          <div className="statusMetric">
+            <div className="metricValue metricValuePhase">{period?.label ?? "No phase"}</div>
+            <div className="metricLabel">Phase</div>
+          </div>
+        </div>
+      </section>
+
+      <section className="railSection" aria-label="Surgery date settings">
+        <button
+          type="button"
+          className="accordionButton"
+          onClick={() => setDateSettingsOpen((v) => !v)}
+          aria-expanded={dateSettingsOpen}
+          aria-controls="surgery-date-settings"
+        >
+          <div className="accordionCopy">
+            <div className="sectionLabel">Surgery date</div>
+            <div className="sectionTitle">{surgeryDateLabel}</div>
+            <div className="sectionText">{sourceHint}</div>
+          </div>
+          <span className="accordionIcon" aria-hidden>
+            <ChevronDown className={clsx("accordionChevron", dateSettingsOpen && "accordionChevronOpen")} />
+          </span>
+        </button>
+
+        <div
+          id="surgery-date-settings"
+          className={clsx("accordionPanel", dateSettingsOpen && "accordionPanelOpen")}
+          aria-hidden={!dateSettingsOpen}
+        >
+          <div className="field">
+            <label htmlFor="surgery-date-picker">Select date</label>
+            <div className="fieldInputWrap fieldInputWrapIcon">
+              <CalendarDays className="fieldLeadingIcon" />
+              <input
+                id="surgery-date-picker"
+                type="date"
+                className="fieldInput"
+                value={surgeryDateValue}
+                onChange={(e) => onSurgeryDateChange(e.target.value)}
+              />
+            </div>
+          </div>
+
+          <div className="inlineMetaRow">
+            <span className="sectionText">Schedule anchor: {anchorLabel}</span>
+            {anchor?.type ? <span className="sectionText">Type: {anchor.type}</span> : null}
+          </div>
+
+          {showReset ? (
+            <motion.button type="button" whileTap={{ scale: 0.98 }} className="textAction" onClick={onClearSurgeryDateOverride}>
+              <RefreshCcw className="textActionIcon" />
+              Use schedule date
             </motion.button>
-            <div className="uplDiv" aria-hidden />
+          ) : null}
+        </div>
+      </section>
+
+      <section className="railSection" aria-label="Protocol source">
+        <div className="sectionLabel">Protocol source</div>
+        <div className="sourceActions">
+          <motion.button type="button" whileTap={{ scale: 0.98 }} className="actionButton" onClick={() => fileRef.current?.click()}>
+            <Upload className="actionButtonIcon" />
+            Upload JSON
+          </motion.button>
+
+          <div ref={defaultsRef} className="menuWrap">
             <motion.button
               type="button"
               whileTap={{ scale: 0.98 }}
-              className="uplPart uplChevron"
+              className={clsx("actionButton", "actionButtonSecondary", defaultMenuOpen && "actionButtonSecondaryOpen")}
               onClick={() => setDefaultMenuOpen((v) => !v)}
               aria-expanded={defaultMenuOpen}
             >
-              <ChevronDown className={clsx("h-4 w-4", "car", defaultMenuOpen && "carOn")} />
+              <FolderOpen className="actionButtonIcon" />
+              <span className="actionButtonText">{selectedDefaultLabel}</span>
+              <ChevronDown className={clsx("actionButtonChevron", defaultMenuOpen && "actionButtonChevronOpen")} />
             </motion.button>
 
-            <AnimatePresence>
-              {defaultMenuOpen && (
-                <motion.div className="uplMenu" initial={{ opacity: 0, y: -6, scale: 0.98 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -6, scale: 0.98 }}>
-                  {!defaultSchedules.length ? (
-                    <div className="uplIt mut">No defaults found</div>
-                  ) : (
-                    defaultSchedules.map((entry) => {
-                      const active = selectedDefaultId === entry.id;
-                      return (
-                        <button key={entry.id} type="button" className={clsx("uplIt", active && "uplItOn")} onClick={() => applyDefaultSchedule(entry.id)} disabled={defaultState.loading}>
-                          <span>{entry.label}</span>
-                        </button>
-                      );
-                    })
-                  )}
-                  {defaultState.error ? <div className="uplErr">{defaultState.error}</div> : null}
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-          <div className="mut">{todayLabel}</div>
-        </div>
-      </div>
-
-      <div className="pnl ph">
-        <div className="phl">
-          <div className="cap">Post-op day</div>
-          <div className="num">{day}</div>
-          {period ? (
-            <>
-              <div className="dot" />
-              <div className="cap">Phase</div>
-              <div className="mut">{period.label}</div>
-            </>
-          ) : null}
-        </div>
-        <div className={clsx("dateAccordion", dateSettingsOpen && "dateAccordionOn")}>
-          <motion.button
-            type="button"
-            whileTap={{ scale: 0.995 }}
-            className="dateAccordionHead"
-            onClick={() => setDateSettingsOpen((v) => !v)}
-            aria-expanded={dateSettingsOpen}
-            aria-controls="surgery-date-settings"
-          >
-            <div className="dateAccLeft">
-              <div className="cap">Surgery date</div>
-              <div className="dateAccValue">{surgeryDateLabel}</div>
-              <div className="dateAccHint">{sourceHint}</div>
-            </div>
-            <div className="dateAccIcon" aria-hidden>
-              <ChevronDown className={clsx("h-4 w-4", "dateAccChevron", dateSettingsOpen && "dateAccChevronOn")} />
-            </div>
-          </motion.button>
-          <div id="surgery-date-settings" className={clsx("datePanelWrap", dateSettingsOpen && "datePanelWrapOn")} aria-hidden={!dateSettingsOpen}>
-            <div className="datePanel">
-              <div className="dateField">
-                <label className="cap" htmlFor="surgery-date-picker">
-                  Select date
-                </label>
-                <input id="surgery-date-picker" type="date" className="dateIn" value={surgeryDateValue} onChange={(e) => onSurgeryDateChange(e.target.value)} />
+            {defaultMenuOpen ? (
+              <div className="menuPanel">
+                {!defaultSchedules.length ? (
+                  <div className="menuEmpty">No defaults found</div>
+                ) : (
+                  defaultSchedules.map((entry) => {
+                    const active = selectedDefaultId === entry.id;
+                    return (
+                      <button
+                        key={entry.id}
+                        type="button"
+                        className={clsx("menuItem", active && "menuItemActive")}
+                        onClick={() => applyDefaultSchedule(entry.id)}
+                        disabled={defaultState.loading}
+                      >
+                        {entry.label}
+                      </button>
+                    );
+                  })
+                )}
               </div>
-              <div className="dateMetaRow">
-                <span className="dateHint">{sourceHint}</span>
-                {showReset ? (
-                  <motion.button type="button" whileTap={{ scale: 0.98 }} className="dateResetAction" onClick={onClearSurgeryDateOverride}>
-                    <RefreshCcw className="h-3.5 w-3.5" />
-                    Use schedule date
-                  </motion.button>
-                ) : null}
-              </div>
-              <div className="dateAnchor">
-                Schedule anchor: <span className="ak" title={anchor?.at}>{anchorLabel}</span>
-                {anchor?.type ? <span className="atk"> · {anchor.type}</span> : null}
-              </div>
-            </div>
+            ) : null}
           </div>
         </div>
-      </div>
 
-      <div className="weekbar">
-        {weeks.map((w) => {
-          const active = w.weekNumber === selectedWeek;
-          const isAuto = w.weekNumber === autoWeek;
-          return (
-            <button key={w.weekNumber} type="button" className={clsx("weekpill", active && "weekpill-on")} onClick={() => setSelectedWeek(w.weekNumber)}>
-              <span className="weekpill-t">{w.weekNumber}</span>
-              {isAuto && <span className="weekpill-dot" aria-hidden />}
-            </button>
-          );
-        })}
-      </div>
+        {defaultState.error ? <div className="statusNote statusNoteError">{defaultState.error}</div> : null}
+      </section>
 
-      <div className="wk">
-        <div className="cap">{week.label ?? `Week ${week.weekNumber}`}</div>
-        {week.description ? <div className="sub">{week.description}</div> : null}
-      </div>
-    </>
+      <section className="railSection" aria-label="Week selection">
+        <div className="sectionLabel">Week focus</div>
+        <div className="weekPicker">
+          {weeks.map((w) => {
+            const active = w.weekNumber === selectedWeek;
+            const isAuto = w.weekNumber === autoWeek;
+            return (
+              <button
+                key={w.weekNumber}
+                type="button"
+                className={clsx("weekButton", active && "weekButtonActive")}
+                onClick={() => setSelectedWeek(w.weekNumber)}
+                aria-pressed={active}
+              >
+                <span>W{w.weekNumber}</span>
+                {isAuto ? <span className="weekButtonAuto" aria-hidden /> : null}
+              </button>
+            );
+          })}
+        </div>
+
+        <div className="weekSummary">
+          <div className="sectionTitle">{week.label ?? `Week ${week.weekNumber}`}</div>
+          {week.description ? <div className="sectionText">{week.description}</div> : null}
+        </div>
+      </section>
+    </div>
   );
 }

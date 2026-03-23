@@ -11,53 +11,70 @@ type Props = {
   gateDone: Record<string, boolean>;
   toggleGate: (id: string) => void;
   showGateInfo: (id: string) => void;
-  clsx: (...v: Array<string | false | null | undefined>) => string;
 };
 
-export function GateChecklist({ gatesOpen, setGatesOpen, gateProgress, gates, gateDone, toggleGate, showGateInfo, clsx }: Props) {
+const clsx = (...v: Array<string | false | null | undefined>) => v.filter(Boolean).join(" ");
+
+export function GateChecklist({ gatesOpen, setGatesOpen, gateProgress, gates, gateDone, toggleGate, showGateInfo }: Props) {
   return (
-    <div className="pnl gt">
-      <button type="button" className="gth" onClick={() => setGatesOpen((v) => !v)} aria-expanded={gatesOpen}>
-        <div className="cap">Criteria gates</div>
-        <div className="gtr">
-          <div className="gpm">
-            <span className="numS">
-              {gateProgress.done}/{gateProgress.total}
-            </span>
-            <div className="gpb">
-              <motion.div className="gpf" animate={{ width: `${Math.round(gateProgress.pct * 100)}%` }} transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }} />
-            </div>
-          </div>
-          <ChevronDown className={clsx("car", gatesOpen && "carOn")} />
+    <section className="gatePanel" aria-label="Criteria gates">
+      <button type="button" className="gatePanelToggle" onClick={() => setGatesOpen((v) => !v)} aria-expanded={gatesOpen}>
+        <div>
+          <div className="sectionLabel">Criteria gates</div>
+          <h3 className="sectionTitle">Progress only when the checks still hold.</h3>
+        </div>
+
+        <div className="gateProgress">
+          <span className="gateProgressValue">
+            {gateProgress.done}/{gateProgress.total}
+          </span>
+          <span className="gateProgressBar" aria-hidden>
+            <motion.span
+              className="gateProgressFill"
+              animate={{ width: `${Math.round(gateProgress.pct * 100)}%` }}
+              transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+            />
+          </span>
+          <ChevronDown className={clsx("gateChevron", gatesOpen && "gateChevronOpen")} />
         </div>
       </button>
 
       <AnimatePresence initial={false}>
         {gatesOpen && (
-          <motion.div className="gtb" initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.18 }}>
+          <motion.div
+            className="gateList"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.18 }}
+          >
             {!gates.length ? (
-              <div className="sub">No gates in this week.</div>
+              <div className="gateEmpty">No gates in this week.</div>
             ) : (
-              <div className="gtl">
-                {gates.map((g) => {
-                  const on = Boolean(gateDone[g.id]);
-                  return (
-                    <div key={g.id} className={clsx("gr", on && "grOn")}>
-                      <button type="button" className="gm" onClick={() => toggleGate(g.id)}>
-                        <span className={clsx("gc", on && "gcOn")} aria-hidden />
-                        <span className="gtx">{g.title}</span>
-                      </button>
-                      <button type="button" className="ib" onClick={() => showGateInfo(g.id)} aria-label="Gate details" title="Details">
-                        <Info className="h-[18px] w-[18px]" />
-                      </button>
-                    </div>
-                  );
-                })}
-              </div>
+              gates.map((g) => {
+                const on = Boolean(gateDone[g.id]);
+                return (
+                  <div key={g.id} className={clsx("gateRow", on && "gateRowDone")}>
+                    <button type="button" className="gateMain" onClick={() => toggleGate(g.id)}>
+                      <span className={clsx("gateCheck", on && "gateCheckDone")} aria-hidden />
+                      <span className="gateText">{g.title}</span>
+                    </button>
+                    <button
+                      type="button"
+                      className="infoButton"
+                      onClick={() => showGateInfo(g.id)}
+                      aria-label={`Open gate details for ${g.title}`}
+                      title="Details"
+                    >
+                      <Info className="infoButtonIcon" />
+                    </button>
+                  </div>
+                );
+              })
             )}
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </section>
   );
 }
