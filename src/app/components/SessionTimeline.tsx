@@ -48,18 +48,25 @@ export const SessionTimeline = memo(function SessionTimeline({
   SessionDot,
 }: Props) {
   return (
-    <div ref={containerRef} className="tlw">
-      <div className="rail" aria-hidden />
-      <motion.div className="rail-fill" aria-hidden animate={{ height: nowY }} transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }} />
-      <motion.div className="now-dot" aria-hidden animate={{ top: nowY }} transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }} />
+    <div ref={containerRef} className="timelineCanvas">
+      <div className="timelineTrack" aria-hidden />
+      <motion.div className="timelineTrackFill" aria-hidden animate={{ height: nowY }} transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }} />
+      <motion.div className="timelineNow" aria-hidden animate={{ top: nowY }} transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }} />
 
-      <div className="sp">
-        {sessions.map((s) => {
+      <div className="sessionStack">
+        {sessions.map((s, index) => {
           const tot = totals[s.id] ?? { done: 0, total: 0, progress: 0 };
           const overdue = isOverdue(s.id);
+
           return (
-            <div key={s.id} className="row">
-              <div className="row-rail">
+            <motion.section
+              key={s.id}
+              className="sessionRow"
+              initial={{ opacity: 0, y: 18 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: Math.min(index * 0.05, 0.24), duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <div className="sessionMarker">
                 <SessionDot
                   progress={tot.progress}
                   doneAll={tot.done === tot.total}
@@ -71,12 +78,19 @@ export const SessionTimeline = memo(function SessionTimeline({
                 />
               </div>
 
-              <div className="cnt">
-                <div className="hdr">
-                  <div className="rt">{s.time || ""}</div>
-                  <div className="st">{s.title}</div>
+              <div className="sessionBody">
+                <div className="sessionHeader">
+                  <div className="sessionTime">{s.time || "Any time"}</div>
+                  <div className="sessionMeta">
+                    <h4 className="sessionTitle">{s.title}</h4>
+                    <p className="sessionCaption">
+                      {tot.done}/{tot.total} complete
+                      {overdue ? " · Needs attention" : ""}
+                    </p>
+                  </div>
                 </div>
-                <div className="grid">
+
+                <div className="exerciseGrid">
                   {s.items.map((it) => {
                     const Icon = ICONS[it.icon];
                     const doneIt = Boolean(done[s.id]?.[it.id]);
@@ -95,7 +109,7 @@ export const SessionTimeline = memo(function SessionTimeline({
                   })}
                 </div>
               </div>
-            </div>
+            </motion.section>
           );
         })}
       </div>

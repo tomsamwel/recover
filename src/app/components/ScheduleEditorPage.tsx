@@ -32,6 +32,7 @@ const parseLines = (value: string) =>
     .split("\n")
     .map((x) => x.trim())
     .filter(Boolean);
+
 const joinLines = (items: string[]) => items.join("\n");
 const DAY_OPTIONS: ScheduleDayOfWeek[] = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
@@ -78,32 +79,36 @@ const ExerciseEditor = memo(function ExerciseEditor({
   onRemove: () => void;
 }) {
   return (
-    <div className="edExercise">
-      <div className="edSessionTop">
-        <div className="mut">Exercise</div>
-        <button type="button" className="ib" aria-label={`Delete exercise ${exercise.name || "item"}`} onClick={onRemove}>
-          <Trash2 className="h-[16px] w-[16px]" />
+    <section className="editorSubsection">
+      <div className="editorSubsectionHeader">
+        <div>
+          <div className="sectionLabel">Exercise</div>
+          <div className="editorSubsectionTitle">{exercise.name || "Untitled exercise"}</div>
+        </div>
+        <button type="button" className="iconAction" aria-label={`Delete exercise ${exercise.name || "item"}`} onClick={onRemove}>
+          <Trash2 className="iconActionIcon" />
         </button>
       </div>
-      <div className="edGrid2">
-        <label className="edField">
+
+      <div className="editorGridTwo">
+        <label className="field">
           <span>Name</span>
-          <input type="text" value={exercise.name} onChange={(e) => onChange({ name: e.target.value })} />
+          <input className="fieldInput" type="text" value={exercise.name} onChange={(e) => onChange({ name: e.target.value })} />
         </label>
-        <label className="edField">
+        <label className="field">
           <span>Purpose</span>
-          <input type="text" value={exercise.purpose} onChange={(e) => onChange({ purpose: e.target.value })} />
+          <input className="fieldInput" type="text" value={exercise.purpose} onChange={(e) => onChange({ purpose: e.target.value })} />
         </label>
-        <label className="edField edSpan2">
+        <label className="field fieldSpanTwo">
           <span>Instructions (one step per line)</span>
-          <textarea rows={3} value={exercise.instructions} onChange={(e) => onChange({ instructions: e.target.value })} />
+          <textarea className="fieldInput" rows={3} value={exercise.instructions} onChange={(e) => onChange({ instructions: e.target.value })} />
         </label>
-        <label className="edField edSpan2">
+        <label className="field fieldSpanTwo">
           <span>Progression</span>
-          <textarea rows={2} value={exercise.progression ?? ""} onChange={(e) => onChange({ progression: e.target.value })} />
+          <textarea className="fieldInput" rows={2} value={exercise.progression ?? ""} onChange={(e) => onChange({ progression: e.target.value })} />
         </label>
       </div>
-    </div>
+    </section>
   );
 });
 
@@ -126,26 +131,30 @@ const SessionEditor = memo(function SessionEditor({
   const applyTiming = (next: ScheduleSessionTiming) => onChange({ timing: next, timeOfDay: legacyTimeFromTiming(next) });
 
   return (
-    <div className="edSession">
-      <div className="edSessionTop">
-        <div className="mut">Session</div>
-        <button type="button" className="ib" aria-label={`Delete session ${session.title || session.id}`} onClick={onRemove}>
-          <Trash2 className="h-[16px] w-[16px]" />
+    <section className="editorSection">
+      <div className="editorSectionHeader">
+        <div>
+          <div className="sectionLabel">Session</div>
+          <h4 className="editorSectionTitle">{session.title || session.id || "Untitled session"}</h4>
+        </div>
+        <button type="button" className="iconAction" aria-label={`Delete session ${session.title || session.id}`} onClick={onRemove}>
+          <Trash2 className="iconActionIcon" />
         </button>
       </div>
 
-      <div className="edGrid3">
-        <label className="edField">
+      <div className="editorGridThree">
+        <label className="field">
           <span>ID</span>
-          <input type="text" value={session.id} onChange={(e) => onChange({ id: e.target.value })} />
+          <input className="fieldInput" type="text" value={session.id} onChange={(e) => onChange({ id: e.target.value })} />
         </label>
-        <label className="edField">
+        <label className="field">
           <span>Title</span>
-          <input type="text" value={session.title} onChange={(e) => onChange({ title: e.target.value })} />
+          <input className="fieldInput" type="text" value={session.title} onChange={(e) => onChange({ title: e.target.value })} />
         </label>
-        <label className="edField">
+        <label className="field">
           <span>Timing mode</span>
           <select
+            className="fieldInput"
             value={timing.mode}
             onChange={(e) => {
               const mode = e.target.value as ScheduleSessionTiming["mode"];
@@ -162,37 +171,46 @@ const SessionEditor = memo(function SessionEditor({
       </div>
 
       {timing.mode === "exact" ? (
-        <div className="edGrid3">
-          <label className="edField">
+        <div className="editorGridThree">
+          <label className="field">
             <span>Time (HH:MM)</span>
-            <input type="text" value={timing.time} onChange={(e) => applyTiming({ ...timing, time: e.target.value })} />
+            <input className="fieldInput" type="text" value={timing.time} onChange={(e) => applyTiming({ ...timing, time: e.target.value })} />
           </label>
-          <label className="edField edSpan2">
+          <label className="field fieldSpanTwo">
             <span>Display label (optional)</span>
-            <input type="text" value={timing.label ?? ""} onChange={(e) => applyTiming({ ...timing, label: e.target.value || undefined })} />
+            <input
+              className="fieldInput"
+              type="text"
+              value={timing.label ?? ""}
+              onChange={(e) => applyTiming({ ...timing, label: e.target.value || undefined })}
+            />
           </label>
         </div>
       ) : null}
 
       {timing.mode === "anytime" ? (
-        <div className="edGrid3">
-          <label className="edField edSpan2">
+        <div className="editorGridThree">
+          <label className="field fieldSpanTwo">
             <span>Label (optional)</span>
-            <input type="text" value={timing.label ?? ""} onChange={(e) => applyTiming({ ...timing, label: e.target.value || undefined })} />
+            <input
+              className="fieldInput"
+              type="text"
+              value={timing.label ?? ""}
+              onChange={(e) => applyTiming({ ...timing, label: e.target.value || undefined })}
+            />
           </label>
         </div>
       ) : null}
 
       {timing.mode === "recurring" ? (
-        <div className="edGrid3">
-          <div className="edField edSpan2">
+        <div className="editorGridThree">
+          <div className="field fieldSpanTwo">
             <span>Days</span>
-            <div className="edGrid3">
+            <div className="checkboxGrid">
               {DAY_OPTIONS.map((day) => {
                 const checked = timing.days.includes(day);
                 return (
-                  <label key={day} className="edField">
-                    <span>{day}</span>
+                  <label key={day} className="checkboxField">
                     <input
                       type="checkbox"
                       checked={checked}
@@ -203,36 +221,49 @@ const SessionEditor = memo(function SessionEditor({
                         })
                       }
                     />
+                    <span>{day}</span>
                   </label>
                 );
               })}
             </div>
           </div>
-          <label className="edField">
+          <label className="field">
             <span>Time (optional HH:MM)</span>
-            <input type="text" value={timing.time ?? ""} onChange={(e) => applyTiming({ ...timing, time: e.target.value || undefined })} />
+            <input
+              className="fieldInput"
+              type="text"
+              value={timing.time ?? ""}
+              onChange={(e) => applyTiming({ ...timing, time: e.target.value || undefined })}
+            />
           </label>
-          <label className="edField">
+          <label className="field">
             <span>Display label (optional)</span>
-            <input type="text" value={timing.label ?? ""} onChange={(e) => applyTiming({ ...timing, label: e.target.value || undefined })} />
+            <input
+              className="fieldInput"
+              type="text"
+              value={timing.label ?? ""}
+              onChange={(e) => applyTiming({ ...timing, label: e.target.value || undefined })}
+            />
           </label>
         </div>
       ) : null}
 
-      {session.exercises.map((exercise, exerciseIndex) => (
-        <ExerciseEditor
-          key={`${exercise.id ?? "exercise"}-${exerciseIndex}`}
-          exercise={exercise}
-          onChange={(patch) => onExerciseChange(exerciseIndex, patch)}
-          onRemove={() => onExerciseRemove(exerciseIndex)}
-        />
-      ))}
+      <div className="editorSubsectionList">
+        {session.exercises.map((exercise, exerciseIndex) => (
+          <ExerciseEditor
+            key={`${exercise.id ?? "exercise"}-${exerciseIndex}`}
+            exercise={exercise}
+            onChange={(patch) => onExerciseChange(exerciseIndex, patch)}
+            onRemove={() => onExerciseRemove(exerciseIndex)}
+          />
+        ))}
+      </div>
 
-      <motion.button type="button" whileTap={{ scale: 0.98 }} className="rb edInlineBtn" onClick={onAddExercise}>
-        <Plus className="h-4 w-4" />
+      <motion.button type="button" whileTap={{ scale: 0.98 }} className="actionButton actionButtonSecondary editorInlineAction" onClick={onAddExercise}>
+        <Plus className="actionButtonIcon" />
         Add exercise
       </motion.button>
-    </div>
+    </section>
   );
 });
 
@@ -248,28 +279,33 @@ const GateEditor = memo(function GateEditor({
   onRemove: () => void;
 }) {
   return (
-    <div className="edGateRow">
-      <div className="edSessionTop">
-        <div className="mut">Gate #{gateIndex + 1}</div>
-        <button type="button" className="ib" aria-label={`Delete gate ${gate.title || gate.id}`} onClick={onRemove}>
-          <Trash2 className="h-[16px] w-[16px]" />
+    <section className="editorSection">
+      <div className="editorSectionHeader">
+        <div>
+          <div className="sectionLabel">Gate #{gateIndex + 1}</div>
+          <h4 className="editorSectionTitle">{gate.title || gate.id || "Untitled gate"}</h4>
+        </div>
+        <button type="button" className="iconAction" aria-label={`Delete gate ${gate.title || gate.id}`} onClick={onRemove}>
+          <Trash2 className="iconActionIcon" />
         </button>
       </div>
-      <label className="edField">
-        <span>Title</span>
-        <input type="text" value={gate.title} onChange={(e) => onChange({ title: e.target.value })} />
-      </label>
-      <label className="edField">
-        <span>Details (one item per line)</span>
-        <textarea rows={3} value={joinLines(gate.detail)} onChange={(e) => onChange({ detail: parseLines(e.target.value) })} />
-      </label>
-    </div>
+
+      <div className="editorGridTwo">
+        <label className="field">
+          <span>Title</span>
+          <input className="fieldInput" type="text" value={gate.title} onChange={(e) => onChange({ title: e.target.value })} />
+        </label>
+        <label className="field fieldSpanTwo">
+          <span>Details (one item per line)</span>
+          <textarea className="fieldInput" rows={3} value={joinLines(gate.detail)} onChange={(e) => onChange({ detail: parseLines(e.target.value) })} />
+        </label>
+      </div>
+    </section>
   );
 });
 
 const WeekEditor = memo(function WeekEditor({
   week,
-  weekIndex,
   onChange,
   onRemove,
   canDeleteWeek,
@@ -284,7 +320,6 @@ const WeekEditor = memo(function WeekEditor({
   onGateAdd,
 }: {
   week: ScheduleWeek;
-  weekIndex: number;
   onChange: (patch: Partial<ScheduleWeek>) => void;
   onRemove: () => void;
   canDeleteWeek: boolean;
@@ -299,62 +334,80 @@ const WeekEditor = memo(function WeekEditor({
   onGateAdd: () => void;
 }) {
   return (
-    <div className="pnl edWeek">
-      <div className="edWeekTop">
-        <div className="edWeekTitle">Week {week.weekNumber}</div>
+    <section className="editorWeek">
+      <div className="editorWeekHeader">
+        <div>
+          <div className="sectionLabel">Week {week.weekNumber}</div>
+          <h3 className="editorWeekTitle">{week.label || `Week ${week.weekNumber}`}</h3>
+        </div>
         <button
           type="button"
-          className="ib"
+          className="iconAction"
           title={canDeleteWeek ? "Delete week" : "A schedule must have at least one week."}
           aria-label={`Delete week ${week.weekNumber}`}
           onClick={onRemove}
           disabled={!canDeleteWeek}
         >
-          <Trash2 className="h-[18px] w-[18px]" />
+          <Trash2 className="iconActionIcon" />
         </button>
       </div>
 
-      <div className="edGrid2">
-        <label className="edField">
+      <div className="editorGridTwo">
+        <label className="field">
           <span>Week number</span>
-          <input type="number" value={week.weekNumber} onChange={(e) => onChange({ weekNumber: Number(e.target.value) || 0 })} />
+          <input className="fieldInput" type="number" value={week.weekNumber} onChange={(e) => onChange({ weekNumber: Number(e.target.value) || 0 })} />
         </label>
-        <label className="edField">
+        <label className="field">
           <span>Label</span>
-          <input type="text" value={week.label ?? ""} onChange={(e) => onChange({ label: e.target.value })} />
+          <input className="fieldInput" type="text" value={week.label ?? ""} onChange={(e) => onChange({ label: e.target.value })} />
         </label>
-        <label className="edField edSpan2">
+        <label className="field fieldSpanTwo">
           <span>Description</span>
-          <textarea rows={2} value={week.description ?? ""} onChange={(e) => onChange({ description: e.target.value })} />
+          <textarea className="fieldInput" rows={2} value={week.description ?? ""} onChange={(e) => onChange({ description: e.target.value })} />
         </label>
       </div>
 
-      {week.sessions.map((session, sessionIndex) => (
-        <SessionEditor
-          key={`${session.id}-${sessionIndex}`}
-          session={session}
-          onChange={(patch) => onSessionChange(sessionIndex, patch)}
-          onRemove={() => onSessionRemove(sessionIndex)}
-          onAddExercise={() => onExerciseAdd(sessionIndex)}
-          onExerciseChange={(exerciseIndex, patch) => onExerciseChange(sessionIndex, exerciseIndex, patch)}
-          onExerciseRemove={(exerciseIndex) => onExerciseRemove(sessionIndex, exerciseIndex)}
-        />
-      ))}
+      <div className="editorDivider" />
 
-      <motion.button type="button" whileTap={{ scale: 0.98 }} className="rb edInlineBtn" onClick={onSessionAdd}>
-        <Plus className="h-4 w-4" />
-        Add session
-      </motion.button>
-
-      <div className="edGates">
-        <div className="edGatesTop">
-          <div className="mut">Gates</div>
-          <motion.button type="button" whileTap={{ scale: 0.98 }} className="rb edInlineBtn" onClick={onGateAdd}>
-            <Plus className="h-4 w-4" />
-            Add gate
-          </motion.button>
+      <div className="editorGroupHeader">
+        <div>
+          <div className="sectionLabel">Sessions</div>
+          <div className="sectionText">Keep timing explicit and progression easy to scan.</div>
         </div>
+        <motion.button type="button" whileTap={{ scale: 0.98 }} className="actionButton actionButtonSecondary" onClick={onSessionAdd}>
+          <Plus className="actionButtonIcon" />
+          Add session
+        </motion.button>
+      </div>
 
+      <div className="editorStack">
+        {week.sessions.map((session, sessionIndex) => (
+          <SessionEditor
+            key={`${session.id}-${sessionIndex}`}
+            session={session}
+            onChange={(patch) => onSessionChange(sessionIndex, patch)}
+            onRemove={() => onSessionRemove(sessionIndex)}
+            onAddExercise={() => onExerciseAdd(sessionIndex)}
+            onExerciseChange={(exerciseIndex, patch) => onExerciseChange(sessionIndex, exerciseIndex, patch)}
+            onExerciseRemove={(exerciseIndex) => onExerciseRemove(sessionIndex, exerciseIndex)}
+          />
+        ))}
+      </div>
+
+      <div className="editorDivider" />
+
+      <div className="editorGroupHeader">
+        <div>
+          <div className="sectionLabel">Gates</div>
+          <div className="sectionText">Use gates for progression rules or safety checks.</div>
+        </div>
+        <motion.button type="button" whileTap={{ scale: 0.98 }} className="actionButton actionButtonSecondary" onClick={onGateAdd}>
+          <Plus className="actionButtonIcon" />
+          Add gate
+        </motion.button>
+      </div>
+
+      <div className="editorStack">
         {week.gates.map((gate, gateIndex) => (
           <GateEditor
             key={`${gate.id}-${gateIndex}`}
@@ -365,7 +418,7 @@ const WeekEditor = memo(function WeekEditor({
           />
         ))}
       </div>
-    </div>
+    </section>
   );
 });
 
@@ -396,95 +449,109 @@ export function ScheduleEditorPage({ schedule, setSchedule, onOpenUpload, onDown
   }, [canDownload, onDownload]);
 
   return (
-    <div className="edWrap">
-      <div className="pnl edTop">
-        <div className="edTopTitle">
-          <div className="h1">Schedule editor</div>
-          <div className="sub">Visual editor for upload, quick edits, and JSON export.</div>
+    <div className="editorShell">
+      <aside className="editorRail">
+        <div className="editorRailBlock">
+          <div className="sectionLabel">Protocol editor</div>
+          <h2 className="workspaceTitle">Editor</h2>
+          <p className="workspaceText">Upload, validate, and adjust the plan without leaving the working surface.</p>
         </div>
-        <div className="edActions">
-          <motion.button type="button" whileTap={{ scale: 0.98 }} className="rb edActionBtn" onClick={onOpenUpload}>
-            <Upload className="h-4 w-4" />
+
+        <div className="editorRailBlock">
+          <motion.button type="button" whileTap={{ scale: 0.98 }} className="actionButton" onClick={onOpenUpload}>
+            <Upload className="actionButtonIcon" />
             Upload JSON
           </motion.button>
           <motion.button
             type="button"
             whileTap={{ scale: 0.98 }}
-            className="rb edActionBtn"
+            className="actionButton actionButtonSecondary"
             onClick={safeDownload}
             disabled={!canDownload}
             title={validationHint}
           >
-            <Download className="h-4 w-4" />
+            <Download className="actionButtonIcon" />
             Download JSON
           </motion.button>
         </div>
-      </div>
 
-      {uploadError ? <div className="edErr">{uploadError}</div> : null}
+        {uploadError ? <div className="statusNote statusNoteError">{uploadError}</div> : null}
 
-      <div className={`edVal ${canDownload ? "edValOk" : "edValBad"}`} aria-live="polite">
-        <div className="edValHead">
-          <AlertTriangle className="h-4 w-4" />
-          {canDownload ? "Schedule is valid" : `Validation issues: ${validationErrors.length}`}
+        <div className={`validationBox ${canDownload ? "validationBoxOk" : "validationBoxBad"}`} aria-live="polite">
+          <div className="validationHeader">
+            <AlertTriangle className="validationIcon" />
+            {canDownload ? "Schedule is valid" : `Validation issues: ${validationErrors.length}`}
+          </div>
+          {!canDownload ? (
+            <ul className="validationList">
+              {validationErrors.slice(0, 8).map((error) => (
+                <li key={error}>{error}</li>
+              ))}
+            </ul>
+          ) : (
+            <p className="sectionText">Ready for export.</p>
+          )}
         </div>
-        {!canDownload ? (
-          <ul className="edValList">
-            {validationErrors.slice(0, 8).map((error) => (
-              <li key={error}>{error}</li>
-            ))}
-          </ul>
-        ) : null}
-      </div>
 
-      <div className="pnl edMeta">
-        <div className="cap">Metadata</div>
-        <div className="edGrid2">
-          <label className="edField">
-            <span>Version</span>
-            <input type="number" value={schedule.version} onChange={(e) => setSchedule((prev) => ({ ...prev, version: Number(e.target.value) || 1 }))} />
-          </label>
-          <label className="edField">
-            <span>Anchor type</span>
-            <input type="text" value={schedule.metadata?.anchor?.type ?? ""} onChange={(e) => updateMeta("type", e.target.value)} />
-          </label>
-          <label className="edField edSpan2">
-            <span>Anchor datetime</span>
-            <input type="text" value={schedule.metadata?.anchor?.at ?? ""} onChange={(e) => updateMeta("at", e.target.value)} />
-          </label>
+        <div className="editorRailBlock">
+          <div className="sectionLabel">Metadata</div>
+          <div className="editorGridTwo">
+            <label className="field">
+              <span>Version</span>
+              <input
+                className="fieldInput"
+                type="number"
+                value={schedule.version}
+                onChange={(e) => setSchedule((prev) => ({ ...prev, version: Number(e.target.value) || 1 }))}
+              />
+            </label>
+            <label className="field">
+              <span>Anchor type</span>
+              <input className="fieldInput" type="text" value={schedule.metadata?.anchor?.type ?? ""} onChange={(e) => updateMeta("type", e.target.value)} />
+            </label>
+            <label className="field fieldSpanTwo">
+              <span>Anchor datetime</span>
+              <input className="fieldInput" type="text" value={schedule.metadata?.anchor?.at ?? ""} onChange={(e) => updateMeta("at", e.target.value)} />
+            </label>
+          </div>
         </div>
-      </div>
+      </aside>
 
-      <div className="edSectionHead">
-        <div className="cap">Weeks</div>
-        <motion.button type="button" whileTap={{ scale: 0.98 }} className="rb edInlineBtn" onClick={() => setSchedule((prev) => addWeek(prev))}>
-          <Plus className="h-4 w-4" />
-          Add week
-        </motion.button>
-      </div>
+      <div className="editorContent">
+        <div className="editorContentHeader">
+          <div>
+            <div className="sectionLabel">Weeks</div>
+            <h3 className="sectionTitle">Protocol structure</h3>
+            <p className="sectionText">One week per stage. Keep sessions clear, progression explicit, and gates easy to verify.</p>
+          </div>
+          <motion.button type="button" whileTap={{ scale: 0.98 }} className="actionButton actionButtonSecondary" onClick={() => setSchedule((prev) => addWeek(prev))}>
+            <Plus className="actionButtonIcon" />
+            Add week
+          </motion.button>
+        </div>
 
-      <div className="edWeeks">
-        {schedule.weeks.map((week, weekIndex) => (
-          <WeekEditor
-            key={`${week.weekNumber}-${weekIndex}`}
-            week={week}
-            weekIndex={weekIndex}
-            onChange={(patch) => setSchedule((prev) => updateWeek(prev, weekIndex, patch))}
-            onRemove={() => setSchedule((prev) => removeWeek(prev, weekIndex))}
-            canDeleteWeek={schedule.weeks.length > 1}
-            onSessionChange={(sessionIndex, patch) => setSchedule((prev) => updateSession(prev, weekIndex, sessionIndex, patch))}
-            onSessionRemove={(sessionIndex) => setSchedule((prev) => removeSession(prev, weekIndex, sessionIndex))}
-            onSessionAdd={() => setSchedule((prev) => addSession(prev, weekIndex))}
-            onExerciseChange={(sessionIndex, exerciseIndex, patch) =>
-              setSchedule((prev) => updateExercise(prev, weekIndex, sessionIndex, exerciseIndex, patch))
-            }
-            onExerciseRemove={(sessionIndex, exerciseIndex) => setSchedule((prev) => removeExercise(prev, weekIndex, sessionIndex, exerciseIndex))}
-            onExerciseAdd={(sessionIndex) => setSchedule((prev) => addExercise(prev, weekIndex, sessionIndex))}
-            onGateChange={(gateIndex, patch) => setSchedule((prev) => updateGate(prev, weekIndex, gateIndex, patch))}
-            onGateRemove={(gateIndex) => setSchedule((prev) => removeGate(prev, weekIndex, gateIndex))}
-            onGateAdd={() => setSchedule((prev) => addGate(prev, weekIndex))}
-          />
-        ))}
+        <div className="editorWeekList">
+          {schedule.weeks.map((week, weekIndex) => (
+            <WeekEditor
+              key={`${week.weekNumber}-${weekIndex}`}
+              week={week}
+              onChange={(patch) => setSchedule((prev) => updateWeek(prev, weekIndex, patch))}
+              onRemove={() => setSchedule((prev) => removeWeek(prev, weekIndex))}
+              canDeleteWeek={schedule.weeks.length > 1}
+              onSessionChange={(sessionIndex, patch) => setSchedule((prev) => updateSession(prev, weekIndex, sessionIndex, patch))}
+              onSessionRemove={(sessionIndex) => setSchedule((prev) => removeSession(prev, weekIndex, sessionIndex))}
+              onSessionAdd={() => setSchedule((prev) => addSession(prev, weekIndex))}
+              onExerciseChange={(sessionIndex, exerciseIndex, patch) =>
+                setSchedule((prev) => updateExercise(prev, weekIndex, sessionIndex, exerciseIndex, patch))
+              }
+              onExerciseRemove={(sessionIndex, exerciseIndex) => setSchedule((prev) => removeExercise(prev, weekIndex, sessionIndex, exerciseIndex))}
+              onExerciseAdd={(sessionIndex) => setSchedule((prev) => addExercise(prev, weekIndex, sessionIndex))}
+              onGateChange={(gateIndex, patch) => setSchedule((prev) => updateGate(prev, weekIndex, gateIndex, patch))}
+              onGateRemove={(gateIndex) => setSchedule((prev) => removeGate(prev, weekIndex, gateIndex))}
+              onGateAdd={() => setSchedule((prev) => addGate(prev, weekIndex))}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );
